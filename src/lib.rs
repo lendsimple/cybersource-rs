@@ -9,6 +9,8 @@
 #[cfg(feature = "server")]
 pub mod auth;
 pub mod clock;
+#[cfg(feature = "server")]
+pub mod config;
 pub mod entropy;
 pub mod error;
 pub mod jose;
