@@ -1,0 +1,43 @@
+# Build output
+/target/
+**/target/
+
+# Cargo.lock is committed for workspaces with binaries (xtask); keep it tracked.
+
+# Backup files from rustfmt
+**/*.rs.bk
+
+# Debug info (MSVC)
+*.pdb
+
+# Code coverage
+*.profraw
+*.profdata
+/coverage/
+lcov.info
+
+# insta snapshot review leftovers
+*.snap.new
+*.pending-snap
+
+# WASM build artifacts
+/pkg/
+**/pkg/
+.wrangler/
+
+# Local secrets / credentials (never commit merchant keys)
+.env
+.env.*
+*.p12
+*.pfx
+*.pem
+*.key
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Test fixtures are throwaway keys generated for tests; commit them.
+!tests/fixtures/**

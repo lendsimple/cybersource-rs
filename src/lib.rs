@@ -1,0 +1,13 @@
+//! Idiomatic Rust client for the [Cybersource REST API](https://developer.cybersource.com/api-reference-assets/index.html).
+//!
+//! The crate is built around a sans-IO core: requests are built, signed and
+//! parsed by pure functions, and sent through a pluggable transport. This lets
+//! the same client run async, blocking, or on WebAssembly.
+//!
+//! See `implementation.md` in the repository for the design.
+
+pub mod clock;
+pub mod entropy;
+pub mod error;
+
+pub use error::{Error, Result};
