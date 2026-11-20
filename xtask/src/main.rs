@@ -13,6 +13,7 @@ tasks:
   vectors               regenerate tests/vectors/*.json from the official Python SDK
   update-spec <tag>     vendor the spec from cybersource-rest-client-python at <tag>
   verify-spec           check spec/cybersource-rest-spec.json matches spec/SOURCE.md
+  codegen               regenerate src/generated from the spec
   codegen --report      build the IR from the spec and print a summary";
 
 type Result<T = ()> = std::result::Result<T, String>;
@@ -28,6 +29,7 @@ fn main() -> ExitCode {
         ["vectors"] => vectors::vectors(),
         ["update-spec", tag] => spec_source::update(tag),
         ["verify-spec"] => spec_source::verify().map(|_| ()),
+        ["codegen"] => codegen::codegen(),
         ["codegen", "--report"] => codegen::report(),
         [] => Err(USAGE.to_string()),
         other => Err(format!("unknown task: {}\n\n{USAGE}", other.join(" "))),

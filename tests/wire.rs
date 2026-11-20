@@ -1,11 +1,13 @@
 //! Real HTTP round trips through the reqwest and ureq transports against a
 //! local wiremock server.
 
-#![cfg(all(feature = "reqwest", feature = "ureq"))]
+#![cfg(all(feature = "reqwest", feature = "ureq", feature = "payments"))]
+
+mod common;
 
 use cybersource::auth::digest;
 use cybersource::jose::b64;
-use cybersource::models::{AmountDetails, CreatePaymentRequest, OrderInformation};
+use cybersource::models::CreatePaymentRequest;
 use cybersource::transport::{ReqwestTransport, UreqTransport};
 use cybersource::{BlockingClient, Client, Config, Credentials, Environment, Error};
 use wiremock::matchers::{header, header_exists, method, path};
@@ -25,16 +27,7 @@ fn config() -> Config {
 }
 
 fn payment() -> CreatePaymentRequest {
-    CreatePaymentRequest {
-        order_information: Some(OrderInformation {
-            amount_details: Some(AmountDetails {
-                total_amount: Some("100.00".into()),
-                currency: Some("USD".into()),
-            }),
-            bill_to: None,
-        }),
-        ..Default::default()
-    }
+    common::payment("wire", "100.00")
 }
 
 async fn payments_server(status: u16, body: &str) -> MockServer {
@@ -74,7 +67,7 @@ async fn reqwest_round_trip() {
         .unwrap();
     let client = Client::new(config(), transport);
 
-    let resp = client.payments().create_payment(&payment()).await.unwrap();
+    let resp = client.payments().create_payment(payment()).await.unwrap();
 
     assert_eq!(resp.status.as_deref(), Some("AUTHORIZED"));
     let received = server.received_requests().await.unwrap();
@@ -90,7 +83,8 @@ async fn ureq_round_trip() {
         let transport = UreqTransport::new().with_base_url(&base_url).unwrap();
         BlockingClient::new(config(), transport)
             .payments()
-            .create_payment(&payment())
+            .create_payment(payment())
+            .send()
     })
     .await
     .unwrap()
@@ -112,7 +106,7 @@ async fn reqwest_maps_error_status_to_api_error() {
 
     let err = Client::new(config(), transport)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap_err();
 
@@ -130,7 +124,8 @@ async fn ureq_maps_error_status_to_api_error_not_transport_error() {
         let transport = UreqTransport::new().with_base_url(&base_url).unwrap();
         BlockingClient::new(config(), transport)
             .payments()
-            .create_payment(&payment())
+            .create_payment(payment())
+            .send()
     })
     .await
     .unwrap()
@@ -153,7 +148,7 @@ async fn connection_failure_is_a_transport_error() {
 
     let err = Client::new(config(), transport)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap_err();
 

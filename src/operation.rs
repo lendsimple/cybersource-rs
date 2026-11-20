@@ -99,8 +99,8 @@ pub trait Operation {
     }
 
     /// Extra request headers. They can never override authentication headers.
-    fn headers(&self) -> HeaderMap {
-        HeaderMap::new()
+    fn headers(&self) -> Result<HeaderMap> {
+        Ok(HeaderMap::new())
     }
 
     /// The serialized request body, if any. POST, PUT and PATCH without a
@@ -137,6 +137,24 @@ pub fn json_body<T: serde::Serialize>(body: &T) -> Result<Option<Bytes>> {
     serde_json::to_vec(body)
         .map(|v| Some(Bytes::from(v)))
         .map_err(|e| Error::Request(format!("failed to serialize request body: {e}")))
+}
+
+/// Adds a header from a parameter value, failing on invalid characters.
+pub fn insert_header(headers: &mut HeaderMap, name: &'static str, value: &str) -> Result<()> {
+    let value = http::HeaderValue::from_str(value)
+        .map_err(|_| Error::Request(format!("header {name} contains invalid characters")))?;
+    headers.insert(name, value);
+    Ok(())
+}
+
+/// Decodes a text body (e.g. a compact JWT).
+pub fn text_decode(body: &Bytes) -> Result<String> {
+    String::from_utf8(body.to_vec()).map_err(|e| {
+        Error::decode(
+            <serde_json::Error as serde::de::Error>::custom(format!("body is not UTF-8: {e}")),
+            body,
+        )
+    })
 }
 
 /// Deserializes a JSON response body.

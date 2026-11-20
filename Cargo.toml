@@ -15,7 +15,7 @@ readme = "README.md"
 exclude = ["/spec", "/xtask", "/tests", "/.github", "/implementation.md"]
 
 [features]
-default = ["server", "reqwest", "rustls"]
+default = ["server", "reqwest", "rustls", "payments", "tms", "capture-context"]
 # Credentialed client: auth, keys, operations. Never enable in browser builds.
 server = []
 # Legacy HTTP Signature auth. Cybersource retires it in March 2027; prefer JWT.
@@ -24,6 +24,55 @@ reqwest = ["server", "dep:reqwest"]
 ureq = ["server", "dep:ureq"]
 rustls = ["reqwest?/rustls", "ureq?/rustls"]
 native-tls = ["reqwest?/native-tls", "ureq?/native-tls"]
+
+# API groups (see spec/codegen.toml [groups]); each is `client.<group>()`.
+account-updater = ["server"]
+agentic-commerce = ["server"]
+bank-account-validation = ["server"]
+bin-lookup = ["server"]
+boarding = ["server"]
+capture-context = ["server"]
+currency-conversion = ["server"]
+devices = ["server"]
+invoicing = ["server"]
+payments = ["server"]
+payouts = ["server"]
+recurring-billing = ["server"]
+reporting = ["server"]
+risk = ["server"]
+secure-file-share = ["server"]
+tax = ["server"]
+tms = ["server"]
+transactions = ["server"]
+user-management = ["server"]
+webhooks = ["server"]
+# Every API group, plus every auth option.
+full = [
+    "account-updater",
+    "agentic-commerce",
+    "bank-account-validation",
+    "bin-lookup",
+    "boarding",
+    "capture-context",
+    "currency-conversion",
+    "devices",
+    "invoicing",
+    "payments",
+    "payouts",
+    "recurring-billing",
+    "reporting",
+    "risk",
+    "secure-file-share",
+    "tax",
+    "tms",
+    "transactions",
+    "user-management",
+    "webhooks",
+    "http-signature",
+]
+
+[package.metadata.docs.rs]
+features = ["full", "reqwest", "ureq"]
 
 [dependencies]
 bytes = "1.12"

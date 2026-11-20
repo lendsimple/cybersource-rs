@@ -1,6 +1,8 @@
 //! End-to-end pipeline tests through both clients, using `MockTransport`.
 
-#![cfg(feature = "server")]
+#![cfg(feature = "payments")]
+
+mod common;
 
 use std::borrow::Cow;
 
@@ -10,10 +12,7 @@ use cybersource::clock::FixedClock;
 use cybersource::entropy::FixedEntropy;
 use cybersource::error::ErrorBody;
 use cybersource::jose::b64;
-use cybersource::models::{
-    AmountDetails, Card, ClientReferenceInformation, CreatePaymentRequest, OrderInformation,
-    PaymentInformation,
-};
+use cybersource::models::CreatePaymentRequest;
 use cybersource::operation::{Operation, OperationMeta, json_decode};
 use cybersource::transport::MockTransport;
 use cybersource::{BlockingClient, Call, Client, Config, Credentials, Environment, Error};
@@ -41,27 +40,7 @@ fn jwt_client(mock: &MockTransport) -> Client<MockTransport> {
 }
 
 fn payment() -> CreatePaymentRequest {
-    CreatePaymentRequest {
-        client_reference_information: Some(ClientReferenceInformation {
-            code: Some("TC50171_3".into()),
-        }),
-        payment_information: Some(PaymentInformation {
-            card: Some(Card {
-                number: Some("4111111111111111".into()),
-                expiration_month: Some("12".into()),
-                expiration_year: Some("2031".into()),
-                security_code: Some("123".into()),
-            }),
-        }),
-        order_information: Some(OrderInformation {
-            amount_details: Some(AmountDetails {
-                total_amount: Some("100.00".into()),
-                currency: Some("USD".into()),
-            }),
-            bill_to: None,
-        }),
-        ..Default::default()
-    }
+    common::payment("TC50171_3", "100.00")
 }
 
 fn jwt_claims(request: &http::Request<Bytes>) -> serde_json::Value {
@@ -80,7 +59,7 @@ async fn jwt_request_is_signed_over_the_exact_body() {
 
     let resp = jwt_client(&mock)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap();
     assert_eq!(resp.status.as_deref(), Some("AUTHORIZED"));
@@ -118,7 +97,7 @@ async fn jwt_request_is_signed_over_the_exact_body() {
         "4111111111111111"
     );
     assert!(
-        sent.get("processingInformation").is_none(),
+        sent.get("buyerInformation").is_none(),
         "None fields are omitted"
     );
 }
@@ -132,7 +111,7 @@ fn blocking_client_runs_the_same_pipeline() {
         mock.clone(),
     );
 
-    let resp = client.payments().create_payment(&payment()).unwrap();
+    let resp = client.payments().create_payment(payment()).send().unwrap();
 
     assert_eq!(resp.id.as_deref(), Some("7000000000000000000001"));
     assert!(mock.last_request().headers().contains_key("authorization"));
@@ -149,7 +128,7 @@ fn http_signature_request_carries_digest_of_sent_body() {
     )
     .with_clock(FixedClock::from_secs(1_793_865_600));
 
-    client.payments().create_payment(&payment()).unwrap();
+    client.payments().create_payment(payment()).send().unwrap();
 
     let req = mock.last_request();
     assert_eq!(req.headers()["date"], "Thu, 05 Nov 2026 08:00:00 GMT");
@@ -199,8 +178,8 @@ impl Operation for Probe {
     fn query(&self) -> Vec<(&'static str, String)> {
         self.query.clone()
     }
-    fn headers(&self) -> HeaderMap {
-        self.headers.clone()
+    fn headers(&self) -> cybersource::Result<HeaderMap> {
+        Ok(self.headers.clone())
     }
     fn decode(&self, _: StatusCode, body: &Bytes) -> cybersource::Result<Self::Output> {
         json_decode(body)
@@ -283,7 +262,7 @@ async fn declined_payment_is_ok_not_an_error() {
 
     let resp = jwt_client(&mock)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap();
 
@@ -307,7 +286,7 @@ async fn bad_request_is_a_typed_api_error() {
 
     let err = jwt_client(&mock)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap_err();
 
@@ -335,7 +314,7 @@ async fn bad_gateway_on_payment_means_outcome_unknown_and_not_retry_safe() {
 
     let err = jwt_client(&mock)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap_err();
 
@@ -350,7 +329,7 @@ async fn transport_failure_means_outcome_unknown() {
 
     let err = jwt_client(&mock)
         .payments()
-        .create_payment(&payment())
+        .create_payment(payment())
         .await
         .unwrap_err();
 
@@ -372,7 +351,7 @@ async fn correlation_id_is_exposed_on_success() {
     let body = payment();
 
     let resp = client
-        .execute_with_response(&cybersource::operations::CreatePayment { body: &body })
+        .execute_with_response(&cybersource::operations::CreatePayment::new(body))
         .await
         .unwrap();
 
@@ -393,9 +372,7 @@ fn debug_output_redacts_card_data_and_secrets() {
 fn client_futures_are_send_on_native_targets() {
     fn assert_send<T: Send>(_: &T) {}
     let client = jwt_client(&MockTransport::new());
-    let body = payment();
-    let payments = client.payments();
-    let fut = payments.create_payment(&body);
+    let fut = std::future::IntoFuture::into_future(client.payments().create_payment(payment()));
     assert_send(&fut);
 }
 

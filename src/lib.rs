@@ -17,15 +17,13 @@ pub mod clock;
 pub mod config;
 pub mod entropy;
 pub mod error;
+#[cfg(feature = "server")]
+mod generated;
 pub mod jose;
 #[cfg(feature = "server")]
 pub mod keys;
 #[cfg(feature = "server")]
-pub mod models;
-#[cfg(feature = "server")]
 pub mod operation;
-#[cfg(feature = "server")]
-pub mod operations;
 #[cfg(feature = "server")]
 pub mod pipeline;
 #[cfg(feature = "server")]
@@ -43,3 +41,5 @@ pub use client::Client;
 #[cfg(feature = "server")]
 pub use config::{Config, Credentials, Environment};
 pub use error::{Error, Result};
+#[cfg(feature = "server")]
+pub use generated::{apis, models, operations};

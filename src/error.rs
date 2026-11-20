@@ -39,6 +39,10 @@ pub enum Error {
     #[error("invalid request: {0}")]
     Request(String),
 
+    /// Cybersource answered with a success status the operation does not document.
+    #[error("unexpected success status {0}")]
+    UnexpectedStatus(StatusCode),
+
     /// A response body could not be decoded.
     #[error("failed to decode response body: {source}; body starts with: {body_snippet:?}")]
     Decode {

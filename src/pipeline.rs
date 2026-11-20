@@ -73,7 +73,7 @@ pub fn prepare<O: Operation + ?Sized>(
         .body(body)
         .map_err(|e| Error::Request(e.to_string()))?;
     let headers = request.headers_mut();
-    headers.extend(op.headers());
+    headers.extend(op.headers()?);
     headers.insert(
         ACCEPT,
         HeaderValue::from_static(op.accept().unwrap_or(ACCEPT_JSON)),

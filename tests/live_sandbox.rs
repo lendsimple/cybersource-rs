@@ -10,12 +10,16 @@
 //! (from `CyberSource/cybersource-rest-samples-*`). Override with
 //! `CYBS_MERCHANT_ID`, `CYBS_KEY_ID` and `CYBS_SHARED_SECRET`.
 
-#![cfg(all(feature = "reqwest", feature = "ureq", feature = "http-signature"))]
+#![cfg(all(
+    feature = "reqwest",
+    feature = "ureq",
+    feature = "http-signature",
+    feature = "payments"
+))]
 
-use cybersource::models::{
-    AmountDetails, BillTo, Card, ClientReferenceInformation, CreatePaymentRequest,
-    OrderInformation, PaymentInformation, ProcessingInformation, PtsV2PaymentsPost201Response,
-};
+mod common;
+
+use cybersource::models::PtsV2PaymentsPost201Response;
 use cybersource::transport::{ReqwestTransport, UreqTransport};
 use cybersource::{BlockingClient, Client, Config, Credentials, Environment};
 
@@ -51,43 +55,6 @@ fn http_signature(key_id: &str, secret: &str) -> cybersource::Result<Credentials
     Credentials::http_signature(key_id, secret)
 }
 
-fn authorization(code: &str) -> CreatePaymentRequest {
-    CreatePaymentRequest {
-        client_reference_information: Some(ClientReferenceInformation {
-            code: Some(code.into()),
-        }),
-        processing_information: Some(ProcessingInformation {
-            capture: Some(false),
-            commerce_indicator: Some("internet".into()),
-        }),
-        payment_information: Some(PaymentInformation {
-            card: Some(Card {
-                number: Some("4111111111111111".into()),
-                expiration_month: Some("12".into()),
-                expiration_year: Some("2031".into()),
-                security_code: None,
-            }),
-        }),
-        order_information: Some(OrderInformation {
-            amount_details: Some(AmountDetails {
-                total_amount: Some("100.00".into()),
-                currency: Some("USD".into()),
-            }),
-            bill_to: Some(BillTo {
-                first_name: Some("John".into()),
-                last_name: Some("Doe".into()),
-                address1: Some("1 Market St".into()),
-                locality: Some("San Francisco".into()),
-                administrative_area: Some("CA".into()),
-                postal_code: Some("94105".into()),
-                country: Some("US".into()),
-                email: Some("test@cybs.com".into()),
-                phone_number: Some("4158880000".into()),
-            }),
-        }),
-    }
-}
-
 fn assert_authorized(label: &str, resp: &PtsV2PaymentsPost201Response) {
     eprintln!("{label}: id={:?} status={:?}", resp.id, resp.status);
     assert_eq!(
@@ -106,9 +73,12 @@ async fn authorize_async(
     };
     let client = Client::new(config, ReqwestTransport::new());
     let resp = client
-        .execute_with_response(&cybersource::operations::CreatePayment {
-            body: &authorization(&format!("cybersource-rs-{label}")),
-        })
+        .payments()
+        .create_payment(common::payment(
+            &format!("cybersource-rs-{label}"),
+            "100.00",
+        ))
+        .send_with_response()
         .await
         .unwrap_or_else(|e| panic!("{label}: {e}"));
     eprintln!("{label}: correlation id {:?}", resp.correlation_id());
@@ -125,7 +95,11 @@ fn authorize_blocking(
     let client = BlockingClient::new(config, UreqTransport::new());
     let resp = client
         .payments()
-        .create_payment(&authorization(&format!("cybersource-rs-{label}")))
+        .create_payment(common::payment(
+            &format!("cybersource-rs-{label}"),
+            "100.00",
+        ))
+        .send()
         .unwrap_or_else(|e| panic!("{label}: {e}"));
     assert_authorized(label, &resp);
 }

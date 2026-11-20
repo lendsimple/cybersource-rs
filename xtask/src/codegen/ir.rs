@@ -42,17 +42,6 @@ impl fmt::Display for Ty {
     }
 }
 
-impl Ty {
-    /// Generated models this type refers to, directly or nested.
-    pub fn model_name(&self) -> Option<&str> {
-        match self {
-            Ty::Model(n) => Some(n),
-            Ty::Vec(t) | Ty::Map(t) => t.model_name(),
-            _ => None,
-        }
-    }
-}
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct Field {
     pub json_name: String,
