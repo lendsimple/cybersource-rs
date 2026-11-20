@@ -3,6 +3,7 @@
 pub mod config;
 pub mod docs;
 pub mod emit;
+pub mod examples;
 pub mod ir;
 pub mod naming;
 
@@ -14,7 +15,7 @@ use crate::{Result, run, spec_source, workspace_root};
 
 /// Loads the vendored spec and settings and builds the IR, reporting every
 /// problem at once.
-pub fn load() -> Result<ir::Ir> {
+pub fn load() -> Result<(ir::Ir, config::Config)> {
     let bytes = spec_source::verify()?;
     let spec: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|e| format!("spec is not JSON: {e}"))?;
@@ -27,7 +28,7 @@ pub fn load() -> Result<ir::Ir> {
         return Err(problems(errors));
     }
     check_features(&ir)?;
-    Ok(ir)
+    Ok((ir, config))
 }
 
 fn problems(errors: Vec<String>) -> String {
@@ -81,8 +82,8 @@ fn check_features(ir: &ir::Ir) -> Result {
 }
 
 /// Writes the generated files into `dir` (replacing it) and formats them.
-pub fn write(dir: &Path) -> Result {
-    let ir = load()?;
+pub fn write(dir: &Path, tests_dir: &Path) -> Result {
+    let (ir, config) = load()?;
     let files = emit::generate(&ir);
     if dir.exists() {
         fs::remove_dir_all(dir).map_err(|e| format!("clearing {}: {e}", dir.display()))?;
@@ -94,21 +95,31 @@ pub fn write(dir: &Path) -> Result {
         fs::write(&path, contents).map_err(|e| e.to_string())?;
         paths.push(path);
     }
+
+    let (test_rs, examples_json) = examples::generate(&ir, &config.example_allowlist);
+    let test_path = tests_dir.join("spec_examples.rs");
+    fs::create_dir_all(tests_dir.join("spec_examples")).map_err(|e| e.to_string())?;
+    fs::write(&test_path, test_rs).map_err(|e| e.to_string())?;
+    fs::write(tests_dir.join("spec_examples/examples.json"), examples_json)
+        .map_err(|e| e.to_string())?;
+    paths.push(test_path);
+
     run(Command::new("rustfmt")
         .args(["--edition", "2024"])
         .args(&paths))?;
-    println!("generated {} files in {}", paths.len(), dir.display());
+    println!("generated {} files", paths.len());
     Ok(())
 }
 
 /// `cargo xtask codegen`: regenerates `src/generated`.
 pub fn codegen() -> Result {
-    write(&workspace_root().join("src/generated"))
+    let root = workspace_root();
+    write(&root.join("src/generated"), &root.join("tests"))
 }
 
 /// `cargo xtask codegen --report`: prints what would be generated.
 pub fn report() -> Result {
-    let ir = load()?;
+    let (ir, _) = load()?;
     let mut by_group = std::collections::BTreeMap::<&str, usize>::new();
     for op in &ir.operations {
         *by_group.entry(&op.group).or_default() += 1;

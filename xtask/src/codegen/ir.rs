@@ -135,6 +135,114 @@ pub struct Operation {
     pub retry_safe: bool,
     pub no_auth: bool,
     pub doc: Option<String>,
+    /// Request body examples from `x-example`.
+    pub request_examples: Vec<Example>,
+    /// JSON success response examples, keyed by status.
+    pub response_examples: Vec<(u16, Example)>,
+}
+
+/// A spec example, checked against its own schema.
+#[derive(Debug, Clone)]
+pub struct Example {
+    pub name: String,
+    pub value: Value,
+    /// Paths (`$.a.b[0]`) where the example disagrees with its schema
+    /// (undeclared fields, convertible type mismatches): spec errata the
+    /// round-trip test ignores.
+    pub ignore: Vec<String>,
+    /// Set when the example cannot match its schema at all.
+    pub skip: Option<String>,
+}
+
+impl Example {
+    fn new(name: String, value: Value, schema: &Value) -> Self {
+        let mut example = Example {
+            name,
+            value: Value::Null,
+            ignore: Vec::new(),
+            skip: None,
+        };
+        errata(schema, &value, "$", &mut example);
+        example.value = value;
+        example
+    }
+}
+
+/// Records where `value` disagrees with `schema` (see [`Example`]).
+fn errata(schema: &Value, value: &Value, path: &str, ex: &mut Example) {
+    if value.is_null() || ex.skip.is_some() {
+        return;
+    }
+    let skip = |ex: &mut Example, what: &str| {
+        ex.skip = Some(format!(
+            "{path}: example has {value}, schema expects {what}"
+        ));
+    };
+    let ty = schema.get("type").and_then(Value::as_str);
+    let props = schema
+        .get("properties")
+        .and_then(Value::as_object)
+        .filter(|p| !p.is_empty());
+    let additional = schema.get("additionalProperties");
+    match (ty, props) {
+        (Some("object") | None, Some(props)) => {
+            let Some(obj) = value.as_object() else {
+                return skip(ex, "an object");
+            };
+            for (key, v) in obj {
+                let child = format!("{path}.{key}");
+                match props.get(key) {
+                    Some(prop) => errata(prop, v, &child, ex),
+                    None => ex.ignore.push(child),
+                }
+            }
+        }
+        (Some("object"), None) => match additional {
+            Some(ap @ Value::Object(m)) if !m.is_empty() => {
+                let Some(obj) = value.as_object() else {
+                    return skip(ex, "a map");
+                };
+                for (key, v) in obj {
+                    errata(ap, v, &format!("{path}.{key}"), ex);
+                }
+            }
+            _ => {}
+        },
+        (Some("array"), _) => {
+            let Some(items) = value.as_array() else {
+                return skip(ex, "an array");
+            };
+            let item_schema = schema.get("items").unwrap_or(&Value::Null);
+            for (i, v) in items.iter().enumerate() {
+                errata(item_schema, v, &format!("{path}[{i}]"), ex);
+            }
+        }
+        (Some("string"), _) => {
+            if value.is_object() || value.is_array() {
+                skip(ex, "a string");
+            } else if !value.is_string() {
+                ex.ignore.push(path.to_owned());
+            }
+        }
+        (Some("integer" | "number"), _) => match value {
+            Value::Number(n) if ty == Some("number") || n.is_i64() || n.is_u64() => {}
+            Value::String(s) if s.trim().parse::<f64>().is_ok() => ex.ignore.push(path.to_owned()),
+            _ => skip(ex, "a number"),
+        },
+        (Some("boolean"), _) => match value {
+            Value::Bool(_) => {}
+            Value::String(s)
+                if matches!(
+                    s.trim().to_ascii_lowercase().as_str(),
+                    "true" | "false" | "1" | "0" | "y" | "n" | "yes" | "no"
+                ) =>
+            {
+                ex.ignore.push(path.to_owned())
+            }
+            _ => skip(ex, "a boolean"),
+        },
+        _ => {}
+    }
 }
 
 #[derive(Debug, Default)]
@@ -315,6 +423,13 @@ impl Builder<'_> {
         }
 
         let (output, accept) = self.output(op, &pointer, &id, &group);
+        let body_schema = op
+            .get("parameters")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .find(|p| p.get("in").and_then(Value::as_str) == Some("body"))
+            .and_then(|p| p.get("schema"));
         let meta = op.get("x-devcenter-metaData");
         let mle = |k: &str| match meta.and_then(|m| m.get(k)).and_then(Value::as_str) {
             Some("mandatory") => Mle::Mandatory,
@@ -345,6 +460,33 @@ impl Builder<'_> {
                 .and_then(Value::as_str)
                 .and_then(docs::summary)
                 .or_else(|| describe(op)),
+            request_examples: op
+                .get("x-example")
+                .and_then(Value::as_object)
+                .into_iter()
+                .flatten()
+                .filter_map(|(name, ex)| {
+                    Some(Example::new(
+                        name.clone(),
+                        ex.get("value")?.clone(),
+                        body_schema?,
+                    ))
+                })
+                .collect(),
+            response_examples: op
+                .get("responses")
+                .and_then(Value::as_object)
+                .into_iter()
+                .flatten()
+                .filter_map(|(code, r)| {
+                    let status = code
+                        .parse::<u16>()
+                        .ok()
+                        .filter(|s| (200..300).contains(s))?;
+                    let value = r.pointer("/examples/application~1json")?.clone();
+                    Some((status, Example::new(code.clone(), value, r.get("schema")?)))
+                })
+                .collect(),
         });
     }
 
@@ -895,6 +1037,28 @@ mod tests {
             ]
         );
         assert!(ir.operations[0].retry_safe);
+    }
+
+    #[test]
+    fn example_errata_are_classified() {
+        let schema = json!({"type": "object", "properties": {
+            "s": {"type": "string"},
+            "n": {"type": "integer"},
+            "b": {"type": "boolean"},
+            "list": {"type": "array", "items": {"type": "object", "properties": {"x": {"type": "string"}}}}
+        }});
+        let ex = Example::new(
+            "e".into(),
+            json!({"s": 5, "n": "7", "b": "Y", "extra": 1, "list": [{"x": "a", "y": 2}]}),
+            &schema,
+        );
+        assert_eq!(ex.skip, None);
+        assert_eq!(ex.ignore, ["$.b", "$.extra", "$.list[0].y", "$.n", "$.s"]);
+
+        let bad = Example::new("e".into(), json!({"n": "PHYSICAL"}), &schema);
+        assert!(bad.skip.unwrap().contains("$.n"));
+        let wrong_shape = Example::new("e".into(), json!({"list": {"x": "a"}}), &schema);
+        assert!(wrong_shape.skip.unwrap().contains("an array"));
     }
 
     #[test]

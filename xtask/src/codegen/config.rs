@@ -26,6 +26,9 @@ pub struct Config {
     pub model_renames: BTreeMap<String, String>,
     #[serde(default)]
     pub sensitive: Sensitive,
+    /// Example ids allowed to fail the round-trip test -> reason.
+    #[serde(default)]
+    pub example_allowlist: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Default, Deserialize)]
