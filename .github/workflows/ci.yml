@@ -20,6 +20,20 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - run: cargo doc --package cybersource --features full --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo xtask verify-spec
+      - run: cargo xtask check-codegen
 
   test:
     strategy:
@@ -34,13 +48,58 @@ jobs:
       - run: cargo nextest run --workspace --all-features
       - run: cargo test --doc --all-features
 
+  # Each API group must build on its own: catches cfg mistakes in shared models.
+  features:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - account-updater
+          - agentic-commerce
+          - bank-account-validation
+          - bin-lookup
+          - boarding
+          - capture-context
+          - currency-conversion
+          - devices
+          - invoicing
+          - payments
+          - payouts
+          - recurring-billing
+          - reporting
+          - risk
+          - secure-file-share
+          - tax
+          - tms
+          - transactions
+          - user-management
+          - webhooks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --package cybersource --no-default-features --features ${{ matrix.group }}
+
+  build-time:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Clean build of the full API surface
+        run: |
+          cargo fetch
+          start=$(date +%s)
+          cargo build --package cybersource --features full
+          echo "### Clean \`--features full\` build: $(( $(date +%s) - start ))s" >> "$GITHUB_STEP_SUMMARY"
+
   msrv:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.88
       - uses: Swatinem/rust-cache@v2
-      - run: cargo check --package cybersource
+      - run: cargo check --package cybersource --features full,ureq
 
   wasm:
     runs-on: ubuntu-latest
@@ -52,4 +111,4 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,reqwest
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --all-features
-      - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server
+      - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments
