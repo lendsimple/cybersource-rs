@@ -1,0 +1,102 @@
+# Code generation settings for `cargo xtask codegen`.
+#
+# The generator fails on anything ambiguous in the spec (an unmapped tag, a
+# duplicate operation id, two different schemas with the same name) and
+# names the setting below that resolves it. Every entry should say why.
+
+# ---------------------------------------------------------------------------
+# Feature groups: every spec tag must map to exactly one Cargo feature. The
+# feature name is also the client accessor (`client.payments()`, ...).
+# ---------------------------------------------------------------------------
+[groups]
+payments = ["payments", "capture", "refund", "reversal", "void", "credit", "orders", "billingAgreements", "payment-tokens"]
+payouts = ["Payouts", "Push Funds", "Pull Funds", "Foreign Exchange Rates", "Transaction Query"]
+risk = ["Payer Authentication", "Decision Manager", "Verification", "Visa Protect Risk Insights"]
+tms = ["Customer", "Customer Payment Instrument", "Customer Shipping Address", "Payment Instrument", "Instrument Identifier", "Network Tokens", "Tokenize"]
+capture-context = ["Microform Integration", "Flex API", "Unified Checkout Capture Context", "Unified Checkout V1 Capture Context", "Transient Token Data v2"]
+transactions = ["TransactionDetails", "SearchTransactions", "EMVTagDetails", "TransactionBatches"]
+reporting = [
+    "Reports", "Report Definitions", "Report Downloads", "Report Subscriptions", "Net Fundings",
+    "Notification Of Changes", "Purchase And Refund Details", "Payment Batch Summaries", "Conversion Details",
+    "Chargeback Details", "Chargeback Summaries", "Retrieval Details", "Retrieval Summaries",
+    "Interchange Clearing Level Details", "Download DTD", "Download XSD",
+]
+secure-file-share = ["SecureFileShare"]
+recurring-billing = ["Plans", "Subscriptions", "Subscriptions Follow-Ons"]
+invoicing = ["Invoices", "Invoice Settings", "Payment Links", "Merchant Defined Fields"]
+webhooks = ["Create New Webhooks", "Manage Webhooks"]
+account-updater = ["Batches"]
+bank-account-validation = ["bankAccountValidation"]
+bin-lookup = ["Bin Lookup"]
+tax = ["taxes"]
+currency-conversion = ["Offers"]
+boarding = ["Merchant Boarding"]
+user-management = ["UserManagement", "UserManagementSearch"]
+devices = ["Device De-Association", "Device Search"]
+agentic-commerce = [
+    "ACP_Checkout", "Agent_Registration", "Credentials", "Enrollment", "Merchant_Registration",
+    "Payment_Events", "Product_Feed", "Purchase_Intent", "UCP_Checkout",
+]
+
+# ---------------------------------------------------------------------------
+# Operations
+# ---------------------------------------------------------------------------
+
+# Operations not generated, keyed "METHOD /path".
+[skip_operations]
+"POST /pts/v1/transaction-batch-upload" = "mTLS + PGP multipart batch upload; out of scope for v0.1 (implementation.md §5)"
+
+# Operation id overrides, keyed "METHOD /path". Used for duplicate or
+# missing operationIds; the value is the camelCase id to use.
+[operation_ids]
+"POST /rbs/v1/subscriptions" = "createSubscription"
+"GET /rbs/v1/subscriptions" = "getAllSubscriptions"
+"GET /rbs/v1/subscriptions/{id}" = "getSubscription"
+"PUT /reporting/v3/report-subscriptions" = "createReportSubscription"
+"GET /reporting/v3/report-subscriptions" = "getAllReportSubscriptions"
+"GET /reporting/v3/report-subscriptions/{reportName}" = "getReportSubscription"
+"PUT /notification-subscriptions/v2/webhooks/{webhookId}/status" = "updateWebhookStatus"
+
+# Operations that move money and so must never be retried blindly (a
+# timeout or 5xx leaves the outcome unknown). Taken from the Java SDK's
+# RETRY_UNSAFE_POST_PATTERNS, plus incremental authorization (PATCH), which
+# raises an authorized amount.
+money_movement = [
+    "POST /pts/v2/payments",
+    "PATCH /pts/v2/payments/{id}",
+    "POST /pts/v2/payments/{id}/captures",
+    "POST /pts/v2/payments/{id}/reversals",
+    "POST /pts/v2/payments/{id}/refunds",
+    "POST /pts/v2/captures/{id}/refunds",
+    "POST /pts/v2/credits",
+    "POST /pts/v2/reversals",
+    "POST /pts/v2/payouts",
+    "POST /pts/v1/push-funds-transfer",
+    "POST /pts/v1/pull-funds-transfer",
+    "POST /pts/v1/pull-funds-transfer/{id}/reversal",
+    "POST /pts/v1/pull-funds-transfer/{id}/refund",
+]
+
+# Header parameters the pipeline sets itself; never exposed as setters.
+pipeline_headers = ["content-type", "v-c-merchant-id", "user-agent"]
+
+# ---------------------------------------------------------------------------
+# Models
+# ---------------------------------------------------------------------------
+
+# Renames for schemas whose name collides with a different schema. Keyed by
+# "<schema name>@<json pointer of the occurrence>"; filled in from the
+# generator's collision report.
+[model_renames]
+
+# JSON property names whose values are redacted in generated `Debug` output.
+[sensitive]
+always = [
+    "securityCode", "cvv", "cvc", "pin", "password", "routingNumber", "accountNumber",
+    "cardNumber", "track1", "track2", "encryptedData", "encryptedRequest", "encryptedResponse",
+    "cryptogram", "transientTokenJwt", "accessToken", "refreshToken", "clientSecret", "secret",
+    "key", "privateKey",
+]
+# `number` is redacted only on types whose name contains one of these
+# (card, bank account and instrument numbers, not e.g. phone numbers).
+number_in_types_containing = ["Card", "Account", "Bank", "Instrument", "Token"]

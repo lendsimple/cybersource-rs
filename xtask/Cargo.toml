@@ -5,3 +5,16 @@ edition = "2024"
 publish = false
 
 [dependencies]
+heck = "0.5"
+indexmap = { version = "2", features = ["serde"] }
+prettyplease = "0.3"
+proc-macro2 = "1"
+quote = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.11"
+syn = { version = "3", features = ["full"] }
+toml = "1"
+
+[dev-dependencies]
+insta = "1"

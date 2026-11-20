@@ -12,6 +12,7 @@ description = "Idiomatic Rust client for the Cybersource REST API (async, blocki
 keywords = ["cybersource", "payments", "visa", "api", "client"]
 categories = ["api-bindings", "web-programming::http-client", "wasm"]
 readme = "README.md"
+exclude = ["/spec", "/xtask", "/tests", "/.github", "/implementation.md"]
 
 [features]
 default = ["server", "reqwest", "rustls"]
