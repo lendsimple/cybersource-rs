@@ -1,0 +1,14 @@
+[
+  {
+    "body": "{}",
+    "expected": "RBNvo1WzZ4oRRq0W9+hknpT7T8If536DEMBg9hyq/4o="
+  },
+  {
+    "body": "{\"clientReferenceInformation\":{\"code\":\"TC50171_3\"},\"paymentInformation\":{\"card\":{\"number\":\"4111111111111111\",\"expirationMonth\":\"12\",\"expirationYear\":\"2031\"}},\"orderInformation\":{\"amountDetails\":{\"totalAmount\":\"102.21\",\"currency\":\"USD\"}}}",
+    "expected": "hkkzTLvoDGE6fmhUi+6BrAJ79sTWdzKZE/RLQ3llxzw="
+  },
+  {
+    "body": "{\"name\":\"café\"}",
+    "expected": "ZF+kQxJqiVT8bYcZErj8Z7wu6P6uQX7+VVRiUZYsp00="
+  }
+]

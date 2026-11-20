@@ -19,3 +19,12 @@ openssl req -new -x509 -key rsa_test_key.pem -days 36500 \
 `rs256_known_answer.txt` is the compact JWS for header `{"alg":"RS256","kid":"k1","typ":"JWT"}` and
 payload `{"a":1}`, signed with `rsa_test_key.pem` by OpenSSL (`openssl dgst -sha256 -sign`).
 RSASSA-PKCS1-v1_5 is deterministic, so our signer must reproduce it exactly.
+
+`testmerchant.p12` bundles the key and `merchant_cert.pem` the way a Cybersource-issued P12 does
+(alias = merchant ID `testmerchant`, password = merchant ID). The official Python SDK signs the RS256
+vectors with it:
+
+```sh
+openssl pkcs12 -export -inkey rsa_test_key.pem -in merchant_cert.pem -name testmerchant \
+  -passout pass:testmerchant -out testmerchant.p12
+```
