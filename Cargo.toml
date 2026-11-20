@@ -33,7 +33,6 @@ thiserror = "2.0"
 web-time = "1.1"
 getrandom = "0.4"
 reqwest = { version = "0.13", default-features = false, optional = true }
-ureq = { version = "3.5", default-features = false, optional = true }
 base64 = "0.23"
 hmac = "0.13"
 sha2 = "0.11"
@@ -48,11 +47,16 @@ bon = "3.10"
 httpdate = "1.0"
 percent-encoding = "2.3"
 
+# Blocking transport; meaningless on wasm, where nothing may block.
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+ureq = { version = "3.5", default-features = false, optional = true }
+
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
 getrandom = { version = "0.4", features = ["wasm_js"] }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt"] }
+tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread"] }
+wiremock = "0.6"
 
 [lints.rust]
 unsafe_code = "forbid"
