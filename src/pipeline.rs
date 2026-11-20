@@ -1,0 +1,142 @@
+//! The sans-IO request pipeline shared by every client.
+//!
+//! [`prepare`] turns an [`Operation`] into a signed `http::Request`;
+//! [`finish`] turns the `http::Response` into the operation's output or a
+//! typed error. Neither performs I/O, so they work with any transport.
+
+use bytes::Bytes;
+use http::header::{ACCEPT, CONTENT_TYPE, USER_AGENT};
+use http::{HeaderValue, Method, Request, Uri};
+
+use crate::auth::{self, SigningInput};
+use crate::clock::Clock;
+use crate::config::Config;
+use crate::entropy::Entropy;
+use crate::error::{ApiError, ErrorBody};
+use crate::operation::{Operation, encode_path_segment};
+use crate::response::{self, Response};
+use crate::{Error, Result};
+
+const CONTENT_TYPE_JSON: &str = "application/json;charset=utf-8";
+const ACCEPT_JSON: &str = "application/hal+json;charset=utf-8, application/json";
+const CLIENT_ID: &str = concat!("cybersource-rs-", env!("CARGO_PKG_VERSION"));
+
+/// Builds the signed HTTP request for `op`.
+///
+/// The URI, body and authentication are computed once, from the same
+/// bytes, so the signature always covers exactly what is sent.
+pub fn prepare<O: Operation + ?Sized>(
+    op: &O,
+    config: &Config,
+    clock: &dyn Clock,
+    entropy: &dyn Entropy,
+) -> Result<Request<Bytes>> {
+    let meta = op.meta();
+    let target = request_target(&op.path(), &op.query());
+    let uri: Uri = format!("https://{}{target}", config.environment().host())
+        .parse()
+        .map_err(|e| Error::Request(format!("invalid request URI for {target:?}: {e}")))?;
+
+    let has_body = matches!(meta.method, Method::POST | Method::PUT | Method::PATCH);
+    let body = if has_body {
+        // Cybersource signs the digest of the body; an empty body is sent as `{}`.
+        op.body()?.unwrap_or_else(|| Bytes::from_static(b"{}"))
+    } else {
+        Bytes::new()
+    };
+
+    let auth_headers = auth::authenticate(
+        config,
+        &SigningInput {
+            method: &meta.method,
+            target: &target,
+            body: &body,
+        },
+        clock,
+        entropy,
+    )?;
+
+    let mut request = Request::builder()
+        .method(meta.method.clone())
+        .uri(uri)
+        .body(body)
+        .map_err(|e| Error::Request(e.to_string()))?;
+    let headers = request.headers_mut();
+    headers.extend(op.headers());
+    headers.insert(ACCEPT, HeaderValue::from_static(ACCEPT_JSON));
+    if has_body {
+        headers.insert(CONTENT_TYPE, HeaderValue::from_static(CONTENT_TYPE_JSON));
+    }
+    headers.insert("v-c-client-id", HeaderValue::from_static(CLIENT_ID));
+    headers.insert(
+        USER_AGENT,
+        HeaderValue::from_str(config.user_agent())
+            .map_err(|_| Error::Config("user agent contains invalid characters".into()))?,
+    );
+    // Inserted last so operation headers can never replace authentication.
+    for (name, value) in &auth_headers {
+        headers.insert(name.clone(), value.clone());
+    }
+    Ok(request)
+}
+
+/// Decodes a response: 2xx goes to the operation, anything else becomes
+/// [`Error::Api`].
+pub fn finish<O: Operation + ?Sized>(
+    op: &O,
+    response: http::Response<Bytes>,
+) -> Result<Response<O::Output>> {
+    let (parts, body) = response.into_parts();
+    if !parts.status.is_success() {
+        return Err(Error::Api(Box::new(ApiError {
+            status: parts.status,
+            body: ErrorBody::parse(&body),
+            correlation_id: response::correlation_id(&parts.headers).map(str::to_owned),
+            raw: body,
+            retry_safe: op.meta().retry_safe,
+        })));
+    }
+    let decoded = op.decode(parts.status, &body)?;
+    Ok(Response {
+        status: parts.status,
+        headers: parts.headers,
+        body: decoded,
+    })
+}
+
+/// `path?query` with RFC 3986 encoding, exactly as signed and sent.
+fn request_target(path: &str, query: &[(&'static str, String)]) -> String {
+    if query.is_empty() {
+        return path.to_owned();
+    }
+    let query = query
+        .iter()
+        .map(|(k, v)| format!("{}={}", encode_path_segment(k), encode_path_segment(v)))
+        .collect::<Vec<_>>()
+        .join("&");
+    format!("{path}?{query}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn target_without_query_is_the_path() {
+        assert_eq!(request_target("/pts/v2/payments", &[]), "/pts/v2/payments");
+    }
+
+    #[test]
+    fn target_encodes_query_with_percent_twenty() {
+        assert_eq!(
+            request_target(
+                "/reporting/v3/reports",
+                &[
+                    ("reportName", "My Report".into()),
+                    ("startTime", "2026-11-01T00:00:00Z".into())
+                ]
+            ),
+            "/reporting/v3/reports?reportName=My%20Report&startTime=2026-11-01T00%3A00%3A00Z"
+        );
+    }
+}
