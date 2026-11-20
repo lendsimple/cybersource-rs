@@ -18,7 +18,7 @@ Decisions already confirmed with the user:
 - JWT-first, HTTP Signature legacy.
 - A full declarative DSL.
 - developerId injection is opt-in.
-- Crate name `cybersource`, MIT/Apache-2.0, edition 2024, MSRV 1.85.
+- Crate name `cybersource`, MIT/Apache-2.0, edition 2024. MSRV is 1.88: it was planned as 1.85, but `rsa` 0.10 needs 1.87 and current `sha2` needs 1.88.
 
 ---
 
@@ -286,14 +286,14 @@ pub struct OperationMeta {
     pub no_auth: bool,
 }
 
-pub trait Operation {
+pub trait Operation {                                       // as built in Stage 1
     type Output;
-    const META: OperationMeta;
+    fn meta(&self) -> &'static OperationMeta;               // a `static` per operation
     fn path(&self) -> Cow<'_, str>;                         // path params percent-encoded (RFC 3986)
-    fn query(&self) -> Vec<(&'static str, String)>;
+    fn query(&self) -> Vec<(&'static str, String)> { vec![] }
     fn headers(&self) -> HeaderMap { HeaderMap::new() }     // profile-id, if-match, …
-    fn body(&self) -> Option<Result<Bytes, Error>>;         // serde_json::to_vec once
-    fn decode(status: StatusCode, body: Bytes) -> Result<Self::Output, Error>;
+    fn body(&self) -> Result<Option<Bytes>> { Ok(None) }    // serde_json::to_vec once
+    fn decode(&self, status: StatusCode, body: &Bytes) -> Result<Self::Output>;
 }
 
 #[cfg(not(target_family = "wasm"))] pub trait MaybeSend: Send {}
@@ -311,7 +311,7 @@ pub trait BlockingHttpTransport { /* same, synchronous */ }
 1. Build the URI from host, path and query, once.
 2. Serialize the body to bytes, and apply opt-in developerId injection on a *copy*.
 3. Resolve the MLE policy. If request MLE applies, wrap the body as `{"encryptedRequest": JWE}`.
-4. Sign the request with JWT or HTTP Signature over those exact bytes and that exact target. Set `v-c-merchant-id`, `v-c-client-id: cybs-rest-sdk-rust-{ver}` and `User-Agent`.
+4. Sign the request with JWT or HTTP Signature over those exact bytes and that exact target. Set `v-c-merchant-id`, `v-c-client-id: cybersource-rs-{ver}` (not `cybs-rest-sdk-…`, which would pass this crate off as an official SDK) and `User-Agent`.
 5. Send it through the transport.
 6. Decrypt the response if its body is exactly `{"encryptedResponse": "<string>"}`. Then classify the status:
    - A 2xx is passed to `Op::decode`.
@@ -459,7 +459,7 @@ rust_decimal = ["dep:rust_decimal"]  # Amount <-> Decimal
 Each stage leaves the crate compiling with green tests, and each is committed in small increments.
 
 ### Stage 1: Core, auth and transports (hand-written vertical slice)
-**Status:** Not Started
+**Status:** Complete (2026-11-20)
 **Goal:** Authorize a payment against the sandbox from both async and blocking clients, using one hand-written `CreatePayment` operation and model.
 
 **Work**
@@ -480,6 +480,19 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 
 **Success criteria**
 - The sandbox authorizes 4111…1111 at 100.00 USD through both JWT HS256 and HTTP Signature, from both the async and the blocking client.
+
+**Outcome and findings**
+- **Success criterion met.** All four live tests (JWT HS256 and HTTP Signature, async and blocking) returned `AUTHORIZED` from `apitest.cybersource.com` with the public `testrest` credentials.
+- **Ambiguities in §5 are resolved for JWT.** The sandbox accepts uppercase `request-method` and the `digestAlgorithm` claim, which is what we send.
+- **Vectors.** They come from the official Python SDK 0.0.81 only, not Node. Our HTTP Signature headers and JWTs (HS256 and RS256, through a fixture P12) match the SDK **byte for byte**, because jwcrypto emits compact JSON with sorted keys and our claims struct is declared in sorted order. See `tests/vectors/PROVENANCE.md` for the SDK quirks the generator works around.
+- **Deviations from the sketches above:**
+  - `Operation::meta(&self)` returns a `&'static OperationMeta`, instead of an associated `const`.
+  - `ErrorFlavor`, `ResponseKind` and `no_auth` are deferred to Stage 2, when operations need them.
+  - `ErrorBody` is `Pts | Json | Text` for now.
+  - `Client::new(config, transport)` plus `with_clock` / `with_entropy`, instead of a client builder; `Config` has the bon builder.
+- **Intermediate hosts.** Transports take `with_base_url(..)` to connect somewhere other than the host they sign for. This is how an intermediate host is supported, and the wire tests use it to reach wiremock.
+- **ureq is a native-only dependency** (`cfg(not(target_family = "wasm"))`), so `--all-features` builds for wasm32-unknown-unknown.
+- **reqwest does not build for wasm32-wasip2.** WASI needs the `wstd` transport (Stage 5).
 
 ### Stage 2: Code generator and full API surface
 **Status:** Not Started
