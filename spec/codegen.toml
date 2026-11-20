@@ -4,6 +4,31 @@
 # duplicate operation id, two different schemas with the same name) and
 # names the setting below that resolves it. Every entry should say why.
 
+# Top-level keys must come before the first [table].
+
+# Operations that move money and so must never be retried blindly (a
+# timeout or 5xx leaves the outcome unknown). Taken from the Java SDK's
+# RETRY_UNSAFE_POST_PATTERNS, plus incremental authorization (PATCH), which
+# raises an authorized amount.
+money_movement = [
+    "POST /pts/v2/payments",
+    "PATCH /pts/v2/payments/{id}",
+    "POST /pts/v2/payments/{id}/captures",
+    "POST /pts/v2/payments/{id}/reversals",
+    "POST /pts/v2/payments/{id}/refunds",
+    "POST /pts/v2/captures/{id}/refunds",
+    "POST /pts/v2/credits",
+    "POST /pts/v2/reversals",
+    "POST /pts/v2/payouts",
+    "POST /pts/v1/push-funds-transfer",
+    "POST /pts/v1/pull-funds-transfer",
+    "POST /pts/v1/pull-funds-transfer/{id}/reversal",
+    "POST /pts/v1/pull-funds-transfer/{id}/refund",
+]
+
+# Header parameters the pipeline sets itself; never exposed as setters.
+pipeline_headers = ["content-type", "v-c-merchant-id", "user-agent"]
+
 # ---------------------------------------------------------------------------
 # Feature groups: every spec tag must map to exactly one Cargo feature. The
 # feature name is also the client accessor (`client.payments()`, ...).
@@ -57,29 +82,6 @@ agentic-commerce = [
 "GET /reporting/v3/report-subscriptions/{reportName}" = "getReportSubscription"
 "PUT /notification-subscriptions/v2/webhooks/{webhookId}/status" = "updateWebhookStatus"
 
-# Operations that move money and so must never be retried blindly (a
-# timeout or 5xx leaves the outcome unknown). Taken from the Java SDK's
-# RETRY_UNSAFE_POST_PATTERNS, plus incremental authorization (PATCH), which
-# raises an authorized amount.
-money_movement = [
-    "POST /pts/v2/payments",
-    "PATCH /pts/v2/payments/{id}",
-    "POST /pts/v2/payments/{id}/captures",
-    "POST /pts/v2/payments/{id}/reversals",
-    "POST /pts/v2/payments/{id}/refunds",
-    "POST /pts/v2/captures/{id}/refunds",
-    "POST /pts/v2/credits",
-    "POST /pts/v2/reversals",
-    "POST /pts/v2/payouts",
-    "POST /pts/v1/push-funds-transfer",
-    "POST /pts/v1/pull-funds-transfer",
-    "POST /pts/v1/pull-funds-transfer/{id}/reversal",
-    "POST /pts/v1/pull-funds-transfer/{id}/refund",
-]
-
-# Header parameters the pipeline sets itself; never exposed as setters.
-pipeline_headers = ["content-type", "v-c-merchant-id", "user-agent"]
-
 # ---------------------------------------------------------------------------
 # Models
 # ---------------------------------------------------------------------------
@@ -88,6 +90,12 @@ pipeline_headers = ["content-type", "v-c-merchant-id", "user-agent"]
 # "<schema name>@<json pointer of the occurrence>"; filled in from the
 # generator's collision report.
 [model_renames]
+# The payment-credentials request titles its merchant info
+# `tmsMerchantInformation` (descriptor: name, url); TMS payment instruments
+# use `TmsMerchantInformation` (descriptor: alternateName). Same name once
+# PascalCased, different shapes.
+"TmsMerchantInformation@/paths/~1tms~1v2~1tokens~1{tokenId}~1payment-credentials/post/parameters/2/schema/properties/merchantInformation" = "TmsPaymentCredentialsMerchantInformation"
+"TmsMerchantInformation@/paths/~1tms~1v3~1tokens~1{tokenId}~1payment-credentials/post/parameters/2/schema/properties/merchantInformation" = "TmsPaymentCredentialsMerchantInformation"
 
 # JSON property names whose values are redacted in generated `Debug` output.
 [sensitive]
