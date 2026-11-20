@@ -6,8 +6,13 @@
 //!
 //! See `implementation.md` in the repository for the design.
 
+#[cfg(feature = "server")]
+pub mod auth;
 pub mod clock;
 pub mod entropy;
 pub mod error;
+pub mod jose;
+#[cfg(feature = "server")]
+pub mod keys;
 
 pub use error::{Error, Result};
