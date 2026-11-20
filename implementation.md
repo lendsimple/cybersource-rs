@@ -495,7 +495,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - **reqwest does not build for wasm32-wasip2.** WASI needs the `wstd` transport (Stage 5).
 
 ### Stage 2: Code generator and full API surface
-**Status:** Not Started
+**Status:** Complete (2026-11-20)
 **Goal:** All 221 operations and about 2,200 models are generated, feature-gated and compiling.
 
 **Work**
@@ -526,6 +526,31 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - `cargo build --features full` passes.
 - Each group feature builds alone.
 - Re-running codegen produces no diff.
+
+**Outcome and findings**
+- **All success criteria met.**
+  - The spec is pinned to `cybersource-rest-client-python` tag 0.0.81, the same release as the auth vectors.
+  - Generated: **220 operations** (the mTLS batch upload is skipped), **2,068 models** and **10,886 fields**, in 65 files (about 88k lines).
+  - Each of the 20 API groups builds alone with no warnings.
+  - `cargo xtask check-codegen` passes and runs in CI.
+- **Compile time.** A clean `--features full` build, dependencies included, takes **62 s** on the dev machine, under the 90 s budget. That is without dropping lenient deserializers or splitting crates.
+- **Deduplicating by title works.** The spec had far fewer real conflicts than the raw counts suggested. **One** rename was needed: the TMS payment-credentials `tmsMerchantInformation` against `TmsMerchantInformation`. The other case-only title pairs had identical shapes and merged.
+- **Example corpus.** 554 examples (528 request, 26 response):
+  - 269 round-trip exactly.
+  - 275 round-trip apart from spec errata.
+  - 10 contradict their own schema and are skipped, e.g. `actionList: "AP_ORDER"` where the schema says array, and `"PHYSICAL"` for a numeric field.
+
+  The errata are mostly undeclared fields and `"Y"`/`"N"` used for booleans. The generator records them by checking each example against its raw schema, so the test still fails on any field the spec declares. Deleting one declared field from a model fails 217 examples. `[example_allowlist]` is empty.
+- **Live.** The sandbox authorizes through the generated API (all 4 Stage 1 tests still pass). It also passes capture (a path parameter), transaction details (a real response decoded by a generated model) and capture-context creation (a JWT text response).
+- **Deviations from §2:**
+  - **No `api_group!` macro.** The generator emits plain accessor structs (`client.payments()`), methods that return a hand-written `Call<'c, C, Op>`, and inherent `Call` setters. `Call` implements `IntoFuture` for async clients and `send()` for blocking ones.
+  - **`ErrorFlavor` is not used.** Error bodies are recognized by shape: `ErrorBody::Pts`, `ErrorBody::Tms` (`{"errors": [...]}`), or raw JSON or text.
+  - `Operation::headers` returns `Result`, so an invalid header value is an error, never dropped. `Operation::accept` was added for CSV, XML and JWT.
+  - **Bodies on any method.** A body is sent whenever an operation has one, which covers the `/icc` GETs. Digests still follow the method rule: POST, PUT and PATCH only.
+  - **Output types.** `Bytes` for non-JSON content, `String` for JWT and JOSE, and a `<Op>Response` enum when 2xx statuses differ (8 operations).
+  - **Field order and names.** Fields are in alphabetical JSON-name order, which keeps output deterministic without `preserve_order` leaking into the library's `serde_json`. Every field has an explicit rename, because property casing in the spec is mixed.
+  - **Mixed objects.** When an object has both properties and `additionalProperties`, the map is ignored. All 165 occurrences are the same boarding error detail.
+  - **Formatting.** `quote`, then `prettyplease`, then `rustfmt` (via stdin), so `cargo fmt` leaves the generated files unchanged.
 
 ### Stage 3: Key material and Message-Level Encryption
 **Status:** Not Started

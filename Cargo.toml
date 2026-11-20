@@ -105,7 +105,7 @@ ureq = { version = "3.5", default-features = false, optional = true }
 getrandom = { version = "0.4", features = ["wasm_js"] }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread"] }
+tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "time"] }
 wiremock = "0.6"
 
 [lints.rust]

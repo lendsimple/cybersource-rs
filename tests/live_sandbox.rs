@@ -14,7 +14,9 @@
     feature = "reqwest",
     feature = "ureq",
     feature = "http-signature",
-    feature = "payments"
+    feature = "payments",
+    feature = "transactions",
+    feature = "capture-context"
 ))]
 
 mod common;
@@ -126,4 +128,85 @@ async fn http_signature_async_authorizes() {
 #[ignore = "hits the Cybersource sandbox; run with CYBS_LIVE=1"]
 fn http_signature_blocking_authorizes() {
     authorize_blocking("httpsig-blocking", http_signature);
+}
+
+/// Exercises generated operations beyond createPayment: a path parameter
+/// (capture), a GET with a JSON body (transaction details) and a text/JWT
+/// response (capture context).
+#[tokio::test]
+#[ignore = "hits the Cybersource sandbox; run with CYBS_LIVE=1"]
+async fn generated_operations_round_trip() {
+    use cybersource::models::{
+        CapturePaymentRequest, GenerateCaptureContextRequest,
+        Ptsv2paymentsidcapturesOrderInformation,
+        Ptsv2paymentsidcapturesOrderInformationAmountDetails,
+    };
+
+    let Some(config) = live_config(jwt) else {
+        return;
+    };
+    let client = Client::new(config, ReqwestTransport::new());
+
+    let auth = client
+        .payments()
+        .create_payment(common::payment("cybersource-rs-generated", "10.00"))
+        .await
+        .expect("authorize");
+    assert_authorized("generated-auth", &auth);
+    let id = auth.id.expect("payment id");
+
+    let capture = client
+        .payments()
+        .capture_payment(
+            id.clone(),
+            CapturePaymentRequest {
+                order_information: Some(Ptsv2paymentsidcapturesOrderInformation {
+                    amount_details: Some(Ptsv2paymentsidcapturesOrderInformationAmountDetails {
+                        total_amount: Some("10.00".into()),
+                        currency: Some("USD".into()),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            },
+        )
+        .await
+        .expect("capture");
+    eprintln!("capture: id={:?} status={:?}", capture.id, capture.status);
+    assert_eq!(capture.status.as_deref(), Some("PENDING"));
+
+    // Transaction details are indexed asynchronously; allow a short delay.
+    let mut details = None;
+    for _ in 0..10 {
+        match client.transactions().get_transaction(id.clone()).await {
+            Ok(d) => {
+                details = Some(d);
+                break;
+            }
+            Err(e) if e.api().is_some_and(|a| a.status == 404) => {
+                tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+            }
+            Err(e) => panic!("get_transaction: {e}"),
+        }
+    }
+    let details = details.expect("transaction details never became available");
+    assert_eq!(details.id.as_deref(), Some(id.as_str()));
+
+    let context = client
+        .capture_context()
+        .generate_capture_context(GenerateCaptureContextRequest {
+            client_version: Some("v2".into()),
+            target_origins: Some(vec!["https://www.example.com".into()]),
+            allowed_card_networks: Some(vec!["VISA".into(), "MASTERCARD".into()]),
+            allowed_payment_types: Some(vec!["CARD".into()]),
+            ..Default::default()
+        })
+        .await
+        .expect("capture context");
+    assert_eq!(
+        context.split('.').count(),
+        3,
+        "capture context is a compact JWT"
+    );
 }
