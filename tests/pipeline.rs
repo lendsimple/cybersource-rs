@@ -16,7 +16,7 @@ use cybersource::models::{
 };
 use cybersource::operation::{Operation, OperationMeta, json_decode};
 use cybersource::transport::MockTransport;
-use cybersource::{BlockingClient, Client, Config, Credentials, Environment, Error};
+use cybersource::{BlockingClient, Call, Client, Config, Credentials, Environment, Error};
 use http::{HeaderMap, Method, StatusCode};
 
 const KEY_ID: &str = "08c94330-f618-42a3-b09d-e1e43be5efda";
@@ -166,25 +166,32 @@ fn http_signature_request_carries_digest_of_sent_body() {
     assert!(req.headers().get("authorization").is_none());
 }
 
-/// A test-only operation exercising query strings, empty bodies and headers.
+/// A test-only operation exercising query strings, bodies, headers and metadata.
+#[derive(Clone)]
 struct Probe {
-    method: Method,
+    meta: &'static OperationMeta,
     query: Vec<(&'static str, String)>,
     headers: HeaderMap,
+    body: Option<Bytes>,
+    accept: Option<&'static str>,
 }
 
 static PROBE_GET: OperationMeta = OperationMeta::new("probe", Method::GET, "/probe/v1/items");
 static PROBE_POST: OperationMeta = OperationMeta::new("probe", Method::POST, "/probe/v1/items");
+static PROBE_NO_AUTH: OperationMeta =
+    OperationMeta::new("probe", Method::GET, "/probe/v1/items").no_auth();
 
 impl Operation for Probe {
     type Output = serde_json::Value;
 
     fn meta(&self) -> &'static OperationMeta {
-        if self.method == Method::GET {
-            &PROBE_GET
-        } else {
-            &PROBE_POST
-        }
+        self.meta
+    }
+    fn body(&self) -> cybersource::Result<Option<Bytes>> {
+        Ok(self.body.clone())
+    }
+    fn accept(&self) -> Option<&'static str> {
+        self.accept
     }
     fn path(&self) -> Cow<'_, str> {
         "/probe/v1/items".into()
@@ -200,11 +207,13 @@ impl Operation for Probe {
     }
 }
 
-fn probe(method: Method) -> Probe {
+fn probe(meta: &'static OperationMeta) -> Probe {
     Probe {
-        method,
+        meta,
         query: Vec::new(),
         headers: HeaderMap::new(),
+        body: None,
+        accept: None,
     }
 }
 
@@ -212,7 +221,7 @@ fn probe(method: Method) -> Probe {
 async fn query_is_rfc3986_encoded_and_signed_as_sent() {
     let mock = MockTransport::new();
     mock.push_json(200, "{}");
-    let mut op = probe(Method::GET);
+    let mut op = probe(&PROBE_GET);
     op.query = vec![
         ("name", "My Report".into()),
         ("startTime", "2026-11-01T00:00:00Z".into()),
@@ -236,7 +245,7 @@ async fn empty_post_sends_an_empty_json_object() {
     mock.push_json(200, "{}");
 
     jwt_client(&mock)
-        .execute(&probe(Method::POST))
+        .execute(&probe(&PROBE_POST))
         .await
         .unwrap();
 
@@ -249,7 +258,7 @@ async fn empty_post_sends_an_empty_json_object() {
 async fn operation_headers_cannot_override_authentication() {
     let mock = MockTransport::new();
     mock.push_json(200, "{}");
-    let mut op = probe(Method::GET);
+    let mut op = probe(&PROBE_GET);
     op.headers
         .insert("authorization", "Bearer forged".parse().unwrap());
     op.headers
@@ -387,5 +396,101 @@ fn client_futures_are_send_on_native_targets() {
     let body = payment();
     let payments = client.payments();
     let fut = payments.create_payment(&body);
+    assert_send(&fut);
+}
+
+#[tokio::test]
+async fn no_auth_operations_are_not_signed() {
+    let mock = MockTransport::new();
+    mock.push_json(200, "{}");
+
+    jwt_client(&mock)
+        .execute(&probe(&PROBE_NO_AUTH))
+        .await
+        .unwrap();
+
+    let req = mock.last_request();
+    assert!(req.headers().get("authorization").is_none());
+    assert_eq!(req.headers()["v-c-merchant-id"], "testrest");
+}
+
+#[tokio::test]
+async fn accept_header_follows_the_operation() {
+    let mock = MockTransport::new();
+    mock.push_json(200, "{}").push_json(200, "{}");
+    let client = jwt_client(&mock);
+
+    client.execute(&probe(&PROBE_GET)).await.unwrap();
+    assert!(
+        mock.last_request().headers()["accept"]
+            .to_str()
+            .unwrap()
+            .contains("json")
+    );
+
+    let mut csv = probe(&PROBE_GET);
+    csv.accept = Some("text/csv");
+    client.execute(&csv).await.unwrap();
+    assert_eq!(mock.last_request().headers()["accept"], "text/csv");
+}
+
+#[tokio::test]
+async fn get_with_a_body_sends_it_without_a_digest() {
+    let mock = MockTransport::new();
+    mock.push_json(200, "{}");
+    let mut op = probe(&PROBE_GET);
+    op.body = Some(Bytes::from_static(br#"{"q":1}"#));
+
+    jwt_client(&mock).execute(&op).await.unwrap();
+
+    let req = mock.last_request();
+    assert_eq!(req.body().as_ref(), br#"{"q":1}"#);
+    assert_eq!(
+        req.headers()["content-type"],
+        "application/json;charset=utf-8"
+    );
+    assert!(jwt_claims(&req).get("digest").is_none());
+}
+
+#[tokio::test]
+async fn calls_can_be_awaited_or_sent() {
+    let mock = MockTransport::new();
+    mock.push_json(200, r#"{"n":1}"#)
+        .push_json(200, r#"{"n":2}"#);
+    let client = jwt_client(&mock);
+
+    let first = Call::new(&client, probe(&PROBE_GET))
+        .map_op(|op| op.query.push(("limit", "5".into())))
+        .await
+        .unwrap();
+    assert_eq!(first["n"], 1);
+    assert_eq!(mock.last_request().uri().query(), Some("limit=5"));
+
+    let second = Call::new(&client, probe(&PROBE_GET))
+        .send_with_response()
+        .await
+        .unwrap();
+    assert_eq!(second.body["n"], 2);
+}
+
+#[test]
+fn blocking_calls_are_sent() {
+    let mock = MockTransport::new();
+    mock.push_json(200, r#"{"n":3}"#);
+    let client = BlockingClient::new(
+        config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap()),
+        mock.clone(),
+    );
+
+    let out = Call::new(&client, probe(&PROBE_GET)).send().unwrap();
+
+    assert_eq!(out["n"], 3);
+}
+
+#[test]
+fn awaited_calls_are_send() {
+    fn assert_send<T: Send>(_: &T) {}
+    let client = jwt_client(&MockTransport::new());
+    let fut = std::future::IntoFuture::into_future(Call::new(&client, probe(&PROBE_GET)));
     assert_send(&fut);
 }

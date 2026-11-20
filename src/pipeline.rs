@@ -37,25 +37,36 @@ pub fn prepare<O: Operation + ?Sized>(
         .parse()
         .map_err(|e| Error::Request(format!("invalid request URI for {target:?}: {e}")))?;
 
-    let has_body = matches!(meta.method, Method::POST | Method::PUT | Method::PATCH);
-    let body = if has_body {
+    let body_method = matches!(meta.method, Method::POST | Method::PUT | Method::PATCH);
+    let body = match op.body()? {
+        Some(body) => body,
         // Cybersource signs the digest of the body; an empty body is sent as `{}`.
-        op.body()?.unwrap_or_else(|| Bytes::from_static(b"{}"))
-    } else {
-        Bytes::new()
+        None if body_method => Bytes::from_static(b"{}"),
+        None => Bytes::new(),
     };
 
-    let auth_headers = auth::authenticate(
-        config,
-        &SigningInput {
-            method: &meta.method,
-            target: &target,
-            body: &body,
-        },
-        clock,
-        entropy,
-    )?;
+    let auth_headers = if meta.no_auth {
+        let mut headers = http::HeaderMap::new();
+        headers.insert(
+            "v-c-merchant-id",
+            HeaderValue::from_str(config.merchant_id())
+                .map_err(|_| Error::Config("merchant id contains invalid characters".into()))?,
+        );
+        headers
+    } else {
+        auth::authenticate(
+            config,
+            &SigningInput {
+                method: &meta.method,
+                target: &target,
+                body: &body,
+            },
+            clock,
+            entropy,
+        )?
+    };
 
+    let has_content = !body.is_empty();
     let mut request = Request::builder()
         .method(meta.method.clone())
         .uri(uri)
@@ -63,8 +74,11 @@ pub fn prepare<O: Operation + ?Sized>(
         .map_err(|e| Error::Request(e.to_string()))?;
     let headers = request.headers_mut();
     headers.extend(op.headers());
-    headers.insert(ACCEPT, HeaderValue::from_static(ACCEPT_JSON));
-    if has_body {
+    headers.insert(
+        ACCEPT,
+        HeaderValue::from_static(op.accept().unwrap_or(ACCEPT_JSON)),
+    );
+    if has_content {
         headers.insert(CONTENT_TYPE, HeaderValue::from_static(CONTENT_TYPE_JSON));
     }
     headers.insert("v-c-client-id", HeaderValue::from_static(CLIENT_ID));

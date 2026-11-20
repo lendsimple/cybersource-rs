@@ -36,6 +36,26 @@ pub trait MaybeSend {}
 #[cfg(target_family = "wasm")]
 impl<T: ?Sized> MaybeSend for T {}
 
+/// `Sync` on native targets, nothing on WebAssembly.
+#[cfg(not(target_family = "wasm"))]
+pub trait MaybeSync: Sync {}
+#[cfg(not(target_family = "wasm"))]
+impl<T: Sync + ?Sized> MaybeSync for T {}
+
+/// `Sync` on native targets, nothing on WebAssembly.
+#[cfg(target_family = "wasm")]
+pub trait MaybeSync {}
+#[cfg(target_family = "wasm")]
+impl<T: ?Sized> MaybeSync for T {}
+
+/// A boxed future that is `Send` on native targets.
+#[cfg(not(target_family = "wasm"))]
+pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn Future<Output = T> + Send + 'a>>;
+
+/// A boxed future that is `Send` on native targets.
+#[cfg(target_family = "wasm")]
+pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn Future<Output = T> + 'a>>;
+
 /// An asynchronous HTTP transport.
 pub trait HttpTransport {
     /// Sends `request` and reads the whole response body.

@@ -43,6 +43,8 @@ pub struct OperationMeta {
     pub mle_response: MlePolicy,
     /// False for operations that move money; never retry those blindly.
     pub retry_safe: bool,
+    /// True for the few operations Cybersource serves without authentication.
+    pub no_auth: bool,
 }
 
 impl OperationMeta {
@@ -55,7 +57,21 @@ impl OperationMeta {
             mle_request: MlePolicy::Never,
             mle_response: MlePolicy::Never,
             retry_safe: true,
+            no_auth: false,
         }
+    }
+
+    /// Sets the request and response encryption policies.
+    pub const fn mle(mut self, request: MlePolicy, response: MlePolicy) -> Self {
+        self.mle_request = request;
+        self.mle_response = response;
+        self
+    }
+
+    /// Marks the operation as served without authentication.
+    pub const fn no_auth(mut self) -> Self {
+        self.no_auth = true;
+        self
     }
 
     /// Marks the operation as moving money (not safe to retry).
@@ -87,9 +103,16 @@ pub trait Operation {
         HeaderMap::new()
     }
 
-    /// The serialized request body, if any.
+    /// The serialized request body, if any. POST, PUT and PATCH without a
+    /// body send `{}`; a GET or DELETE body is sent as given.
     fn body(&self) -> Result<Option<Bytes>> {
         Ok(None)
+    }
+
+    /// The `Accept` header, for operations that return non-JSON content
+    /// (CSV, XML, PDF, JWT). `None` means JSON.
+    fn accept(&self) -> Option<&'static str> {
+        None
     }
 
     /// Decodes a success (2xx) response body.

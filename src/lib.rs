@@ -9,6 +9,8 @@
 #[cfg(feature = "server")]
 pub mod auth;
 #[cfg(feature = "server")]
+pub mod call;
+#[cfg(feature = "server")]
 pub mod client;
 pub mod clock;
 #[cfg(feature = "server")]
@@ -30,7 +32,10 @@ pub mod pipeline;
 pub mod response;
 #[cfg(feature = "server")]
 pub mod transport;
+pub mod types;
 
+#[cfg(feature = "server")]
+pub use call::Call;
 #[cfg(all(feature = "server", not(target_family = "wasm")))]
 pub use client::BlockingClient;
 #[cfg(feature = "server")]

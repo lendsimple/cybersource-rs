@@ -120,6 +120,8 @@ impl ApiError {
 pub enum ErrorBody {
     /// The payments-style error body (`/pts`, risk, and most other APIs).
     Pts(PtsError),
+    /// The Token Management Service error body: `{"errors": [...]}`.
+    Tms(TmsErrors),
     /// JSON in a shape not modelled here.
     Json(serde_json::Value),
     /// A non-JSON body (possibly empty).
@@ -130,6 +132,11 @@ impl ErrorBody {
     /// Parses a body as a [`PtsError`], falling back to raw JSON or text.
     #[cfg(feature = "server")]
     pub(crate) fn parse(raw: &[u8]) -> Self {
+        if let Ok(tms) = serde_json::from_slice::<TmsErrors>(raw)
+            && !tms.errors.is_empty()
+        {
+            return ErrorBody::Tms(tms);
+        }
         if let Ok(pts) = serde_json::from_slice::<PtsError>(raw)
             && (pts.reason.is_some() || pts.message.is_some())
         {
@@ -148,6 +155,18 @@ impl ErrorBody {
                 e.reason.as_deref().unwrap_or("UNKNOWN"),
                 e.message.as_deref().unwrap_or("")
             ),
+            ErrorBody::Tms(e) => e
+                .errors
+                .iter()
+                .map(|e| {
+                    format!(
+                        "{} {}",
+                        e.r#type.as_deref().unwrap_or("UNKNOWN"),
+                        e.message.as_deref().unwrap_or("")
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("; "),
             ErrorBody::Json(v) => v.to_string().chars().take(200).collect(),
             ErrorBody::Text(t) => t.chars().take(200).collect(),
         }
@@ -182,6 +201,38 @@ pub struct PtsErrorDetail {
     pub reason: Option<String>,
 }
 
+/// The Token Management Service error body.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[non_exhaustive]
+pub struct TmsErrors {
+    /// The errors, usually one.
+    #[serde(default)]
+    pub errors: Vec<TmsError>,
+}
+
+/// One TMS error.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[non_exhaustive]
+pub struct TmsError {
+    /// e.g. `notFound`, `invalidHeaders`, `missingFields`, `forbidden`, `conflict`.
+    pub r#type: Option<String>,
+    /// Human-readable description.
+    pub message: Option<String>,
+    /// The offending fields or headers.
+    #[serde(default)]
+    pub details: Vec<TmsErrorDetail>,
+}
+
+/// A field- or header-level problem in a [`TmsError`].
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[non_exhaustive]
+pub struct TmsErrorDetail {
+    /// The field or header name.
+    pub name: Option<String>,
+    /// Where it is, e.g. `header` or `body`.
+    pub location: Option<String>,
+}
+
 #[cfg(all(test, feature = "server"))]
 mod tests {
     use super::*;
@@ -207,6 +258,16 @@ mod tests {
             e.details[0].field.as_deref(),
             Some("orderInformation.billTo.country")
         );
+    }
+
+    #[test]
+    fn parses_tms_errors() {
+        let body = br#"{"errors":[{"type":"notFound","message":"Token not found","details":[{"name":"customerId","location":"path"}]}]}"#;
+        let ErrorBody::Tms(e) = ErrorBody::parse(body) else {
+            panic!("expected Tms");
+        };
+        assert_eq!(e.errors[0].r#type.as_deref(), Some("notFound"));
+        assert_eq!(e.errors[0].details[0].name.as_deref(), Some("customerId"));
     }
 
     #[test]
