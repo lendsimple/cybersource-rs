@@ -1,2 +1,12 @@
 [alias]
 xtask = "run --quiet --package xtask --"
+
+# Runners for `cargo test --target <wasm target>`.
+# wasm-bindgen-cli must match the resolved wasm-bindgen version exactly
+# (`cargo install wasm-bindgen-cli --version <version>`).
+[target.wasm32-unknown-unknown]
+runner = "wasm-bindgen-test-runner"
+
+# wasmtime with wasi-http enabled, for the WASI transport's live test.
+[target.wasm32-wasip2]
+runner = "wasmtime run -S http -S inherit-network --dir ."

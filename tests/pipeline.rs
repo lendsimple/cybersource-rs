@@ -1,6 +1,6 @@
 //! End-to-end pipeline tests through both clients, using `MockTransport`.
 
-#![cfg(feature = "payments")]
+#![cfg(all(not(target_family = "wasm"), feature = "payments"))]
 
 mod common;
 

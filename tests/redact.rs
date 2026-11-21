@@ -1,6 +1,6 @@
 //! Redaction, and what the `tracing` instrumentation actually logs.
 
-#![cfg(all(feature = "payments", feature = "tms"))]
+#![cfg(all(not(target_family = "wasm"), feature = "payments", feature = "tms"))]
 
 mod common;
 

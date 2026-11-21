@@ -11,6 +11,7 @@
 //! `CYBS_MERCHANT_ID`, `CYBS_KEY_ID` and `CYBS_SHARED_SECRET`.
 
 #![cfg(all(
+    not(target_family = "wasm"),
     feature = "reqwest",
     feature = "ureq",
     feature = "http-signature",

@@ -3,7 +3,7 @@
 //! Expected compiler output lives in `tests/ui/*.stderr`; regenerate with
 //! `TRYBUILD=overwrite cargo test --test trybuild` after a toolchain update.
 
-#![cfg(feature = "payments")]
+#![cfg(all(not(target_family = "wasm"), feature = "payments"))]
 
 #[test]
 fn dsl_compile_errors() {

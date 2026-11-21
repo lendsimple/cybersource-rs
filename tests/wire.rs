@@ -1,7 +1,12 @@
 //! Real HTTP round trips through the reqwest and ureq transports against a
 //! local wiremock server.
 
-#![cfg(all(feature = "reqwest", feature = "ureq", feature = "payments"))]
+#![cfg(all(
+    not(target_family = "wasm"),
+    feature = "reqwest",
+    feature = "ureq",
+    feature = "payments"
+))]
 
 mod common;
 

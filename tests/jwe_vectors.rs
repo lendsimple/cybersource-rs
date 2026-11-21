@@ -1,7 +1,7 @@
 //! Decrypting JWE tokens produced by the official Python SDK and its JOSE
 //! library (see `tests/vectors/PROVENANCE.md`).
 
-#![cfg(feature = "server")]
+#![cfg(all(not(target_family = "wasm"), feature = "server"))]
 
 use cybersource::jose::jwe::{self, KeyAlg};
 use cybersource::keys::pem::rsa_private_key_from_pem;

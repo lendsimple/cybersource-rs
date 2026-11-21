@@ -155,6 +155,7 @@ mod tests {
         assert!(!PaymentStatus::from("AUTHORIZED").is_unknown());
     }
 
+    #[cfg(not(target_family = "wasm"))]
     proptest::proptest! {
         #[test]
         fn any_string_survives(s in ".*") {

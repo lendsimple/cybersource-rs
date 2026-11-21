@@ -119,12 +119,19 @@ ureq = { version = "3.5", default-features = false, optional = true }
 getrandom = { version = "0.4", features = ["wasm_js"] }
 
 [dev-dependencies]
+futures-executor = { version = "0.3", default-features = false, features = ["std"] }
+
+# Native-only test tooling (tokio networking, compile-fail tests, snapshots).
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
 insta = { version = "1", features = ["json"] }
 proptest = "1"
 tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "time"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "std"] }
 trybuild = "1"
 wiremock = "0.6"
+
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dev-dependencies]
+wasm-bindgen-test = "=0.3.80"
 
 [lints.rust]
 unsafe_code = "forbid"

@@ -1,6 +1,6 @@
 //! Message-level encryption: configuration, validation and the pipeline.
 
-#![cfg(all(feature = "p12", feature = "payments"))]
+#![cfg(all(not(target_family = "wasm"), feature = "p12", feature = "payments"))]
 
 use cybersource::config::CertificateRole;
 use cybersource::mle::{MleConfig, MleOverride, RequestMleCert, ResponseMleKey};

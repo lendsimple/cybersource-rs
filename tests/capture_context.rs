@@ -1,6 +1,6 @@
 //! Capture context and transient token verification.
 
-#![cfg(feature = "server")]
+#![cfg(all(not(target_family = "wasm"), feature = "server"))]
 
 use cybersource::capture_context::CaptureContextVerifier;
 use cybersource::clock::FixedClock;

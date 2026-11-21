@@ -2,7 +2,7 @@
 //!
 //! Run `cargo xtask sandbox-keys` first; these tests are ignored otherwise.
 
-#![cfg(feature = "p12")]
+#![cfg(all(not(target_family = "wasm"), feature = "p12"))]
 
 use cybersource::Credentials;
 use cybersource::keys::p12::P12;

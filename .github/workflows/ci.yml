@@ -115,6 +115,15 @@ jobs:
         with:
           targets: wasm32-unknown-unknown, wasm32-wasip2
       - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen-cli@0.2.130,wasmtime
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,reqwest
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --all-features
       - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,p12
+      # Run the core on real wasm runtimes: Node (wasm-bindgen-test) and wasmtime.
+      - run: cargo test --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,payments,http-signature --test wasm
+      - run: cargo test --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,http-signature --test wasm --test dsl --test spec_examples

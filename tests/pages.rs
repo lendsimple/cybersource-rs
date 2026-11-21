@@ -1,6 +1,6 @@
 //! Pagination, ETags and the opt-in partner developer id.
 
-#![cfg(all(feature = "tms", feature = "payments"))]
+#![cfg(all(not(target_family = "wasm"), feature = "tms", feature = "payments"))]
 
 mod common;
 
