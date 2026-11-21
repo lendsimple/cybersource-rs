@@ -784,7 +784,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - A windows/macOS CI matrix (CI stays on ubuntu).
 
 ### Stage 6: Consistency with authorizenet-rs
-**Status:** In Progress
+**Status:** Complete (2026-11-21)
 **Goal:** Match `~/Web/authorizenet-rs` in API naming and constructors, and in repo and release practices, before 0.1.0 is published.
 
 0.1.0 is not on crates.io yet, so the API changes are renames with no deprecation shims, recorded in the 0.1.0 CHANGELOG entry. Unchanged by decision: the license (`MIT OR Apache-2.0`), and `webhook` stays ungated, because `webhooks` already names the management API group and gating it would save no dependencies.
@@ -816,6 +816,13 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - Every CI job passes on the pull request, Windows included.
 - `cargo deny check`, the minimal-versions run, `scripts/test-packaged-crate.sh` and `cargo publish --dry-run` pass locally.
 - `Client::new(config)` compiles with default features, and the crate still builds without `reqwest` and on both wasm targets.
+
+**Outcome**
+- **CI:** all 41 checks pass on PR #1, including the Windows tests, with no Windows-specific fixes needed.
+- **cargo-deny:** one advisory is ignored, `RUSTSEC-2024-0384` (`instant`, unmaintained, not vulnerable). It reaches us only through `wstd` 0.6.8, the latest release, on wasm32-wasip2. The licenses allowed beyond MIT and Apache-2.0 are all permissive: BSD-3-Clause, ISC, Unicode-3.0, CDLA-Permissive-2.0 and Apache-2.0 WITH LLVM-exception.
+- **Dependency floors:** pinning them to the locked versions needed no adjustments. The suite passes under `-Z direct-minimal-versions`.
+- **Package:** 180 files, 5.2 MiB (692 KiB compressed), with tests included. Every test passes from the `.crate`; the live and p12 tests stay ignored.
+- **Before the first release:** do the one-time setup in `RELEASING.md` (the `crates-io` environment and `CARGO_REGISTRY_TOKEN`).
 
 ---
 
