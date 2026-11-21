@@ -79,6 +79,11 @@ macro_rules! client_common {
                 &self.transport
             }
 
+            /// The client's clock, as time since the Unix epoch.
+            pub(crate) fn now(&self) -> ::std::time::Duration {
+                self.inner.clock.now()
+            }
+
             fn inner_mut(&mut self) -> &mut Inner {
                 Arc::get_mut(&mut self.inner)
                     .expect("with_clock/with_entropy must be called before the client is cloned")

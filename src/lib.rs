@@ -11,6 +11,8 @@ pub mod auth;
 #[cfg(feature = "server")]
 pub mod call;
 #[cfg(feature = "server")]
+pub mod capture_context;
+#[cfg(feature = "server")]
 pub mod client;
 pub mod clock;
 #[cfg(feature = "server")]

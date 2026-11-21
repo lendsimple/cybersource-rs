@@ -35,6 +35,10 @@ pub enum Error {
     #[error("message-level encryption: {0}")]
     Mle(String),
 
+    /// A signed token (capture context, transient token) failed verification.
+    #[error("verification failed: {0}")]
+    Verification(String),
+
     /// The operating system could not supply random bytes.
     #[error("random number generator failed: {0}")]
     Entropy(String),

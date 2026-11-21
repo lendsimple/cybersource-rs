@@ -209,6 +209,14 @@ async fn generated_operations_round_trip() {
         3,
         "capture context is a compact JWT"
     );
+
+    // Verify it against Cybersource's published signing key (fetched live).
+    let verified = cybersource::capture_context::CaptureContextVerifier::new()
+        .verify(&client, &context)
+        .await
+        .expect("capture context verifies");
+    assert_eq!(verified.iss.as_deref(), Some("Flex API"));
+    assert!(verified.client_library().is_some());
 }
 
 // ---------------------------------------------------------------------------
