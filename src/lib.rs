@@ -21,6 +21,7 @@ pub mod config;
 pub mod dsl;
 pub mod entropy;
 pub mod error;
+pub mod flex;
 #[cfg(feature = "server")]
 pub mod flows;
 #[cfg(feature = "server")]
