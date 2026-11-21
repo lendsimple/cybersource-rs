@@ -123,7 +123,7 @@ impl<T: HttpTransport> Client<T> {
             .send(request)
             .await
             .map_err(Error::Transport)?;
-        pipeline::finish(op, response)
+        pipeline::finish(op, &self.inner.config, response)
     }
 }
 
@@ -152,6 +152,6 @@ impl<T: BlockingHttpTransport> BlockingClient<T> {
     ) -> Result<Response<O::Output>> {
         let request = self.prepare(op)?;
         let response = self.transport.send(request).map_err(Error::Transport)?;
-        pipeline::finish(op, response)
+        pipeline::finish(op, &self.inner.config, response)
     }
 }

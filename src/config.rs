@@ -8,6 +8,7 @@ use secrecy::{ExposeSecret, SecretBox};
 
 use crate::jose::b64;
 use crate::keys::{pem, x509::CertificateInfo};
+use crate::mle::{MleConfig, RequestMleCert};
 use crate::{Error, Result};
 
 /// The Cybersource environment (API host) to talk to.
@@ -56,6 +57,8 @@ pub enum Credentials {
         kid: String,
         /// The merchant's RSA private key.
         key: Box<PrivateKey>,
+        /// The signing certificate, when known (for expiry reporting).
+        signing_cert: Option<Box<CertificateInfo>>,
         /// Cybersource's request-encryption certificate, when the key came
         /// from a Business Center P12 (which includes it).
         request_mle_cert: Option<Box<CertificateInfo>>,
@@ -83,8 +86,13 @@ impl Credentials {
     /// JWT (RS256) from a PEM private key and the matching merchant
     /// certificate. The `kid` is read from the certificate.
     pub fn jwt_rsa_pem(private_key_pem: &str, certificate_pem: &str) -> Result<Self> {
-        let kid = CertificateInfo::from_pem(certificate_pem)?.subject_serial_number()?;
-        Self::jwt_rsa_pem_with_kid(private_key_pem, kid)
+        let cert = CertificateInfo::from_pem(certificate_pem)?;
+        let kid = cert.subject_serial_number()?;
+        let mut credentials = Self::jwt_rsa_pem_with_kid(private_key_pem, kid)?;
+        if let Credentials::JwtRsa { signing_cert, .. } = &mut credentials {
+            *signing_cert = Some(Box::new(cert));
+        }
+        Ok(credentials)
     }
 
     /// JWT (RS256) from a PEM private key and an explicit `kid`.
@@ -92,6 +100,7 @@ impl Credentials {
         Ok(Credentials::JwtRsa {
             kid: non_empty("kid", kid.into())?,
             key: Box::new(pem::rsa_private_key_from_pem(private_key_pem)?),
+            signing_cert: None,
             request_mle_cert: None,
         })
     }
@@ -109,6 +118,7 @@ impl Credentials {
         Ok(Credentials::JwtRsa {
             kid: cert.subject_serial_number()?,
             key: Box::new(key),
+            signing_cert: Some(Box::new(cert)),
             request_mle_cert: store.mle_certificate().cloned().map(Box::new),
         })
     }
@@ -170,6 +180,30 @@ pub struct Config {
     credentials: Credentials,
     portfolio_id: Option<String>,
     user_agent: String,
+    mle: MleConfig,
+}
+
+/// What a certificate is used for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum CertificateRole {
+    /// Signs JWTs (RS256).
+    Signing,
+    /// Cybersource's certificate that requests are encrypted to.
+    RequestMle,
+    /// The merchant's response-encryption key.
+    ResponseMle,
+}
+
+/// When a configured certificate expires.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CertificateExpiry {
+    /// What the certificate is used for.
+    pub role: CertificateRole,
+    /// Its subject DN.
+    pub subject: String,
+    /// Expiry, as seconds since the Unix epoch.
+    pub not_after_unix: u64,
 }
 
 #[bon::bon]
@@ -206,6 +240,9 @@ impl Config {
         /// Overrides the `User-Agent` header.
         #[builder(into)]
         user_agent: Option<String>,
+        /// Message-level encryption settings. Without them, mandatory-MLE
+        /// operations still use the request certificate from a P12.
+        mle: Option<MleConfig>,
     ) -> Result<Self> {
         let merchant_id = non_empty("merchant id", merchant_id)?;
         let portfolio_id = portfolio_id
@@ -218,6 +255,7 @@ impl Config {
                 "custom environment must be a bare host name, got {host:?}"
             )));
         }
+        let mle = resolve_mle(mle.unwrap_or_default(), &credentials)?;
         Ok(Config {
             environment,
             merchant_id,
@@ -225,6 +263,7 @@ impl Config {
             portfolio_id,
             user_agent: user_agent
                 .unwrap_or_else(|| concat!("cybersource-rust/", env!("CARGO_PKG_VERSION")).into()),
+            mle,
         })
     }
 }
@@ -255,11 +294,89 @@ impl Config {
         &self.user_agent
     }
 
+    /// Message-level encryption settings.
+    pub fn mle(&self) -> &MleConfig {
+        &self.mle
+    }
+
+    /// Expiry of every configured certificate. Nothing is enforced: the
+    /// official SDKs only warn, and the sandbox accepts expired keys. Check
+    /// this at startup and alert before production keys lapse.
+    pub fn certificate_expiries(&self) -> Vec<CertificateExpiry> {
+        let entry = |role, cert: &CertificateInfo| CertificateExpiry {
+            role,
+            subject: cert.subject(),
+            not_after_unix: cert.not_after_unix(),
+        };
+        let mut out = Vec::new();
+        if let Credentials::JwtRsa {
+            signing_cert: Some(cert),
+            ..
+        } = &self.credentials
+        {
+            out.push(entry(CertificateRole::Signing, cert));
+        }
+        if let Some(c) = &self.mle.request_cert {
+            out.push(entry(CertificateRole::RequestMle, &c.cert));
+        }
+        if let Some(cert) = self.mle.response_key.as_ref().and_then(|k| k.cert.as_ref()) {
+            out.push(entry(CertificateRole::ResponseMle, cert));
+        }
+        out
+    }
+
     /// The merchant that owns the signing key: the portfolio with a meta key,
     /// otherwise the merchant itself.
     pub(crate) fn key_owner(&self) -> &str {
         self.portfolio_id.as_deref().unwrap_or(&self.merchant_id)
     }
+}
+
+/// Fills in the request certificate from P12 credentials and rejects
+/// settings that cannot work.
+fn resolve_mle(mut mle: MleConfig, credentials: &Credentials) -> Result<MleConfig> {
+    if mle.request_cert.is_none()
+        && let Credentials::JwtRsa {
+            request_mle_cert: Some(cert),
+            ..
+        } = credentials
+    {
+        mle.request_cert = Some(RequestMleCert::from_certificate((**cert).clone())?);
+    }
+    let jwt = matches!(
+        credentials,
+        Credentials::JwtSharedSecret { .. } | Credentials::JwtRsa { .. }
+    );
+    let wants_mle = mle.requests_encryption()
+        || mle.requests_encrypted_responses()
+        || mle.response_key.is_some();
+    if wants_mle && !jwt {
+        return Err(Error::Config(
+            "message-level encryption requires JWT authentication".into(),
+        ));
+    }
+    if mle.requests_encryption() && mle.request_cert.is_none() {
+        return Err(Error::Config(
+            "request encryption is enabled but no request MLE certificate is configured; \
+             use a Business Center P12 or MleConfig::request_cert"
+                .into(),
+        ));
+    }
+    if mle.requests_encrypted_responses() && mle.response_key.is_none() {
+        return Err(Error::Config(
+            "encrypted responses are enabled but no response MLE key is configured; \
+             use MleConfig::response_key"
+                .into(),
+        ));
+    }
+    if let Some(key) = &mle.response_key
+        && key.kid.is_none()
+    {
+        return Err(Error::Config(
+            "the response MLE key has no key id; set it with ResponseMleKey::kid".into(),
+        ));
+    }
+    Ok(mle)
 }
 
 fn non_empty(what: &str, value: String) -> Result<String> {

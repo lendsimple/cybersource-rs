@@ -23,6 +23,8 @@ pub mod jose;
 #[cfg(feature = "server")]
 pub mod keys;
 #[cfg(feature = "server")]
+pub mod mle;
+#[cfg(feature = "server")]
 pub mod operation;
 #[cfg(feature = "server")]
 pub mod pipeline;

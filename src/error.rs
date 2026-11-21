@@ -31,6 +31,10 @@ pub enum Error {
     #[error(transparent)]
     Api(Box<ApiError>),
 
+    /// Message-level encryption failed or is required but not configured.
+    #[error("message-level encryption: {0}")]
+    Mle(String),
+
     /// The operating system could not supply random bytes.
     #[error("random number generator failed: {0}")]
     Entropy(String),

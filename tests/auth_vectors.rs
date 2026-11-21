@@ -98,6 +98,7 @@ fn jwt_tokens_match_sdk_byte_for_byte() {
             method: &method,
             target: &v.target,
             body: v.body.as_deref().unwrap_or("").as_bytes(),
+            response_mle_kid: None,
         };
 
         let headers = authenticate(
@@ -160,6 +161,7 @@ mod http_signature {
                 method: &method,
                 target: &v.target,
                 body: body.as_bytes(),
+                response_mle_kid: None,
             };
 
             let headers = authenticate(
@@ -217,6 +219,7 @@ fn rs256_tokens_match_sdk_via_p12() {
             method: &method,
             target: &v.target,
             body: v.body.as_deref().unwrap_or("").as_bytes(),
+            response_mle_kid: None,
         };
         let headers = authenticate(
             &config,

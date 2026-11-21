@@ -26,6 +26,9 @@ pub struct SigningInput<'a> {
     pub target: &'a str,
     /// Body bytes exactly as sent. Ignored for GET and DELETE.
     pub body: &'a [u8],
+    /// When set, asks for an encrypted response: the JWT carries this
+    /// response-MLE key id. Only JWT authentication can ask.
+    pub response_mle_kid: Option<&'a str>,
 }
 
 impl SigningInput<'_> {
@@ -66,6 +69,11 @@ pub fn authenticate(
         }
         #[cfg(feature = "http-signature")]
         Credentials::HttpSignature { .. } => {
+            if input.response_mle_kid.is_some() {
+                return Err(Error::Mle(
+                    "encrypted responses require JWT authentication".into(),
+                ));
+            }
             let signed = http_signature::sign(config, input, clock)?;
             insert(&mut headers, "date", &signed.date)?;
             if let Some(digest) = &signed.digest {

@@ -39,6 +39,16 @@ struct Claims<'a> {
     jwt_version: &'static str,
     #[serde(rename = "v-c-merchant-id")]
     merchant_id: &'a str,
+    #[serde(
+        rename = "v-c-response-mle-algo",
+        skip_serializing_if = "Option::is_none"
+    )]
+    response_mle_algo: Option<&'static str>,
+    #[serde(
+        rename = "v-c-response-mle-kid",
+        skip_serializing_if = "Option::is_none"
+    )]
+    response_mle_kid: Option<&'a str>,
 }
 
 /// Creates the signed JWT for a request.
@@ -74,6 +84,8 @@ pub fn token(
         request_resource_path: input.target,
         jwt_version: "2",
         merchant_id: config.merchant_id(),
+        response_mle_algo: input.response_mle_kid.map(|_| "RSA-OAEP-256"),
+        response_mle_kid: input.response_mle_kid,
     };
     jws::sign(key, kid, &claims).map_err(|e| Error::Auth(e.to_string()))
 }

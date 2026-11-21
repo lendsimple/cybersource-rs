@@ -13,6 +13,8 @@ use crate::clock::Clock;
 use crate::config::Config;
 use crate::entropy::Entropy;
 use crate::error::{ApiError, ErrorBody};
+use crate::jose::jwe::{self, Enc, KeyAlg};
+use crate::mle::policy;
 use crate::operation::{Operation, encode_path_segment};
 use crate::response::{self, Response};
 use crate::{Error, Result};
@@ -38,11 +40,32 @@ pub fn prepare<O: Operation + ?Sized>(
         .map_err(|e| Error::Request(format!("invalid request URI for {target:?}: {e}")))?;
 
     let body_method = matches!(meta.method, Method::POST | Method::PUT | Method::PATCH);
-    let body = match op.body()? {
+    let mut body = match op.body()? {
         Some(body) => body,
         // Cybersource signs the digest of the body; an empty body is sent as `{}`.
         None if body_method => Bytes::from_static(b"{}"),
         None => Bytes::new(),
+    };
+
+    let mle = policy::resolve(meta, config.mle());
+    if mle.request && !body.is_empty() {
+        body = encrypt_request(meta.id, &body, config, clock, entropy)?;
+    }
+    let response_mle_kid = if mle.response {
+        let kid = config
+            .mle()
+            .response_key
+            .as_ref()
+            .and_then(|k| k.key_id())
+            .ok_or_else(|| {
+                Error::Mle(format!(
+                    "{} requires an encrypted response; configure MleConfig::response_key",
+                    meta.id
+                ))
+            })?;
+        Some(kid)
+    } else {
+        None
     };
 
     let auth_headers = if meta.no_auth {
@@ -60,6 +83,7 @@ pub fn prepare<O: Operation + ?Sized>(
                 method: &meta.method,
                 target: &target,
                 body: &body,
+                response_mle_kid,
             },
             clock,
             entropy,
@@ -94,13 +118,77 @@ pub fn prepare<O: Operation + ?Sized>(
     Ok(request)
 }
 
-/// Decodes a response: 2xx goes to the operation, anything else becomes
-/// [`Error::Api`].
+/// Replaces `body` with `{"encryptedRequest": "<JWE>"}`, encrypted to
+/// Cybersource's request certificate.
+fn encrypt_request(
+    operation_id: &str,
+    body: &[u8],
+    config: &Config,
+    clock: &dyn Clock,
+    entropy: &dyn Entropy,
+) -> Result<Bytes> {
+    let jwt = matches!(
+        config.credentials(),
+        crate::config::Credentials::JwtSharedSecret { .. }
+            | crate::config::Credentials::JwtRsa { .. }
+    );
+    let cert = config
+        .mle()
+        .request_cert
+        .as_ref()
+        .filter(|_| jwt)
+        .ok_or_else(|| {
+            Error::Mle(format!(
+                "{operation_id} requires message-level encryption; use JWT authentication with \
+             a request MLE certificate (a Business Center P12, or MleConfig::request_cert)"
+            ))
+        })?;
+    let mut header = serde_json::Map::new();
+    header.insert("kid".into(), cert.kid.clone().into());
+    header.insert("iat".into(), clock.now().as_secs().into());
+    header.insert("cty".into(), "application/json".into());
+    let token = jwe::encrypt(
+        &cert.key,
+        KeyAlg::RsaOaep256,
+        Enc::A256Gcm,
+        &header,
+        body,
+        entropy,
+    )
+    .map_err(|e| Error::Mle(e.to_string()))?;
+    let wrapper = serde_json::json!({ "encryptedRequest": token });
+    Ok(Bytes::from(
+        serde_json::to_vec(&wrapper).map_err(|e| Error::Mle(e.to_string()))?,
+    ))
+}
+
+/// The JWE in a body that is exactly `{"encryptedResponse": "<string>"}`.
+fn encrypted_response(body: &[u8]) -> Option<String> {
+    // Cheap check first: most responses are not encrypted.
+    if !body.windows(19).any(|w| w == b"\"encryptedResponse\"") {
+        return None;
+    }
+    let value: serde_json::Value = serde_json::from_slice(body).ok()?;
+    let object = value.as_object().filter(|o| o.len() == 1)?;
+    object.get("encryptedResponse")?.as_str().map(str::to_owned)
+}
+
+/// Decodes a response: decrypts it if it is MLE-encrypted, then 2xx goes
+/// to the operation and anything else becomes [`Error::Api`].
 pub fn finish<O: Operation + ?Sized>(
     op: &O,
+    config: &Config,
     response: http::Response<Bytes>,
 ) -> Result<Response<O::Output>> {
-    let (parts, body) = response.into_parts();
+    let (parts, mut body) = response.into_parts();
+    if let Some(token) = encrypted_response(&body) {
+        let key = config.mle().response_key.as_ref().ok_or_else(|| {
+            Error::Mle("the response is encrypted but no response MLE key is configured".into())
+        })?;
+        let decrypted = jwe::decrypt(&key.key, &token, &[KeyAlg::RsaOaep256, KeyAlg::RsaOaep])
+            .map_err(|e| Error::Mle(format!("could not decrypt the response: {e}")))?;
+        body = Bytes::from(decrypted.plaintext);
+    }
     if !parts.status.is_success() {
         return Err(Error::Api(Box::new(ApiError {
             status: parts.status,
