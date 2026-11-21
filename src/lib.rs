@@ -18,6 +18,8 @@ pub mod config;
 pub mod entropy;
 pub mod error;
 #[cfg(feature = "server")]
+pub mod flows;
+#[cfg(feature = "server")]
 mod generated;
 pub mod jose;
 #[cfg(feature = "server")]
@@ -43,5 +45,10 @@ pub use client::Client;
 #[cfg(feature = "server")]
 pub use config::{Config, Credentials, Environment};
 pub use error::{Error, Result};
+
+#[doc(hidden)]
+pub mod __private {
+    pub use serde;
+}
 #[cfg(feature = "server")]
 pub use generated::{apis, models, operations};
