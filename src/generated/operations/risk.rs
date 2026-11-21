@@ -80,7 +80,7 @@ impl AddNegative {
     }
 }
 static META_ADD_NEGATIVE: OperationMeta =
-    OperationMeta::new("addNegative", Method::POST, "/risk/v1/lists/{type}/entries");
+    OperationMeta::new("addNegative", Method::POST, "/risk/v1/lists/{type}/entries").developer_id();
 impl Operation for AddNegative {
     type Output = crate::models::RiskV1UpdatePost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -120,7 +120,8 @@ static META_CHECK_PAYER_AUTH_ENROLLMENT: OperationMeta = OperationMeta::new(
     Method::POST,
     "/risk/v1/authentications",
 )
-.mle(MlePolicy::Optional, MlePolicy::Never);
+.mle(MlePolicy::Optional, MlePolicy::Never)
+.developer_id();
 impl Operation for CheckPayerAuthEnrollment {
     type Output = crate::models::RiskV1AuthenticationsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -200,7 +201,8 @@ static META_CREATE_BUNDLED_DECISION_MANAGER_CASE: OperationMeta = OperationMeta:
     "createBundledDecisionManagerCase",
     Method::POST,
     "/risk/v1/decisions",
-);
+)
+.developer_id();
 impl Operation for CreateBundledDecisionManagerCase {
     type Output = crate::models::RiskV1DecisionsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -241,7 +243,8 @@ static META_FRAUD_UPDATE: OperationMeta = OperationMeta::new(
     "fraudUpdate",
     Method::POST,
     "/risk/v1/decisions/{id}/marking",
-);
+)
+.developer_id();
 impl Operation for FraudUpdate {
     type Output = crate::models::RiskV1UpdatePost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -281,7 +284,8 @@ static META_PAYER_AUTH_SETUP: OperationMeta = OperationMeta::new(
     Method::POST,
     "/risk/v1/authentication-setups",
 )
-.mle(MlePolicy::Optional, MlePolicy::Never);
+.mle(MlePolicy::Optional, MlePolicy::Never)
+.developer_id();
 impl Operation for PayerAuthSetup {
     type Output = crate::models::RiskV1AuthenticationSetupsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -352,7 +356,8 @@ static META_VALIDATE_AUTHENTICATION_RESULTS: OperationMeta = OperationMeta::new(
     Method::POST,
     "/risk/v1/authentication-results",
 )
-.mle(MlePolicy::Optional, MlePolicy::Never);
+.mle(MlePolicy::Optional, MlePolicy::Never)
+.developer_id();
 impl Operation for ValidateAuthenticationResults {
     type Output = crate::models::RiskV1AuthenticationResultsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -388,7 +393,8 @@ static META_VALIDATE_EXPORT_COMPLIANCE: OperationMeta = OperationMeta::new(
     "validateExportCompliance",
     Method::POST,
     "/risk/v1/export-compliance-inquiries",
-);
+)
+.developer_id();
 impl Operation for ValidateExportCompliance {
     type Output = crate::models::RiskV1ExportComplianceInquiriesPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -424,7 +430,8 @@ static META_VERIFY_CUSTOMER_ADDRESS: OperationMeta = OperationMeta::new(
     "verifyCustomerAddress",
     Method::POST,
     "/risk/v1/address-verifications",
-);
+)
+.developer_id();
 impl Operation for VerifyCustomerAddress {
     type Output = crate::models::RiskV1AddressVerificationsPost201Response;
     fn meta(&self) -> &'static OperationMeta {

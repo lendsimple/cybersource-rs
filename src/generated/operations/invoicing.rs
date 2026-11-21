@@ -41,7 +41,8 @@ impl CreateInvoice {
 }
 static META_CREATE_INVOICE: OperationMeta =
     OperationMeta::new("createInvoice", Method::POST, "/invoicing/v2/invoices")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CreateInvoice {
     type Output = CreateInvoiceResponse;
     fn meta(&self) -> &'static OperationMeta {
@@ -126,7 +127,8 @@ impl CreatePaymentLink {
 }
 static META_CREATE_PAYMENT_LINK: OperationMeta =
     OperationMeta::new("createPaymentLink", Method::POST, "/ipl/v2/payment-links")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CreatePaymentLink {
     type Output = crate::models::PblPaymentLinksPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -269,6 +271,23 @@ impl Operation for DeletePblMerchantDefinedFieldsDefinitions {
         Ok(())
     }
 }
+impl crate::flows::pages::Paged for GetAllInvoices {
+    fn offset(&self) -> Option<i64> {
+        Some(self.offset)
+    }
+    fn limit(&self) -> Option<i64> {
+        Some(self.limit)
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = offset;
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output.invoices.as_ref().map_or(0, Vec::len),
+            total: output.total_invoices.map(i64::from),
+        }
+    }
+}
 /// Get a List of Invoices
 ///
 /// `GET /invoicing/v2/invoices` (getAllInvoices)
@@ -320,6 +339,23 @@ impl Operation for GetAllInvoices {
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
+    }
+}
+impl crate::flows::pages::Paged for GetAllPaymentLinks {
+    fn offset(&self) -> Option<i64> {
+        Some(self.offset)
+    }
+    fn limit(&self) -> Option<i64> {
+        Some(self.limit)
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = offset;
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output.links.as_ref().map_or(0, Vec::len),
+            total: output.total_links.map(i64::from),
+        }
     }
 }
 /// Get a List of Payment Links
@@ -897,7 +933,8 @@ static META_UPDATE_PAYMENT_LINK: OperationMeta = OperationMeta::new(
     Method::PATCH,
     "/ipl/v2/payment-links/{id}",
 )
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for UpdatePaymentLink {
     type Output = crate::models::PblPaymentLinksPut200Response;
     fn meta(&self) -> &'static OperationMeta {

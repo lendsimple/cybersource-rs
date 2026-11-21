@@ -48,7 +48,8 @@ impl CreateFxRates {
 }
 static META_CREATE_FX_RATES: OperationMeta =
     OperationMeta::new("createFxRates", Method::POST, "/pts/v2/payouts/fx-rates")
-        .mle(MlePolicy::Mandatory, MlePolicy::Mandatory);
+        .mle(MlePolicy::Mandatory, MlePolicy::Mandatory)
+        .developer_id();
 impl Operation for CreateFxRates {
     type Output = crate::models::CreateFxRatesResponse;
     fn meta(&self) -> &'static OperationMeta {

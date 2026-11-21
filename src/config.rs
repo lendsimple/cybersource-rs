@@ -181,6 +181,7 @@ pub struct Config {
     portfolio_id: Option<String>,
     user_agent: String,
     mle: MleConfig,
+    developer_id: Option<String>,
 }
 
 /// What a certificate is used for.
@@ -243,6 +244,11 @@ impl Config {
         /// Message-level encryption settings. Without them, mandatory-MLE
         /// operations still use the request certificate from a P12.
         mle: Option<MleConfig>,
+        /// Your Cybersource partner developer id. When set, it is added as
+        /// `clientReferenceInformation.partner.developerId` to request bodies
+        /// that accept it and don't already have one. Off by default.
+        #[builder(into)]
+        developer_id: Option<String>,
     ) -> Result<Self> {
         let merchant_id = non_empty("merchant id", merchant_id)?;
         let portfolio_id = portfolio_id
@@ -264,6 +270,9 @@ impl Config {
             user_agent: user_agent
                 .unwrap_or_else(|| concat!("cybersource-rust/", env!("CARGO_PKG_VERSION")).into()),
             mle,
+            developer_id: developer_id
+                .map(|d| non_empty("developer id", d))
+                .transpose()?,
         })
     }
 }
@@ -292,6 +301,11 @@ impl Config {
     /// The `User-Agent` sent with every request.
     pub fn user_agent(&self) -> &str {
         &self.user_agent
+    }
+
+    /// The partner developer id added to request bodies, if configured.
+    pub fn developer_id(&self) -> Option<&str> {
+        self.developer_id.as_deref()
     }
 
     /// Message-level encryption settings.

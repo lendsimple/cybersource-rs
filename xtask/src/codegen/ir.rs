@@ -134,11 +134,30 @@ pub struct Operation {
     pub mle_response: Mle,
     pub retry_safe: bool,
     pub no_auth: bool,
+    /// The body has `clientReferenceInformation.partner.developerId`.
+    pub developer_id: bool,
+    /// How to page through the response, for list operations.
+    pub pagination: Option<Pagination>,
     pub doc: Option<String>,
     /// Request body examples from `x-example`.
     pub request_examples: Vec<Example>,
     /// JSON success response examples, keyed by status.
     pub response_examples: Vec<(u16, Example)>,
+}
+
+/// How a list operation's response describes a page (Rust field names).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Pagination {
+    pub total: String,
+    pub count: PageCount,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PageCount {
+    /// An integer field holding the page's item count.
+    Field(String),
+    /// An array field holding the page's items.
+    Items(String),
 }
 
 /// A spec example, checked against its own schema.
@@ -284,6 +303,7 @@ pub fn build(spec: &Value, config: &Config) -> Result<Ir, Vec<String>> {
             "codegen.toml refers to `{key}`, which is not in the spec"
         ));
     }
+    b.pagination();
     if b.errors.is_empty() {
         b.ir.operations
             .sort_by(|a, b| (&a.group, &a.id).cmp(&(&b.group, &b.id)));
@@ -311,6 +331,57 @@ fn is_json_media(m: &str) -> bool {
 }
 
 impl Builder<'_> {
+    /// Resolves `[pagination]` entries against operations and response models.
+    fn pagination(&mut self) {
+        for (id, spec) in &self.config.pagination {
+            let Some(op) = self.ir.operations.iter_mut().find(|o| &o.id == id) else {
+                self.errors
+                    .push(format!("[pagination] names unknown operation `{id}`"));
+                continue;
+            };
+            let paging_params = ["offset", "limit"].iter().all(|name| {
+                op.params
+                    .iter()
+                    .any(|p| p.json_name == *name && p.ty == Ty::I64)
+            });
+            let model = match &op.output {
+                Output::Json(Ty::Model(m)) => self.ir.models.get(m),
+                _ => None,
+            };
+            let (Some(model), true) = (model, paging_params) else {
+                self.errors.push(format!(
+                    "[pagination] `{id}` needs i64 offset/limit params and a JSON model response"
+                ));
+                continue;
+            };
+            let field = |json: &str| model.fields.iter().find(|f| f.json_name == json);
+            let is_int = |f: &Field| matches!(f.ty, Ty::I32 | Ty::I64);
+            let total = field(&spec.total).filter(|f| is_int(f));
+            let count = match (&spec.count, &spec.items) {
+                (Some(c), None) => field(c)
+                    .filter(|f| is_int(f))
+                    .map(|f| PageCount::Field(f.rust_name.clone())),
+                (None, Some(i)) => field(i)
+                    .filter(|f| matches!(f.ty, Ty::Vec(_)))
+                    .map(|f| PageCount::Items(f.rust_name.clone())),
+                _ => None,
+            };
+            match (total, count) {
+                (Some(total), Some(count)) => {
+                    op.pagination = Some(Pagination {
+                        total: total.rust_name.clone(),
+                        count,
+                    });
+                }
+                _ => self.errors.push(format!(
+                    "[pagination] `{id}`: `total` must name an integer field and exactly one of \
+                     `count` (integer) or `items` (array) must name a field of `{}`",
+                    model.name
+                )),
+            }
+        }
+    }
+
     fn seen_key(&self, spec: &Value, key: &str) -> bool {
         let Some((method, path)) = key.split_once(' ') else {
             return false;
@@ -455,6 +526,11 @@ impl Builder<'_> {
                 .and_then(|m| m.get("noAuth"))
                 .and_then(Value::as_bool)
                 .unwrap_or(false),
+            developer_id: body_schema.is_some_and(|b| {
+                b.pointer("/properties/clientReferenceInformation/properties/partner/properties/developerId")
+                    .is_some()
+            }),
+            pagination: None,
             doc: op
                 .get("summary")
                 .and_then(Value::as_str)
@@ -1059,6 +1135,49 @@ mod tests {
         assert!(bad.skip.unwrap().contains("$.n"));
         let wrong_shape = Example::new("e".into(), json!({"list": {"x": "a"}}), &schema);
         assert!(wrong_shape.skip.unwrap().contains("an array"));
+    }
+
+    #[test]
+    fn pagination_entries_are_validated_against_the_response() {
+        let mut config = config();
+        config.pagination.insert(
+            "getList".into(),
+            crate::codegen::config::PageSpec {
+                total: "total".into(),
+                count: None,
+                items: Some("nope".into()),
+            },
+        );
+        let op = json!({"tags": ["payments"], "operationId": "getList",
+        "parameters": [
+            {"in": "query", "name": "offset", "type": "integer", "format": "int64"},
+            {"in": "query", "name": "limit", "type": "integer", "format": "int64"}
+        ],
+        "responses": {"200": {"schema": {"type": "object", "title": "List", "properties": {
+            "total": {"type": "integer"}, "items": {"type": "array", "items": {"type": "string"}}
+        }}}}});
+        let errors = build(&spec(json!({"/list": {"get": op.clone()}})), &config).unwrap_err();
+        assert!(errors[0].contains("`getList`"), "{errors:?}");
+
+        config.pagination.get_mut("getList").unwrap().items = Some("items".into());
+        let ir = build(&spec(json!({"/list": {"get": op}})), &config).unwrap();
+        assert_eq!(
+            ir.operations[0].pagination,
+            Some(Pagination {
+                total: "total".into(),
+                count: PageCount::Items("items".into())
+            })
+        );
+    }
+
+    #[test]
+    fn developer_id_flag_follows_the_body_schema() {
+        let ir = build(
+            &spec(json!({"/pts/v2/payments": {"post": payment_op()}})),
+            &config(),
+        )
+        .unwrap();
+        assert!(!ir.operations[0].developer_id);
     }
 
     #[test]

@@ -45,6 +45,9 @@ pub struct OperationMeta {
     pub retry_safe: bool,
     /// True for the few operations Cybersource serves without authentication.
     pub no_auth: bool,
+    /// The body accepts `clientReferenceInformation.partner.developerId`,
+    /// which [`Config`](crate::Config)'s `developer_id` fills in.
+    pub developer_id: bool,
 }
 
 impl OperationMeta {
@@ -58,7 +61,14 @@ impl OperationMeta {
             mle_response: MlePolicy::Never,
             retry_safe: true,
             no_auth: false,
+            developer_id: false,
         }
+    }
+
+    /// Marks the body as accepting a partner developer id.
+    pub const fn developer_id(mut self) -> Self {
+        self.developer_id = true;
+        self
     }
 
     /// Sets the request and response encryption policies.

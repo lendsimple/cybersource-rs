@@ -32,7 +32,8 @@ impl CalculateTax {
 }
 static META_CALCULATE_TAX: OperationMeta =
     OperationMeta::new("calculateTax", Method::POST, "/vas/v2/tax")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CalculateTax {
     type Output = crate::models::VasV2PaymentsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -71,7 +72,8 @@ impl VoidTax {
 }
 static META_VOID_TAX: OperationMeta =
     OperationMeta::new("voidTax", Method::PATCH, "/vas/v2/tax/{id}")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for VoidTax {
     type Output = crate::models::VasV2TaxVoid200Response;
     fn meta(&self) -> &'static OperationMeta {

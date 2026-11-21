@@ -31,7 +31,7 @@ impl GetAccountInfo {
     }
 }
 static META_GET_ACCOUNT_INFO: OperationMeta =
-    OperationMeta::new("getAccountInfo", Method::POST, "/bin/v1/binlookup");
+    OperationMeta::new("getAccountInfo", Method::POST, "/bin/v1/binlookup").developer_id();
 impl Operation for GetAccountInfo {
     type Output = crate::models::GetAccountInfoResponse;
     fn meta(&self) -> &'static OperationMeta {

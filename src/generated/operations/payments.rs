@@ -41,7 +41,8 @@ static META_AUTH_REVERSAL: OperationMeta = OperationMeta::new(
     "/pts/v2/payments/{id}/reversals",
 )
 .moves_money()
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for AuthReversal {
     type Output = crate::models::PtsV2PaymentsReversalsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -86,7 +87,8 @@ static META_BILLING_AGREEMENTS_DE_REGISTRATION: OperationMeta = OperationMeta::n
     Method::PATCH,
     "/pts/v2/billing-agreements/{id}",
 )
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for BillingAgreementsDeRegistration {
     type Output = crate::models::PtsV2ModifyBillingAgreementPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -131,7 +133,8 @@ static META_BILLING_AGREEMENTS_INTIMATION: OperationMeta = OperationMeta::new(
     Method::POST,
     "/pts/v2/billing-agreements/{id}/intimations",
 )
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for BillingAgreementsIntimation {
     type Output = crate::models::IntimateBillingAgreementResponse;
     fn meta(&self) -> &'static OperationMeta {
@@ -171,7 +174,8 @@ static META_BILLING_AGREEMENTS_REGISTRATION: OperationMeta = OperationMeta::new(
     Method::POST,
     "/pts/v2/billing-agreements",
 )
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for BillingAgreementsRegistration {
     type Output = crate::models::PtsV2CreateBillingAgreementPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -214,7 +218,8 @@ static META_CAPTURE_PAYMENT: OperationMeta = OperationMeta::new(
     "/pts/v2/payments/{id}/captures",
 )
 .moves_money()
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for CapturePayment {
     type Output = crate::models::PtsV2PaymentsCapturesPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -252,7 +257,8 @@ impl CreateCredit {
 static META_CREATE_CREDIT: OperationMeta =
     OperationMeta::new("createCredit", Method::POST, "/pts/v2/credits")
         .moves_money()
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CreateCredit {
     type Output = crate::models::PtsV2CreditsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -366,7 +372,8 @@ impl CreatePayment {
 static META_CREATE_PAYMENT: OperationMeta =
     OperationMeta::new("createPayment", Method::POST, "/pts/v2/payments")
         .moves_money()
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CreatePayment {
     type Output = crate::models::PtsV2PaymentsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -443,7 +450,8 @@ impl IncrementAuth {
 static META_INCREMENT_AUTH: OperationMeta =
     OperationMeta::new("incrementAuth", Method::PATCH, "/pts/v2/payments/{id}")
         .moves_money()
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for IncrementAuth {
     type Output = crate::models::PtsV2IncrementalAuthorizationPatch201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -481,7 +489,8 @@ impl MitReversal {
 static META_MIT_REVERSAL: OperationMeta =
     OperationMeta::new("mitReversal", Method::POST, "/pts/v2/reversals")
         .moves_money()
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for MitReversal {
     type Output = crate::models::PtsV2ReversalsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -514,7 +523,8 @@ impl MitVoid {
     }
 }
 static META_MIT_VOID: OperationMeta = OperationMeta::new("mitVoid", Method::POST, "/pts/v2/voids")
-    .mle(MlePolicy::Optional, MlePolicy::Optional);
+    .mle(MlePolicy::Optional, MlePolicy::Optional)
+    .developer_id();
 impl Operation for MitVoid {
     type Output = crate::models::PtsV2VoidsPost200Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -602,7 +612,8 @@ static META_REFUND_CAPTURE: OperationMeta = OperationMeta::new(
     "/pts/v2/captures/{id}/refunds",
 )
 .moves_money()
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for RefundCapture {
     type Output = crate::models::PtsV2CapturesRefundsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -648,7 +659,8 @@ static META_REFUND_PAYMENT: OperationMeta = OperationMeta::new(
     "/pts/v2/payments/{id}/refunds",
 )
 .moves_money()
-.mle(MlePolicy::Optional, MlePolicy::Optional);
+.mle(MlePolicy::Optional, MlePolicy::Optional)
+.developer_id();
 impl Operation for RefundPayment {
     type Output = crate::models::PtsV2PaymentsRefundPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -814,7 +826,8 @@ impl VoidCapture {
 }
 static META_VOID_CAPTURE: OperationMeta =
     OperationMeta::new("voidCapture", Method::POST, "/pts/v2/captures/{id}/voids")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for VoidCapture {
     type Output = crate::models::PtsV2CapturesVoidsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -856,7 +869,8 @@ impl VoidCredit {
 }
 static META_VOID_CREDIT: OperationMeta =
     OperationMeta::new("voidCredit", Method::POST, "/pts/v2/credits/{id}/voids")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for VoidCredit {
     type Output = crate::models::PtsV2CreditsVoidsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -898,7 +912,8 @@ impl VoidPayment {
 }
 static META_VOID_PAYMENT: OperationMeta =
     OperationMeta::new("voidPayment", Method::POST, "/pts/v2/payments/{id}/voids")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for VoidPayment {
     type Output = crate::models::PtsV2PaymentsVoidsPost201Response;
     fn meta(&self) -> &'static OperationMeta {
@@ -940,7 +955,8 @@ impl VoidRefund {
 }
 static META_VOID_REFUND: OperationMeta =
     OperationMeta::new("voidRefund", Method::POST, "/pts/v2/refunds/{id}/voids")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for VoidRefund {
     type Output = crate::models::PtsV2RefundsVoidsPost201Response;
     fn meta(&self) -> &'static OperationMeta {

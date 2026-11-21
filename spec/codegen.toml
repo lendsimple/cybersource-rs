@@ -108,3 +108,17 @@ always = [
 # `number` is redacted only on types whose name contains one of these
 # (card, bank account and instrument numbers, not e.g. phone numbers).
 number_in_types_containing = ["Card", "Account", "Bank", "Instrument", "Token"]
+
+# List operations that page with `offset`/`limit`: which response fields
+# give the total and the size of the page (JSON names). The generator
+# implements `Paged` for these, so `call.pages()` walks every page.
+[pagination]
+getCustomerPaymentInstrumentsList = { total = "total", count = "count" }
+getCustomerShippingAddressesList = { total = "total", count = "count" }
+getInstrumentIdentifierPaymentInstrumentsList = { total = "total", count = "count" }
+getBatchesList = { total = "total", count = "count" }
+getPlans = { total = "totalCount", items = "plans" }
+getAllSubscriptions = { total = "totalCount", items = "subscriptions" }
+subscriptionsIdPaymentsGet = { total = "totalCount", items = "subscriptionPayment" }
+getAllInvoices = { total = "totalInvoices", items = "invoices" }
+getAllPaymentLinks = { total = "totalLinks", items = "links" }

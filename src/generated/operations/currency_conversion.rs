@@ -45,7 +45,8 @@ impl CreateOffer {
 }
 static META_CREATE_OFFER: OperationMeta =
     OperationMeta::new("createOffer", Method::POST, "/vas/v1/currencyconversion")
-        .mle(MlePolicy::Optional, MlePolicy::Optional);
+        .mle(MlePolicy::Optional, MlePolicy::Optional)
+        .developer_id();
 impl Operation for CreateOffer {
     type Output = crate::models::CreateOfferResponse;
     fn meta(&self) -> &'static OperationMeta {

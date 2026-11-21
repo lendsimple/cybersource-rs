@@ -452,6 +452,26 @@ impl Operation for GetCustomerPaymentInstrument {
         json_decode(body)
     }
 }
+impl crate::flows::pages::Paged for GetCustomerPaymentInstrumentsList {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output
+                .count
+                .and_then(|n| usize::try_from(n).ok())
+                .unwrap_or(0),
+            total: output.total.map(i64::from),
+        }
+    }
+}
 /// List Payment Instruments for a Customer
 ///
 /// `GET /tms/v2/customers/{customerId}/payment-instruments` (getCustomerPaymentInstrumentsList)
@@ -588,6 +608,26 @@ impl Operation for GetCustomerShippingAddress {
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
+    }
+}
+impl crate::flows::pages::Paged for GetCustomerShippingAddressesList {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output
+                .count
+                .and_then(|n| usize::try_from(n).ok())
+                .unwrap_or(0),
+            total: output.total.map(i64::from),
+        }
     }
 }
 /// List Shipping Addresses for a Customer
@@ -737,6 +777,26 @@ impl Operation for GetInstrumentIdentifier {
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
+    }
+}
+impl crate::flows::pages::Paged for GetInstrumentIdentifierPaymentInstrumentsList {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output
+                .count
+                .and_then(|n| usize::try_from(n).ok())
+                .unwrap_or(0),
+            total: output.total.map(i64::from),
+        }
     }
 }
 /// List Payment Instruments for an Instrument Identifier

@@ -20,6 +20,15 @@ impl<T> Response<T> {
         correlation_id(&self.headers)
     }
 
+    /// The `ETag` header. Token Management returns one on reads; pass it to
+    /// the generated `if_match` setter to update without overwriting a
+    /// concurrent change (Cybersource answers 412 if it no longer matches).
+    pub fn etag(&self) -> Option<&str> {
+        self.headers
+            .get(http::header::ETAG)
+            .and_then(|v| v.to_str().ok())
+    }
+
     /// Discards the metadata and returns the body.
     pub fn into_body(self) -> T {
         self.body

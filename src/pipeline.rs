@@ -47,6 +47,12 @@ pub fn prepare<O: Operation + ?Sized>(
         None => Bytes::new(),
     };
 
+    if meta.developer_id
+        && let Some(developer_id) = config.developer_id()
+    {
+        body = with_developer_id(body, developer_id)?;
+    }
+
     let mle = policy::resolve(meta, config.mle());
     if mle.request && !body.is_empty() {
         body = encrypt_request(meta.id, &body, config, clock, entropy)?;
@@ -116,6 +122,34 @@ pub fn prepare<O: Operation + ?Sized>(
         headers.insert(name.clone(), value.clone());
     }
     Ok(request)
+}
+
+/// Sets `clientReferenceInformation.partner.developerId` in a serialized
+/// body unless it is already set. Works on the bytes, never the caller's
+/// value.
+fn with_developer_id(body: Bytes, developer_id: &str) -> Result<Bytes> {
+    let mut value: serde_json::Value = serde_json::from_slice(&body)
+        .map_err(|e| Error::Request(format!("request body is not JSON: {e}")))?;
+    let Some(root) = value.as_object_mut() else {
+        return Ok(body);
+    };
+    let partner = root
+        .entry("clientReferenceInformation")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()
+        .map(|cri| {
+            cri.entry("partner")
+                .or_insert_with(|| serde_json::json!({}))
+        });
+    match partner.and_then(serde_json::Value::as_object_mut) {
+        Some(partner) if !partner.contains_key("developerId") => {
+            partner.insert("developerId".into(), developer_id.into());
+            serde_json::to_vec(&value)
+                .map(Bytes::from)
+                .map_err(|e| Error::Request(e.to_string()))
+        }
+        _ => Ok(body),
+    }
 }
 
 /// Replaces `body` with `{"encryptedRequest": "<JWE>"}`, encrypted to

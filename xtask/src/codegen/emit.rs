@@ -355,6 +355,9 @@ pub fn operation(op: &Operation) -> TokenStream {
     if op.no_auth {
         meta = quote! { #meta.no_auth() };
     }
+    if op.developer_id {
+        meta = quote! { #meta.developer_id() };
+    }
 
     let required: Vec<&Param> = op.params.iter().filter(|p| p.required).collect();
     let optional: Vec<&Param> = op.params.iter().filter(|p| !p.required).collect();
@@ -492,8 +495,53 @@ pub fn operation(op: &Operation) -> TokenStream {
         op.struct_name
     ));
 
+    let paged = op.pagination.as_ref().map(|p| {
+        let total = ident(&p.total);
+        let items = match &p.count {
+            super::ir::PageCount::Field(f) => {
+                let f = ident(f);
+                quote! { output.#f.and_then(|n| usize::try_from(n).ok()).unwrap_or(0) }
+            }
+            super::ir::PageCount::Items(f) => {
+                let f = ident(f);
+                quote! { output.#f.as_ref().map_or(0, Vec::len) }
+            }
+        };
+        let required = |name: &str| op.params.iter().any(|p| p.json_name == name && p.required);
+        let (offset, set_offset) = if required("offset") {
+            (
+                quote! { Some(self.offset) },
+                quote! { self.offset = offset; },
+            )
+        } else {
+            (
+                quote! { self.offset },
+                quote! { self.offset = Some(offset); },
+            )
+        };
+        let limit = if required("limit") {
+            quote! { Some(self.limit) }
+        } else {
+            quote! { self.limit }
+        };
+        quote! {
+            impl crate::flows::pages::Paged for #name {
+                fn offset(&self) -> Option<i64> { #offset }
+                fn limit(&self) -> Option<i64> { #limit }
+                fn set_offset(&mut self, offset: i64) { #set_offset }
+                fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+                    crate::flows::pages::PageInfo {
+                        items: #items,
+                        total: output.#total.map(i64::from),
+                    }
+                }
+            }
+        }
+    });
+
     quote! {
         #extra
+        #paged
 
         #doc
         #[derive(Debug, Clone)]
@@ -790,6 +838,8 @@ mod tests {
             [sensitive]
             always = ["securityCode"]
             number_in_types_containing = ["Card"]
+            [pagination]
+            getCustomerPaymentInstrumentsList = { total = "total", count = "count" }
             "#,
         )
         .unwrap();
@@ -820,7 +870,7 @@ mod tests {
                     {"in": "query", "name": "limit", "type": "integer", "format": "int64"}
                 ],
                 "responses": {"200": {"schema": {"type": "object", "title": "PaymentInstrumentList",
-                    "properties": {"count": {"type": "integer", "format": "int32"}}}}}
+                    "properties": {"count": {"type": "integer", "format": "int32"}, "total": {"type": "integer"}}}}}
             }},
             "/reporting/v3/report-downloads": {"get": {
                 "tags": ["Reports"], "operationId": "downloadReport",

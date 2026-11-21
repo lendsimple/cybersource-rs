@@ -53,6 +53,10 @@ impl<'c, C, Op> Call<'c, C, Op> {
         self.op
     }
 
+    pub(crate) fn client_ref(&self) -> &'c C {
+        self.client
+    }
+
     /// Applies `f` to the operation; used by the generated setters.
     pub fn map_op(mut self, f: impl FnOnce(&mut Op)) -> Self {
         f(&mut self.op);

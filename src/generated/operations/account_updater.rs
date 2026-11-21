@@ -90,6 +90,26 @@ impl Operation for GetBatchStatus {
         json_decode(body)
     }
 }
+impl crate::flows::pages::Paged for GetBatchesList {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output
+                .count
+                .and_then(|n| usize::try_from(n).ok())
+                .unwrap_or(0),
+            total: output.total.map(i64::from),
+        }
+    }
+}
 /// List Batches
 ///
 /// `GET /accountupdater/v1/batches` (getBatchesList)

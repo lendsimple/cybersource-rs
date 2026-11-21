@@ -29,6 +29,21 @@ pub struct Config {
     /// Example ids allowed to fail the round-trip test -> reason.
     #[serde(default)]
     pub example_allowlist: BTreeMap<String, String>,
+    /// Operation id -> how to read a page of its response.
+    #[serde(default)]
+    pub pagination: BTreeMap<String, PageSpec>,
+}
+
+/// Response fields (JSON names) that describe one page of a list.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PageSpec {
+    /// Integer field with the total number of items.
+    pub total: String,
+    /// Integer field with the number of items in this page...
+    pub count: Option<String>,
+    /// ...or the array field holding them.
+    pub items: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize)]

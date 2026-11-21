@@ -326,6 +326,23 @@ impl Operation for DeletePlan {
         json_decode(body)
     }
 }
+impl crate::flows::pages::Paged for GetAllSubscriptions {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output.subscriptions.as_ref().map_or(0, Vec::len),
+            total: output.total_count.map(i64::from),
+        }
+    }
+}
 /// Get a List of Subscriptions
 ///
 /// `GET /rbs/v1/subscriptions` (getAllSubscriptions)
@@ -530,6 +547,23 @@ impl Operation for GetPlanCode {
         json_decode(body)
     }
 }
+impl crate::flows::pages::Paged for GetPlans {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output.plans.as_ref().map_or(0, Vec::len),
+            total: output.total_count.map(i64::from),
+        }
+    }
+}
 /// Get a List of Plans
 ///
 /// `GET /rbs/v1/plans` (getPlans)
@@ -681,6 +715,23 @@ impl Operation for GetSubscriptionCode {
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
+    }
+}
+impl crate::flows::pages::Paged for SubscriptionsIdPaymentsGet {
+    fn offset(&self) -> Option<i64> {
+        self.offset
+    }
+    fn limit(&self) -> Option<i64> {
+        self.limit
+    }
+    fn set_offset(&mut self, offset: i64) {
+        self.offset = Some(offset);
+    }
+    fn page_info(output: &Self::Output) -> crate::flows::pages::PageInfo {
+        crate::flows::pages::PageInfo {
+            items: output.subscription_payment.as_ref().map_or(0, Vec::len),
+            total: output.total_count.map(i64::from),
+        }
     }
 }
 /// Get Payments for a Subscription
