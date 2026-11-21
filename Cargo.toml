@@ -16,7 +16,8 @@ exclude = ["/spec", "/xtask", "/tests", "/.github", "/implementation.md"]
 
 [features]
 default = ["server", "reqwest", "rustls", "p12", "payments", "tms", "capture-context"]
-# Credentialed client: auth, keys, operations. Never enable in browser builds.
+# Credentialed client: auth, keys, operations. Leave it off in builds that
+# ship to end users (Flex tokenization in `flex` needs no features).
 server = []
 # Legacy HTTP Signature auth. Cybersource retires it in March 2027; prefer JWT.
 http-signature = ["server"]
@@ -27,7 +28,7 @@ native-tls = ["reqwest?/native-tls", "ureq?/native-tls"]
 # Structured request logging via `tracing`, with PII redacted.
 tracing = ["server", "dep:tracing"]
 # Async transport over the JavaScript `fetch` API (wasm32): Cloudflare
-# Workers, Deno, Node and browsers.
+# Workers, Deno and Node.
 fetch = ["server", "dep:web-sys", "dep:js-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures"]
 # Async transport over WASI 0.2 HTTP (wasm32-wasip2). Needs Rust 1.91.1 (wstd).
 wasi = ["server", "dep:wstd"]

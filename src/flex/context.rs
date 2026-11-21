@@ -1,5 +1,5 @@
 //! Capture contexts and transient tokens: the types, and the checks that
-//! need no network (shared by the server-side verifier and the browser tier).
+//! need no network (shared by the server-side verifier and tokenizing clients).
 
 use serde::Deserialize;
 use serde_json::{Map, Value};
@@ -91,10 +91,10 @@ impl CaptureContext {
 
     /// Decodes a capture context **without verifying its signature**.
     ///
-    /// For browsers, which cannot fetch Cybersource's signing keys (the key
-    /// endpoint sends no CORS headers). The token it leads to is verified on
-    /// your server, where [`CaptureContextVerifier`] can verify the context
-    /// itself.
+    /// For tokenizing clients, which received the context from your server
+    /// and need its key and field lists. Your server verifies the context
+    /// with [`CaptureContextVerifier`] and the resulting transient token with
+    /// [`CaptureContext::verify_transient_token`].
     ///
     /// [`CaptureContextVerifier`]: https://docs.rs/cybersource/latest/cybersource/capture_context/struct.CaptureContextVerifier.html
     pub fn parse_unverified(jwt: &str) -> Result<Self> {

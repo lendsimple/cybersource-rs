@@ -27,6 +27,8 @@ pub mod flows;
 #[cfg(feature = "server")]
 mod generated;
 pub mod jose;
+#[cfg(all(feature = "fetch", target_arch = "wasm32"))]
+mod js_fetch;
 #[cfg(feature = "server")]
 pub mod keys;
 #[cfg(feature = "server")]

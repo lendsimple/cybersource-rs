@@ -1,11 +1,11 @@
 //! Flex API client-side tokenization: card data in, transient token out.
 //!
-//! **Read this first.** Cybersource states that the Flex API "is not designed
-//! to be used from the browser" and recommends Microform or Unified Checkout
-//! for web checkouts: those keep card data in Cybersource-hosted iframes and
-//! qualify for PCI SAQ A. Code that handles the card number in your own
-//! page is, most likely, in SAQ A-EP scope. Use this for native, kiosk, IoT
-//! or other clients where that trade-off is understood.
+//! **Not for web pages.** Flex rejects tokenization requests from browsers
+//! (`400 VALIDATION_ERROR`: "Browser calls are not supported for Flex
+//! Direct API calls"); web checkouts use Microform or Unified Checkout, which
+//! keep card data in Cybersource-hosted iframes. This is for native, kiosk,
+//! IoT and other clients that collect card data themselves, which puts them
+//! in PCI scope for it.
 //!
 //! The protocol, as implemented by Cybersource's own iOS SDK:
 //!
@@ -25,8 +25,9 @@
 //! Unified Checkout (`gda-*`) contexts belong to their own JavaScript.
 //!
 //! This module performs no I/O: send [`TokenizeRequest`] with any HTTP
-//! client, then pass the response to [`parse_tokenize_response`]. In a
-//! browser build, [`tokenize`](super::tokenize) does both.
+//! client, then pass the response to [`parse_tokenize_response`]. It needs
+//! no crate features, so a client build can use `default-features = false`
+//! and carry no merchant credentials or signing code.
 
 use std::collections::BTreeMap;
 use std::fmt;
