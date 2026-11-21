@@ -783,6 +783,40 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - Firefox and headless-Chrome CI runs, because there is no browser tier.
   - A windows/macOS CI matrix (CI stays on ubuntu).
 
+### Stage 6: Consistency with authorizenet-rs
+**Status:** In Progress
+**Goal:** Match `~/Web/authorizenet-rs` in API naming and constructors, and in repo and release practices, before 0.1.0 is published.
+
+0.1.0 is not on crates.io yet, so the API changes are renames with no deprecation shims, recorded in the 0.1.0 CHANGELOG entry. Unchanged by decision: the license (`MIT OR Apache-2.0`), and `webhook` stays ungated, because `webhooks` already names the management API group and gating it would save no dependencies.
+
+**Work: API (6a)**
+1. `Environment::Test` becomes `Environment::Sandbox`, the `Default`. The `Config` builder's `environment` defaults to it, so production still has to be chosen explicitly.
+2. Default transport type parameters, as authorizenet does:
+   - `Client<T = ReqwestTransport>` with the `reqwest` feature, and `BlockingClient<T = UreqTransport>` with `ureq`.
+   - `Client::new(config)` uses the default transport; `with_transport(config, transport)` takes any other.
+3. `Error::api()` becomes `Error::as_api()`.
+
+**Work: repo practices (6b)**
+1. `.gitattributes`: LF for text test inputs, `*.p12` binary, so the tests pass on Windows.
+2. CI:
+   - Every action pinned to a commit SHA with a version comment, kept current by Dependabot (`.github/dependabot.yml`).
+   - `permissions: contents: read`, `concurrency` with cancel-in-progress, `workflow_dispatch`.
+   - Windows in the test matrix.
+   - Clippy for `ureq,rustls` and `reqwest,native-tls`.
+   - New jobs: `minimal-versions`, `deny`, `docs`, `docs-rs` (nightly, `--cfg docsrs`), `package` (`cargo publish --dry-run`) and `package-tests`.
+3. Exact dependency floors (the versions in `Cargo.lock`), proven by the minimal-versions job.
+4. `deny.toml`: advisories, licenses, bans and sources.
+5. Tests ship in the package and pass from it (`scripts/test-packaged-crate.sh`). The trybuild UI test runs only when `CYBERSOURCE_UI_TESTS` is set, which `.cargo/config.toml` does in this repository.
+6. The README's code compiles as a doctest.
+7. `release.yml` publishes on a published GitHub Release: it checks that the tag, version and changelog agree, then publishes with trusted publishing and falls back to a token. `RELEASING.md` describes the steps.
+
+**Not in this stage:** requests by reference, validating requests before sending, typed webhook notifications beyond `verify_and_parse`.
+
+**Success criteria**
+- Every CI job passes on the pull request, Windows included.
+- `cargo deny check`, the minimal-versions run, `scripts/test-packaged-crate.sh` and `cargo publish --dry-run` pass locally.
+- `Client::new(config)` compiles with default features, and the crate still builds without `reqwest` and on both wasm targets.
+
 ---
 
 ## 4. Verification (end to end)
