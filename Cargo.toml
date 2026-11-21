@@ -12,7 +12,9 @@ description = "Idiomatic Rust client for the Cybersource REST API (async, blocki
 keywords = ["cybersource", "payments", "visa", "api", "client"]
 categories = ["api-bindings", "web-programming::http-client", "wasm"]
 readme = "README.md"
-exclude = ["/spec", "/xtask", "/tests", "/.github", "/implementation.md"]
+repository = "https://github.com/lendsimple/cybersource-rs"
+documentation = "https://docs.rs/cybersource"
+exclude = ["/spec", "/xtask", "/tests", "/.github", "/.cargo", "/implementation.md"]
 
 [features]
 default = ["server", "reqwest", "rustls", "p12", "payments", "tms", "capture-context"]
@@ -87,6 +89,7 @@ full = [
 
 [package.metadata.docs.rs]
 features = ["full", "reqwest", "ureq"]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 bytes = "1.12"

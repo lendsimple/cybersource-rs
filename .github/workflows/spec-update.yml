@@ -1,0 +1,47 @@
+# Weekly: vendor the newest official spec, regenerate the code and auth
+# vectors, and open a pull request when anything changed. CI then runs the
+# full suite on that PR; review the generated diff before merging.
+name: spec update
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: cargo xtask update-spec --latest
+      - id: tag
+        run: echo "tag=$(sed -n 's/^| Tag | `\(.*\)` |$/\1/p' spec/SOURCE.md)" >> "$GITHUB_OUTPUT"
+      - run: cargo xtask codegen
+      - run: cargo xtask vectors
+      - run: cargo test --workspace --all-features --no-run
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: spec-update
+          delete-branch: true
+          commit-message: "Update the vendored spec to ${{ steps.tag.outputs.tag }}"
+          title: "Update the vendored spec to ${{ steps.tag.outputs.tag }}"
+          body: |
+            Automated by `.github/workflows/spec-update.yml`. It ran
+            `cargo xtask update-spec --latest`, then `codegen` and `vectors`.
+
+            Review before merging:
+            - New or removed operations and models in `src/generated/` (a
+              removed or renamed item is a breaking change).
+            - Changes to the auth vectors in `tests/vectors/` (they should not change).
+            - MLE requirements of new operations in `src/generated/operations/`.

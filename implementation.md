@@ -145,6 +145,19 @@ Sent as `Authorization: Bearer <jws>`. A fresh JWT is generated per request, wit
 
 ### 1.9 Client-side tokenization (Flex API direct, for the browser)
 
+> **Resolved in Stage 5 (2026-11-20).** Flex rejects real browsers:
+> `400 VALIDATION_ERROR` "Browser calls are not supported for Flex Direct API
+> calls (ctx.type was api-0.1.0)". The CORS preflight passes and the same
+> request succeeds natively and from Node. The browser tier was therefore
+> dropped; the sans-IO core in `flex` remains for native clients. Also
+> settled live:
+> - **Success body:** 200 `application/json`
+>   `{"_embedded":{},"discoverableServices":{},"timestamp":0,"token":<JWT>}`,
+>   not a bare JWT.
+> - **Request:** the `{"keyId": <JWE>}` wrapper and the nested `data` shape
+>   are accepted.
+> - **Verification:** the token verifies with `flx.jwk`.
+
 Sources: the Digital Accept / Flex guide (revision 26.11.01), the official spec, Cybersource's own iOS SDK (`CyberSource/flex-api-ios-sdk`, the only official direct client), the Microform JS bundles, and live unauthenticated probes. **Confirmed** facts come from those sources; **inferred** facts are marked.
 
 **Support status. Read this first.**
@@ -337,6 +350,11 @@ blocking.payments().create_payment(&req)?;
 - **Payment outcomes.** `PaymentOutcome::from(&resp)` gives a typed open-enum `PaymentStatus`, the `errorInformation.reason`, and `.is_approved()` / `.needs_review()` / `.is_declined()`.
 
 ### 2.4a Browser API (the `browser` feature)
+
+> **Not implemented (Stage 5).** Cybersource rejects browser callers; see
+> §1.9. The sans-IO parts (`CaptureContext::parse_unverified`, `CardData`,
+> `tokenize_request`, `parse_tokenize_response`) ship in `flex` with no
+> feature flag.
 ```rust
 use cybersource::flex::{CaptureContext, CardData, FlexError};
 
@@ -681,7 +699,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - New `Error::Verification` and `Error::UnexpectedStatus` variants.
 
 ### Stage 5: WASM targets, browser tokenization, documentation and release
-**Status:** Not Started
+**Status:** Complete (2026-11-20). The browser tier was dropped; see the outcome below.
 **Goal:** Verified builds for edge and WASI (full client) and for the browser (client-side tokenization only), and a publishable 0.1.0.
 
 **Work: server tier on WASM**
@@ -736,6 +754,35 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - `cargo publish --dry-run` succeeds.
 - docs.rs metadata builds with `full`.
 
+**Outcome**
+- **The core runs on real wasm runtimes, not just compiles.** `tests/wasm.rs` runs under Node (wasm-bindgen-test-runner) and wasmtime:
+  - SDK auth vectors, byte for byte;
+  - the MLE pipeline;
+  - JWE;
+  - webhooks;
+  - getrandom and web-time.
+
+  `tests/flex.rs` also runs on both. On wasip2, `tests/dsl.rs` and the spec-example corpus pass too. Native-only dev-dependencies and tests are target-gated.
+- **Transports.**
+  - **`FetchTransport` (feature `fetch`):** the global JS `fetch` via web-sys, replacing the planned `worker` crate. That crate needs Rust 1.91, and its `http` feature changes Workers handler signatures across the whole build.
+  - **`WasiTransport` (feature `wasi`):** `wstd` (Rust 1.91.1, documented).
+  - **Proven live:** both authorize a JWT-signed sandbox payment from inside Node and `wasmtime -S http` (`CYBS_LIVE=1` at build time).
+- **Flex tokenization.**
+  - **Sans-IO core:** `flex::{tokenize_request, parse_tokenize_response, CardData}`, with capture-context types moved to the ungated `flex::context` and re-exported from `capture_context`.
+  - **Verified live, natively:** session, tokenize, verify with `flx.jwk`, then pay, which is AUTHORIZED.
+  - **Browsers:** a headless Chrome run proved Cybersource rejects browser callers (§1.9). The user chose to drop the `browser`/`browser-bindings` features, JS bindings, example and `check-browser` rather than ship them broken. That work is in history at `9ae3f3c^`: 268 KiB, no server code.
+- **Docs.**
+  - **Crate docs:** quickstart, auth table, MLE, DSL, errors and retries, targets and features. All examples are compiled doctests; none are `ignore`d.
+  - **Also:** README, CHANGELOG, and docs.rs `--cfg docsrs` feature badges, checked on nightly.
+- **Release.**
+  - **Metadata:** `repository` and `documentation` set.
+  - **`cargo publish --dry-run`:** 129 files, 4.1 MiB (535 KiB compressed).
+  - **Spec updates:** `cargo xtask update-spec --latest`, with vectors following the tag in `spec/SOURCE.md`. A weekly `spec-update.yml` opens a PR.
+- **Not done:**
+  - A Workers deploy via `worker-build`/`wrangler` (no account or tooling here). `FetchTransport` is proven under Node instead.
+  - Firefox and headless-Chrome CI runs, because there is no browser tier.
+  - A windows/macOS CI matrix (CI stays on ubuntu).
+
 ---
 
 ## 4. Verification (end to end)
@@ -748,7 +795,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - a transaction search.
 - `cargo xtask check-codegen` checks the generated code for drift.
 - Cross-SDK parity: `cargo xtask vectors` regenerates the signature, JWT and JWE vectors from the pinned official SDKs, and the tests must stay green.
-- WASM: `cargo xtask check-browser`, `wasm-pack test --headless --chrome --firefox`, the `examples/browser_tokenize` flow by hand in a browser, `cargo build --target wasm32-wasip2 --no-default-features --features wasi,payments`, and a Workers example deploy with `wrangler dev`.
+- WASM: `cargo test --target wasm32-unknown-unknown ... --test wasm --test flex` (Node), `cargo test --target wasm32-wasip2 ... --test wasm --test flex --test dsl --test spec_examples` (wasmtime). Add `CYBS_LIVE=1` to send live sandbox requests from inside the runtimes.
 
 ## 5. Risks and open items
 - **Compile time** of about 2,200 models. Mitigations: feature gating, no per-model builders, `Option` fields, avoiding `flatten`. Measure in Stage 2. If `full` takes more than about 90 s, split the generated code into internal crates later; the public API is unchanged because they are re-exported.
@@ -757,7 +804,11 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - **Ambiguous server behaviour.**
   - `digestAlgorithm` vs `digest-algorithm`, and the case of `request-method`: we follow the majority of SDKs, and the live tests confirm it.
   - Webhook signature format: confirm against a real webhook in sandbox during Stage 4.
-- **Browser tokenization is unsupported by Cybersource.** The guide says the Flex API "is not designed to be used from the browser". Cybersource could restrict CORS on `/flex/v2/tokens` at any time; today it echoes any origin. Mitigations: the feature is opt-in and documented, and it also works from native callers, where nothing depends on CORS. Microform and Unified Checkout remain the recommended web path.
+- **Browser tokenization (resolved).** Cybersource rejects browser callers outright (§1.9), so there is no browser tier. Microform and Unified Checkout are the web path; the crate creates their contexts and verifies their tokens.
+- **Open items at 0.1.0:**
+  - The webhook payload form; both forms are accepted.
+  - The response-MLE sample key, which expires 2026-11-28; that live test will then need a fresh key.
+  - The agentic-commerce sample merchant cannot process cards (502).
 - **PCI.** Using the browser tier puts the merchant's page in scope for the card number, most likely SAQ A-EP. This is documented; it is not our liability, but it must be impossible to miss.
 - **Flex protocol gaps.**
   - Some details are confirmed only by probes or by the iOS SDK.

@@ -1,6 +1,13 @@
 //! Walking every page of a list operation.
 //!
-//! ```ignore
+//! ```no_run
+//! # #[cfg(feature = "tms")]
+//! # async fn run(
+//! #     client: cybersource::Client<cybersource::transport::ReqwestTransport>,
+//! #     customer_id: &str,
+//! # ) -> cybersource::Result<()> {
+//! use cybersource::flows::Paged;
+//!
 //! let mut pages = client
 //!     .tms()
 //!     .get_customer_payment_instruments_list(customer_id)
@@ -11,6 +18,7 @@
 //!     // ...
 //! }
 //! // Blocking clients: `for page in blocking.tms()....pages() { let page = page?; }`
+//! # Ok(()) }
 //! ```
 
 use crate::Result;

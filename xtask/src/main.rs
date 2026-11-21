@@ -13,6 +13,7 @@ const USAGE: &str = "usage: cargo xtask <task>
 tasks:
   vectors               regenerate tests/vectors/*.json from the official Python SDK
   update-spec <tag>     vendor the spec from cybersource-rest-client-python at <tag>
+  update-spec --latest  vendor the spec from its newest release, if newer
   verify-spec           check spec/cybersource-rest-spec.json matches spec/SOURCE.md
   codegen               regenerate src/generated from the spec
   sandbox-keys          download Cybersource's public sandbox sample keys into target/
@@ -30,6 +31,7 @@ fn main() -> ExitCode {
         .as_slice()
     {
         ["vectors"] => vectors::vectors(),
+        ["update-spec", "--latest"] => spec_source::update_latest(),
         ["update-spec", tag] => spec_source::update(tag),
         ["verify-spec"] => spec_source::verify().map(|_| ()),
         ["codegen"] => codegen::codegen(),

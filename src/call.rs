@@ -1,12 +1,19 @@
 //! [`Call`]: a pending API call returned by the generated accessors.
 //!
-//! ```ignore
+//! ```no_run
+//! # #[cfg(all(feature = "payments", feature = "tms", feature = "ureq"))]
+//! # async fn run(
+//! #     client: cybersource::Client<cybersource::transport::ReqwestTransport>,
+//! #     blocking: cybersource::BlockingClient<cybersource::transport::UreqTransport>,
+//! #     req: cybersource::models::CreatePaymentRequest,
+//! # ) -> cybersource::Result<()> {
 //! // async: await the call directly (or use `.send()`)
-//! let resp = client.payments().create_payment(req).await?;
+//! let resp = client.payments().create_payment(req.clone()).await?;
 //! // optional parameters are setters on the call
-//! let page = client.tms().get_customer_payment_instruments(id).limit(50).await?;
+//! let page = client.tms().get_customer_payment_instruments_list("customer-id").limit(50).await?;
 //! // blocking
 //! let resp = blocking.payments().create_payment(req).send()?;
+//! # Ok(()) }
 //! ```
 
 use std::future::IntoFuture;

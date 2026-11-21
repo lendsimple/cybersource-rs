@@ -11,12 +11,21 @@
 //! Unlike the official SDKs, verification pins the algorithm to RS256 and
 //! checks `exp`/`iat` (with 20 seconds of leeway by default).
 //!
-//! ```ignore
+//! ```no_run
+//! # use cybersource::capture_context::CaptureContextVerifier;
+//! # #[cfg(feature = "capture-context")]
+//! # async fn run(
+//! #     client: cybersource::Client<cybersource::transport::ReqwestTransport>,
+//! #     request: cybersource::models::GenerateCaptureContextRequest,
+//! #     transient_jwt: String,
+//! #     now: i64,
+//! # ) -> cybersource::Result<()> {
 //! let verifier = CaptureContextVerifier::new();
 //! let jwt = client.capture_context().generate_capture_context(request).await?;
 //! let context = verifier.verify(&client, &jwt).await?;
 //! // ... later, with the transient token from the browser:
 //! let token = context.verify_transient_token(&transient_jwt, now)?;
+//! # Ok(()) }
 //! ```
 
 use std::borrow::Cow;

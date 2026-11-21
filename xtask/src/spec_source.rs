@@ -29,6 +29,51 @@ fn sha256_hex(bytes: &[u8]) -> String {
         .collect()
 }
 
+/// The SDK tag the vendored spec came from, as recorded in `spec/SOURCE.md`.
+pub fn current_tag() -> Result<String> {
+    let source = fs::read_to_string(source_path()).map_err(|e| e.to_string())?;
+    source
+        .lines()
+        .find_map(|line| line.strip_prefix("| Tag | `")?.strip_suffix("` |"))
+        .map(str::to_owned)
+        .ok_or_else(|| "spec/SOURCE.md has no `| Tag |` row".to_string())
+}
+
+/// The newest release of the Python SDK, from the GitHub API.
+fn latest_tag() -> Result<String> {
+    let output = Command::new("curl")
+        .args(["-fsSL", "-H", "Accept: application/vnd.github+json"])
+        .arg(format!(
+            "https://api.github.com/repos/{REPO}/releases/latest"
+        ))
+        .output()
+        .map_err(|e| format!("failed to run curl: {e}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "fetching the latest release failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
+    }
+    let release: serde_json::Value =
+        serde_json::from_slice(&output.stdout).map_err(|e| e.to_string())?;
+    release["tag_name"]
+        .as_str()
+        .map(str::to_owned)
+        .ok_or_else(|| "the latest release has no tag_name".to_string())
+}
+
+/// `update-spec --latest`: vendors the newest SDK release's spec, if it is
+/// newer than the one vendored.
+pub fn update_latest() -> Result {
+    let (current, latest) = (current_tag()?, latest_tag()?);
+    if current == latest {
+        println!("spec is current ({current})");
+        return Ok(());
+    }
+    println!("updating spec {current} -> {latest}");
+    update(&latest)
+}
+
 /// Downloads the spec at `tag`, checks it parses, and records its provenance.
 pub fn update(tag: &str) -> Result {
     let url = format!("https://raw.githubusercontent.com/{REPO}/{tag}/{PATH_IN_REPO}");
