@@ -1,0 +1,36 @@
+# cargo-deny: https://embarkstudios.github.io/cargo-deny/
+
+[graph]
+all-features = true
+
+[advisories]
+# Fail on any vulnerability, unmaintained or unsound crate in the dependency tree.
+ignore = [
+    # `instant` is unmaintained, not vulnerable. Only the `wasi` transport pulls
+    # it in (wstd 0.6.8 -> futures-lite 1 -> fastrand 1), on wasm32-wasip2 only.
+    # Drop this once a wstd release moves off futures-lite 1.
+    { id = "RUSTSEC-2024-0384", reason = "unmaintained only; wasm32-wasip2 via wstd" },
+]
+
+[licenses]
+# Permissive licenses, all compatible with this crate's MIT OR Apache-2.0 license.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-3-Clause",
+    "CDLA-Permissive-2.0", # webpki-root-certs (Mozilla's CA certificates)
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+]
+confidence-threshold = 0.9
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# Path dependencies within the workspace carry no version, so they are not wildcards.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

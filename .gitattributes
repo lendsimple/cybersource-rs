@@ -1,0 +1,12 @@
+# Tests read these byte for byte (vectors, keys, snapshots, compiler output, and
+# the spec whose hash `cargo xtask verify-spec` checks), so keep them exactly as
+# committed on every OS. Without this, Windows checkouts would get CRLF.
+*.rs text eol=lf
+*.json text eol=lf
+*.pem text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.snap text eol=lf
+*.stderr text eol=lf
+*.toml text eol=lf
+*.p12 binary
