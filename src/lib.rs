@@ -231,3 +231,8 @@ pub mod __private {
 }
 #[cfg(feature = "server")]
 pub use generated::{apis, models, operations};
+
+/// Compiles the README's example as a doc test.
+#[cfg(all(doctest, feature = "reqwest", feature = "payments"))]
+#[doc = include_str!("../README.md")]
+pub struct ReadmeDoctests;

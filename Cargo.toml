@@ -14,7 +14,16 @@ categories = ["api-bindings", "web-programming::http-client", "wasm"]
 readme = "README.md"
 repository = "https://github.com/lendsimple/cybersource-rs"
 documentation = "https://docs.rs/cybersource"
-exclude = ["/spec", "/xtask", "/tests", "/.github", "/.cargo", "/implementation.md"]
+exclude = [
+    "/spec",
+    "/xtask",
+    "/scripts",
+    "/.github",
+    "/.cargo",
+    "/implementation.md",
+    "/RELEASING.md",
+    "/deny.toml",
+]
 
 [features]
 default = ["server", "reqwest", "rustls", "p12", "payments", "tms", "capture-context"]
