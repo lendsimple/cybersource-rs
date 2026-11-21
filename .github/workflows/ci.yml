@@ -125,5 +125,7 @@ jobs:
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --all-features
       - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,p12
       # Run the core on real wasm runtimes: Node (wasm-bindgen-test) and wasmtime.
-      - run: cargo test --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,payments,http-signature --test wasm
-      - run: cargo test --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,http-signature --test wasm --test dsl --test spec_examples
+      - run: cargo clippy --package cybersource --all-targets --target wasm32-unknown-unknown --no-default-features --features server,payments,http-signature,fetch -- -D warnings
+      - run: cargo clippy --package cybersource --all-targets --target wasm32-wasip2 --no-default-features --features server,payments,http-signature,wasi -- -D warnings
+      - run: cargo test --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,payments,http-signature,fetch --test wasm
+      - run: cargo test --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,http-signature,wasi --test wasm --test dsl --test spec_examples

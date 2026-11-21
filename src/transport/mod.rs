@@ -10,16 +10,24 @@ use bytes::Bytes;
 
 use crate::error::BoxError;
 
+#[cfg(all(feature = "fetch", target_arch = "wasm32"))]
+pub mod fetch;
 pub mod mock;
 #[cfg(feature = "reqwest")]
 pub mod reqwest;
 #[cfg(all(feature = "ureq", not(target_family = "wasm")))]
 pub mod ureq;
+#[cfg(all(feature = "wasi", target_os = "wasi", target_env = "p2"))]
+pub mod wasi;
 
+#[cfg(all(feature = "fetch", target_arch = "wasm32"))]
+pub use self::fetch::FetchTransport;
 #[cfg(feature = "reqwest")]
 pub use self::reqwest::ReqwestTransport;
 #[cfg(all(feature = "ureq", not(target_family = "wasm")))]
 pub use self::ureq::UreqTransport;
+#[cfg(all(feature = "wasi", target_os = "wasi", target_env = "p2"))]
+pub use self::wasi::WasiTransport;
 pub use mock::MockTransport;
 
 /// `Send` on native targets, nothing on WebAssembly, whose futures are
@@ -75,13 +83,29 @@ pub trait BlockingHttpTransport {
 /// Cybersource host the request is signed for: an intermediate host, a
 /// proxy, or a local mock server in tests.
 #[derive(Debug, Clone)]
-#[cfg_attr(not(any(feature = "reqwest", feature = "ureq")), allow(dead_code))]
+#[cfg_attr(
+    not(any(
+        feature = "reqwest",
+        feature = "ureq",
+        feature = "fetch",
+        feature = "wasi"
+    )),
+    allow(dead_code)
+)]
 pub(crate) struct BaseUrl {
     scheme: http::uri::Scheme,
     authority: http::uri::Authority,
 }
 
-#[cfg_attr(not(any(feature = "reqwest", feature = "ureq")), allow(dead_code))]
+#[cfg_attr(
+    not(any(
+        feature = "reqwest",
+        feature = "ureq",
+        feature = "fetch",
+        feature = "wasi"
+    )),
+    allow(dead_code)
+)]
 impl BaseUrl {
     /// Parses `scheme://host[:port]` (no path).
     pub(crate) fn parse(url: &str) -> crate::Result<Self> {

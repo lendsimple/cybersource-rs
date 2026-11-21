@@ -161,3 +161,74 @@ wasm_test! {
             .unwrap();
     }
 }
+
+// ---------------------------------------------------------------------------
+// Live: real requests from inside the wasm runtime. wasm has no environment
+// variables, so these are enabled at compile time with `CYBS_LIVE=1`.
+// ---------------------------------------------------------------------------
+
+#[cfg(any(
+    all(feature = "fetch", target_arch = "wasm32", target_os = "unknown"),
+    all(feature = "wasi", target_os = "wasi", target_env = "p2")
+))]
+async fn live_round_trip<T: cybersource::transport::HttpTransport>(transport: T) {
+    use cybersource::capture_context::GetFlexPublicKey;
+    use cybersource::types::PaymentStatus;
+
+    let client = Client::new(
+        Config::builder()
+            .environment(Environment::Test)
+            .merchant_id("testrest")
+            .credentials(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap())
+            .build()
+            .unwrap(),
+        transport,
+    );
+
+    // Unauthenticated GET.
+    let jwk = client
+        .execute(&GetFlexPublicKey { kid: "zu".into() })
+        .await
+        .unwrap();
+    assert_eq!(jwk.kid.as_deref(), Some("zu"));
+
+    // JWT-signed POST.
+    let resp = client
+        .payments()
+        .create_payment(payment! {
+            code: "cybersource-rs-wasm",
+            amount: "10.00" USD,
+            card: { number: "4111111111111111", expiration_month: "12", expiration_year: "2031" },
+            bill_to: {
+                first_name: "John", last_name: "Doe", address1: "1 Market St",
+                locality: "San Francisco", administrative_area: "CA", postal_code: "94105",
+                country: "US", email: "test@cybs.com", phone_number: "4158880000",
+            },
+        })
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(
+        resp.payment_status(),
+        Some(PaymentStatus::Authorized),
+        "{resp:?}"
+    );
+}
+
+#[cfg(all(feature = "fetch", target_arch = "wasm32", target_os = "unknown"))]
+#[wasm_bindgen_test::wasm_bindgen_test]
+async fn fetch_transport_live() {
+    if option_env!("CYBS_LIVE") != Some("1") {
+        return;
+    }
+    live_round_trip(cybersource::transport::FetchTransport::new()).await;
+}
+
+#[cfg(all(feature = "wasi", target_os = "wasi", target_env = "p2"))]
+#[test]
+fn wasi_transport_live() {
+    if option_env!("CYBS_LIVE") != Some("1") {
+        return;
+    }
+    wstd::runtime::block_on(live_round_trip(cybersource::transport::WasiTransport::new()));
+}

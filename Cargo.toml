@@ -26,6 +26,11 @@ rustls = ["reqwest?/rustls", "ureq?/rustls"]
 native-tls = ["reqwest?/native-tls", "ureq?/native-tls"]
 # Structured request logging via `tracing`, with PII redacted.
 tracing = ["server", "dep:tracing"]
+# Async transport over the JavaScript `fetch` API (wasm32): Cloudflare
+# Workers, Deno, Node and browsers.
+fetch = ["server", "dep:web-sys", "dep:js-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures"]
+# Async transport over WASI 0.2 HTTP (wasm32-wasip2). Needs Rust 1.91.1 (wstd).
+wasi = ["server", "dep:wstd"]
 # Convert rust_decimal::Decimal into Amount.
 rust_decimal = ["dep:rust_decimal"]
 # PKCS#12 (.p12) key loading.
@@ -115,6 +120,17 @@ tracing = { version = "0.1", optional = true }
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 ureq = { version = "3.5", default-features = false, optional = true }
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = { version = "0.3.107", optional = true }
+wasm-bindgen = { version = "=0.2.130", optional = true }
+wasm-bindgen-futures = { version = "0.4.80", optional = true }
+web-sys = { version = "0.3.107", optional = true, features = [
+    "Headers", "Request", "RequestInit", "Response", "WorkerGlobalScope",
+] }
+
+[target.'cfg(all(target_os = "wasi", target_env = "p2"))'.dependencies]
+wstd = { version = "0.6.8", default-features = false, optional = true }
+
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
 getrandom = { version = "0.4", features = ["wasm_js"] }
 
@@ -132,6 +148,9 @@ wiremock = "0.6"
 
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dev-dependencies]
 wasm-bindgen-test = "=0.3.80"
+
+[target.'cfg(all(target_os = "wasi", target_env = "p2"))'.dev-dependencies]
+wstd = { version = "0.6.8", default-features = false }
 
 [lints.rust]
 unsafe_code = "forbid"
