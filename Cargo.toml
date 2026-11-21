@@ -92,37 +92,37 @@ features = ["full", "reqwest", "ureq"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-bytes = "1.12"
-http = "1.5"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = { version = "1.0", features = ["raw_value"] }
-thiserror = "2.0"
-web-time = "1.1"
-getrandom = "0.4"
-reqwest = { version = "0.13", default-features = false, optional = true }
-base64 = "0.23"
-hmac = "0.13"
-sha2 = "0.11"
-secrecy = "0.10"
-zeroize = "1.9"
-x509-cert = { version = "0.3", features = ["hazmat", "pem"] }
-der = "0.8"
-rsa = { version = "0.10", features = ["pkcs1v15"] }
-pkcs8 = { version = "0.11", features = ["encryption", "pem"] }
-pkcs1 = { version = "0.8", features = ["pem"] }
-bon = "3.10"
-httpdate = "1.0"
-percent-encoding = "2.3"
-p12-keystore = { version = "0.4", optional = true }
-aes-gcm = { version = "0.11", default-features = false, features = ["aes", "alloc"] }
-sha1 = { version = "0.11", default-features = false }
-rust_decimal = { version = "1", optional = true }
-subtle = "2.6"
-tracing = { version = "0.1", optional = true }
+bytes = "1.12.2"
+http = "1.5.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.154", features = ["raw_value"] }
+thiserror = "2.0.21"
+web-time = "1.1.0"
+getrandom = "0.4.3"
+reqwest = { version = "0.13.5", default-features = false, optional = true }
+base64 = "0.23.1"
+hmac = "0.13.0"
+sha2 = "0.11.1"
+secrecy = "0.10.3"
+zeroize = "1.9.2"
+x509-cert = { version = "0.3.1", features = ["hazmat", "pem"] }
+der = "0.8.3"
+rsa = { version = "0.10.0", features = ["pkcs1v15"] }
+pkcs8 = { version = "0.11.0", features = ["encryption", "pem"] }
+pkcs1 = { version = "0.8.0", features = ["pem"] }
+bon = "3.10.3"
+httpdate = "1.0.3"
+percent-encoding = "2.3.2"
+p12-keystore = { version = "0.4.1", optional = true }
+aes-gcm = { version = "0.11.1", default-features = false, features = ["aes", "alloc"] }
+sha1 = { version = "0.11.0", default-features = false }
+rust_decimal = { version = "1.43.0", optional = true }
+subtle = "2.6.1"
+tracing = { version = "0.1.44", optional = true }
 
 # Blocking transport; meaningless on wasm, where nothing may block.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-ureq = { version = "3.5", default-features = false, optional = true }
+ureq = { version = "3.5.2", default-features = false, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = { version = "0.3.107", optional = true }
@@ -136,19 +136,19 @@ web-sys = { version = "0.3.107", optional = true, features = [
 wstd = { version = "0.6.8", default-features = false, optional = true }
 
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
-getrandom = { version = "0.4", features = ["wasm_js"] }
+getrandom = { version = "0.4.3", features = ["wasm_js"] }
 
 [dev-dependencies]
-futures-executor = { version = "0.3", default-features = false, features = ["std"] }
+futures-executor = { version = "0.3.34", default-features = false, features = ["std"] }
 
 # Native-only test tooling (tokio networking, compile-fail tests, snapshots).
 [target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
-insta = { version = "1", features = ["json"] }
-proptest = "1"
-tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "time"] }
-tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "std"] }
-trybuild = "1"
-wiremock = "0.6"
+insta = { version = "1.49.0", features = ["json"] }
+proptest = "1.12.0"
+tokio = { version = "1.54.1", features = ["macros", "rt", "rt-multi-thread", "time"] }
+tracing-subscriber = { version = "0.3.23", default-features = false, features = ["fmt", "std"] }
+trybuild = "1.0.125"
+wiremock = "0.6.5"
 
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dev-dependencies]
 wasm-bindgen-test = "=0.3.80"
