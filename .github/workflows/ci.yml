@@ -52,6 +52,7 @@ jobs:
       - uses: taiki-e/install-action@nextest
       - run: cargo nextest run --workspace --all-features
       - run: cargo test --doc --all-features
+      - run: cargo build --examples --all-features
 
   # Each API group must build on its own: catches cfg mistakes in shared models.
   features:

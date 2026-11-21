@@ -598,7 +598,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - `SigningInput` has a new `response_mle_kid` field.
 
 ### Stage 4: Ergonomics, DSL and utilities
-**Status:** Not Started
+**Status:** Complete (2026-11-20)
 **Goal:** The idiomatic layer: DSL, open enums, flow helpers, capture context, webhooks and redaction.
 
 **Work**
@@ -632,6 +632,53 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 
 **Success criteria**
 - Examples compile and run against the sandbox, and none of them uses a raw struct literal.
+
+**Outcome and findings**
+- **Success criterion met.** The five examples use the DSL with no struct literals, and all run against the sandbox:
+  - `authorize_and_capture`: `payment!`, then `PaymentOutcome`, then `capture!`;
+  - `blocking`;
+  - `tms_customer`: create, read with ETag, update with `if_match`, paginated list, delete;
+  - `capture_context`: create and verify against the live key endpoint;
+  - `webhook`.
+
+  The live suite also verifies a fresh Microform capture context.
+- **DSL.**
+  - **`build!`** is one recursive `macro_rules!` muncher with no per-model code that works on all 2,068 models. It covers nested objects, object lists, value lists (`["VISA", "MASTERCARD"]`), raw `field = expr`, and `..base`.
+  - **Base values:** `..base` replaces the planned `from base`, because `macro_rules!` can't have an expression followed by `{`.
+  - **`patch!`** applies the same syntax to an existing value.
+  - **Flow macros:** `payment!`, `capture!`, `refund!`, `reversal!` and `void!` share one muncher with a mode token.
+  - **Compile-time literals:** `amount!("10.00")` and `currency!(USD)` are checked at compile time with `const fn` validators.
+  - **Error quality:** a misspelled field gives an ordinary compiler error pointing at the identifier, with a suggestion. `trybuild` locks this in, along with the invalid-literal errors.
+  - **Not covered:** a "wrong type" compile-fail case was left out, because the compiler's list of candidate `From` impls differs by platform.
+- **Typed statuses.**
+  - `open_enum!` generates string enums with an `Unknown(String)` fallback.
+  - Eight enums use the values from the spec descriptions: payment, capture, refund, reversal, void, credit and payout statuses, and `ReasonCode`.
+  - Typed getters exist on the payment and payout response models, and `PaymentOutcome` interprets them (approved, partial, review, declined). Declines are HTTP 201.
+- **Pagination.**
+  - A `[pagination]` table in `codegen.toml` covers 9 list operations. Their total and count fields differ (`total`/`count`, `totalCount`/`plans`, `totalInvoices`, `totalLinks`, …), and invoices and payment links even make `offset` and `limit` *required*.
+  - The generator implements `Paged`, and `Call::pages()` gives `next().await` on async clients and an `Iterator` on blocking ones. There is no `Stream` dependency.
+- **Partner `developerId`.** It is opt-in (`Config::developer_id`) and is injected into the serialized copy of the body, only for the 32 operations whose body has the field, and never over a value the caller set.
+- **Capture context and transient tokens.**
+  - RS256 is pinned and `exp`/`iat` are checked with 20 s leeway; the SDKs check neither.
+  - Keys come from `/flex/v2/public-keys/{kid}` through the client's own transport. They are cached by host and kid, and a cached key is re-fetched once when it fails, to handle rotation.
+  - Transient tokens are verified with the context's one-time `flx.jwk`, with a matching `kid` required.
+  - The spec's real Cybersource capture contexts verify against the published `zu` key, which is committed as a fixture.
+  - The key endpoint marks its key `use: "enc"` and sends no `alg`, so neither is checked.
+- **Webhooks.**
+  - `WebhookVerifier` implements HMAC-SHA256 over `t + "." + payload` with the base64-decoded secret, constant-time comparison, ±5 min tolerance, and several keys by id for rotation.
+  - The documented worked example passes.
+  - **Open item:** Cybersource's own plugins disagree on whether the payload member or the raw body is signed, so both are accepted. A live webhook delivery, which needs a public endpoint, should settle it.
+- **Redaction and tracing.**
+  - The sensitive-field list is generated from `codegen.toml`, so `Debug` output and logs share one source.
+  - The `tracing` feature adds one span per request (operation, method, path, status, correlation id, elapsed time). TRACE events log redacted bodies: the request before encryption and the response after decryption.
+  - A test captures real log output and checks that the PAN, CVV, names, email, bearer token and JWTs never appear.
+  - Expiring certificates (within 90 days) and MLE warnings are logged when the `Config` is built.
+- **Deviations:**
+  - A `Pager` with `next()` instead of a `Stream`.
+  - Webhook verification accepts either payload form.
+  - Typed getters are hand-written for the payment and payout models, not generated.
+  - Base values use `..base`, not `from`.
+  - New `Error::Verification` and `Error::UnexpectedStatus` variants.
 
 ### Stage 5: WASM targets, browser tokenization, documentation and release
 **Status:** Not Started

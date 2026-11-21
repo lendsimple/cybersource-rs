@@ -132,3 +132,22 @@ missing_docs = "warn"
 
 [lints.clippy]
 all = { level = "warn", priority = -1 }
+
+[[example]]
+name = "authorize_and_capture"
+required-features = ["reqwest", "payments"]
+
+[[example]]
+name = "blocking"
+required-features = ["ureq", "payments"]
+
+[[example]]
+name = "tms_customer"
+required-features = ["reqwest", "tms"]
+
+[[example]]
+name = "capture_context"
+required-features = ["reqwest", "capture-context"]
+
+[[example]]
+name = "webhook"
