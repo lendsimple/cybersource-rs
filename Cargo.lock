@@ -412,6 +412,7 @@ dependencies = [
 name = "cybersource"
 version = "0.1.0"
 dependencies = [
+ "aes-gcm",
  "base64 0.23.1",
  "bon",
  "bytes",
@@ -429,6 +430,7 @@ dependencies = [
  "secrecy",
  "serde",
  "serde_json",
+ "sha1",
  "sha2",
  "thiserror",
  "tokio",

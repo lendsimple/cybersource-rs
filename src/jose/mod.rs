@@ -5,4 +5,5 @@
 //! don't build cleanly for every wasm target.
 
 pub mod b64;
+pub mod jwe;
 pub mod jws;

@@ -100,6 +100,8 @@ bon = "3.10"
 httpdate = "1.0"
 percent-encoding = "2.3"
 p12-keystore = { version = "0.4", optional = true }
+aes-gcm = { version = "0.11", default-features = false, features = ["aes", "alloc"] }
+sha1 = { version = "0.11", default-features = false }
 
 # Blocking transport; meaningless on wasm, where nothing may block.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]

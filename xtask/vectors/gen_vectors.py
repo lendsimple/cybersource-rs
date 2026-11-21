@@ -155,6 +155,49 @@ def jwt_vectors(fixtures):
     return out
 
 
+def jwe_vectors(fixtures):
+    """Tokens the SDK (and its JOSE library, jwcrypto) encrypt to our fixture
+    CyberSource_SJC_US key; the Rust tests decrypt them with sjc_test_key.pem."""
+    from authenticationsdk.util.MLEUtility import MLEUtility
+    import authenticationsdk.util.MLEUtility as mle_module
+    from jwcrypto import jwe, jwk
+
+    mle_module.time = types.SimpleNamespace(time=lambda: EPOCH)
+    config = merchant_config("jwt", jwt_key_type="P12", fixtures=fixtures)
+    # The Cybersource-shaped fixture P12 carries a CyberSource_SJC_US certificate.
+    config.key_file_name = "cybs_shaped"
+    config.p12KeyFilePath = os.path.join(fixtures, "cybs_shaped.p12")
+    wrapper = MLEUtility.encrypt_request_payload(config, PAYMENT_BODY, "application/json")
+    out = [{
+        "name": "sdk_mle_request",
+        "source": "MLEUtility.encrypt_request_payload",
+        "wrapper": wrapper,
+        "token": json.loads(wrapper)["encryptedRequest"],
+        "plaintext": PAYMENT_BODY,
+    }]
+
+    with open(os.path.join(fixtures, "sjc_cert.pem"), "rb") as f:
+        from cryptography import x509
+        from cryptography.hazmat.primitives import serialization
+        cert = x509.load_pem_x509_certificate(f.read())
+        public = jwk.JWK.from_pem(cert.public_key().public_bytes(
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo))
+    for name, alg, enc in [
+        ("jwcrypto_rsa_oaep_a256gcm", "RSA-OAEP", "A256GCM"),
+        ("jwcrypto_rsa_oaep_256_a128gcm", "RSA-OAEP-256", "A128GCM"),
+        ("jwcrypto_rsa_oaep_256_a192gcm", "RSA-OAEP-256", "A192GCM"),
+    ]:
+        token = jwe.JWE(plaintext=PAYMENT_BODY.encode(), protected=json.dumps({"alg": alg, "enc": enc}))
+        token.add_recipient(public)
+        out.append({
+            "name": name,
+            "source": "jwcrypto",
+            "token": token.serialize(compact=True),
+            "plaintext": PAYMENT_BODY,
+        })
+    return out
+
+
 def digest_vectors():
     bodies = ["{}", PAYMENT_BODY, '{"name":"café"}']
     return [
@@ -175,6 +218,11 @@ def main():
     write(os.path.join(output, "http_signature.json"), http_signature_vectors())
     write(os.path.join(output, "jwt.json"), jwt_vectors(fixtures))
     write(os.path.join(output, "digest.json"), digest_vectors())
+    # Encryption is randomized, so these tokens differ on every run; keep the
+    # committed ones unless the file is deleted (tests only decrypt them).
+    jwe_path = os.path.join(output, "jwe.json")
+    if not os.path.exists(jwe_path):
+        write(jwe_path, jwe_vectors(fixtures))
 
 
 if __name__ == "__main__":

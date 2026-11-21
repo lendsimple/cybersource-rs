@@ -15,6 +15,7 @@ cargo xtask vectors
 |---|---|---|
 | `http_signature.json` | `Authorization.get_token` → `HTTPSignatureToken` | GET, POST, GET with query, PATCH, DELETE, meta key. The date is passed in by the caller (the SDK formats it with `wsgiref.handlers.format_date_time`). |
 | `jwt.json` | `Authorization.get_token` → `JwtSignatureToken` | HS256 (`jwt_key_type=SHARED_SECRET`) and RS256 (`P12`, using `tests/fixtures/testmerchant.p12`). |
+| `jwe.json` | `MLEUtility.encrypt_request_payload` (with `tests/fixtures/cybs_shaped.p12`) and jwcrypto directly | Encrypted to the fixture `CyberSource_SJC_US` key; the tests decrypt with `sjc_test_key.pem`. Encryption is randomized, so the generator only writes this file when it is missing: delete it to regenerate. |
 | `digest.json` | `DigestAndPayload.string_digest_generation` | Includes non-ASCII to pin UTF-8 hashing. |
 
 Determinism:
