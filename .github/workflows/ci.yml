@@ -20,6 +20,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      # Reduced feature sets catch code (and test helpers) only used by some features.
+      - run: cargo clippy --package cybersource --all-targets --no-default-features -- -D warnings
+      - run: cargo clippy --package cybersource --all-targets --no-default-features --features server -- -D warnings
+      - run: cargo clippy --package cybersource --all-targets --no-default-features --features p12 -- -D warnings
       - run: cargo doc --package cybersource --features full --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
@@ -111,4 +115,4 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --no-default-features --features server,reqwest
       - run: cargo check --package cybersource --target wasm32-unknown-unknown --all-features
-      - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments
+      - run: cargo check --package cybersource --target wasm32-wasip2 --no-default-features --features server,payments,p12

@@ -553,7 +553,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - **Formatting.** `quote`, then `prettyplease`, then `rustfmt` (via stdin), so `cargo fmt` leaves the generated files unchanged.
 
 ### Stage 3: Key material and Message-Level Encryption
-**Status:** Not Started
+**Status:** Complete (2026-11-20)
 **Goal:** RS256 with P12, request and response MLE, and correct per-operation MLE policy.
 
 **Work**
@@ -576,6 +576,26 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 
 **Success criteria**
 - A sandbox payment succeeds with request MLE and response MLE using a P12.
+
+**Outcome and findings**
+- **Success criterion met, with one change.** The plan was to prove MLE with a sandbox *payment*. Cybersource's public sample merchant `agentic_mid_091225001`, whose P12s ship in the official sample repos, answers `createPayment` with `502 SYSTEM_ERROR` even with plain RS256 and no MLE. That means it authenticates but isn't set up for card processing. The live tests use a transaction search (`POST /tss/v2/searches`) instead, which accepts optional MLE in both directions. All three pass:
+  - JWT RS256 from the real P12;
+  - an encrypted request, which the sandbox decrypts: it echoes back the search name, which only exists inside the JWE;
+  - an encrypted request and response. The response on the wire is `{"encryptedResponse": …}`, and we decrypt it.
+
+  The four Stage 1 authorization tests still pass. That makes 8/8 live tests.
+- **P12.** `p12-keystore` 0.4.1 parses Cybersource's real files: a 3DES certificate bag, plain or shrouded key bags, and an SHA-256 MAC with a 512-byte salt. No in-house parser was needed.
+  - **Surprise:** Cybersource certificates use the ASCII digits of the decimal serial as the X.509 serial (22 bytes). That is over RFC 5280's 20-octet limit, and `x509-cert` rejects it by default, so we parse with its `Raw` profile.
+  - Keys are paired with certificates by public key, not by position in the file.
+- **JWE.** Hand-written RSA-OAEP and RSA-OAEP-256 with A128, A192 and A256 GCM. It decrypts tokens made by the SDK's own `MLEUtility.encrypt_request_payload` and by jwcrypto. Every decryption failure is one opaque error. `rsa` 0.10 is patched for RUSTSEC-2023-0071 (Marvin).
+- **Policy.** It matches the SDKs, with one difference: a mandatory-MLE operation without a certificate, or under HTTP Signature, fails with `Error::Mle` and **nothing is sent**, where the SDKs silently send plaintext.
+- **Sample keys.** `cargo xtask sandbox-keys` downloads Cybersource's public sample keys at a pinned commit, SHA-256 checked, into `target/`. They are not committed: the sample repo licence is `NOASSERTION`. The response-MLE key expires 2026-11-28; after that the live test skips itself.
+- **Deviations:**
+  - **No `mle` feature.** MLE is always available under `server`, because 32 operations require it.
+  - **Expiry is reported, not enforced.** `Config::certificate_expiries()` lists every certificate's expiry. The SDKs only warn, and the sandbox accepts expired keys.
+  - `MleConfig` uses chained setters, with no bon builder.
+  - `pipeline::finish` now takes the `Config`, because it needs the response key.
+  - `SigningInput` has a new `response_mle_kid` field.
 
 ### Stage 4: Ergonomics, DSL and utilities
 **Status:** Not Started
@@ -685,7 +705,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 
 ## 5. Risks and open items
 - **Compile time** of about 2,200 models. Mitigations: feature gating, no per-model builders, `Option` fields, avoiding `flatten`. Measure in Stage 2. If `full` takes more than about 90 s, split the generated code into internal crates later; the public API is unchanged because they are re-exported.
-- **Pre-release dependencies.** `p12-keystore` pulls in `pkcs12`/`cms` pre-releases. If that blocks publishing, vendor a minimal PKCS#12 parser (PBES1 and PBES2 bags).
+- **Pre-release dependencies.** `p12-keystore` pulls in `pkcs12`/`cms` release candidates and a second ASN.1 stack (`x509-parser`). crates.io allows publishing with them. If they become a problem, vendor a minimal PKCS#12 parser (PBES1 and PBES2 bags) on `pkcs12` types plus `pkcs5`.
 - **Spec churn.** Cybersource releases monthly. Adding a field is semver-minor for us because structs use `Default` and `..` construction. Renamed types become a semver-major regeneration.
 - **Ambiguous server behaviour.**
   - `digestAlgorithm` vs `digest-algorithm`, and the case of `request-method`: we follow the majority of SDKs, and the live tests confirm it.
