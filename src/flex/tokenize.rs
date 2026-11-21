@@ -16,7 +16,8 @@
 //!    encrypts it to the context's one-time key (`RSA-OAEP`, `A256GCM`,
 //!    `kid` = `flx.jwk.kid`), and POSTs `{"keyId": "<JWE>"}` to
 //!    `flx.origin + flx.path` with no authentication.
-//! 3. The response is the transient token, a JWT. Your server verifies it
+//! 3. The response carries the transient token, a JWT
+//!    (`{"token": "<JWT>", ...}`). Your server verifies it
 //!    with [`CaptureContext::verify_transient_token`] and pays with it
 //!    (`tokenInformation.transientTokenJwt`).
 //!
@@ -352,8 +353,17 @@ pub fn parse_tokenize_response(status: u16, body: &[u8]) -> Result<TransientToke
     if !(200..300).contains(&status) {
         return Err(rejection(status, text));
     }
-    // A bare JWT; tolerate a JSON-quoted one.
-    let jwt = if text.starts_with('"') {
+    // Flex answers `{"token": "<JWT>", ...}` (application/json); tolerate a
+    // bare or JSON-quoted JWT as well.
+    let jwt = if text.starts_with('{') {
+        let value: Value =
+            serde_json::from_str(text).map_err(|e| FlexError::InvalidResponse(e.to_string()))?;
+        value
+            .get("token")
+            .and_then(Value::as_str)
+            .ok_or_else(|| FlexError::InvalidResponse("no token in the response".into()))?
+            .to_owned()
+    } else if text.starts_with('"') {
         serde_json::from_str::<String>(text)
             .map_err(|e| FlexError::InvalidResponse(e.to_string()))?
     } else {

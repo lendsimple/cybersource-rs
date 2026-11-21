@@ -398,3 +398,100 @@ mod p12_and_mle {
         );
     }
 }
+
+/// The whole Flex API direct flow: the server creates an `api-*` capture
+/// context, the "client" encrypts card data to it and posts it to
+/// testflex, the server verifies the transient token and pays with it.
+#[tokio::test]
+#[ignore = "hits the Cybersource sandbox; run with CYBS_LIVE=1"]
+async fn flex_api_tokenization_end_to_end() {
+    use cybersource::build;
+    use cybersource::capture_context::CaptureContextVerifier;
+    use cybersource::entropy::OsEntropy;
+    use cybersource::flex::{CardData, parse_tokenize_response, tokenize_request};
+    use cybersource::models::{CreatePaymentRequest, GenerateFlexApiCaptureContextRequest};
+
+    let Some(config) = live_config(jwt) else {
+        return;
+    };
+    let client = Client::new(config, ReqwestTransport::new());
+
+    // Server: a session that requires the card number and expiry.
+    let jwt = client
+        .capture_context()
+        .generate_flex_api_capture_context(build!(GenerateFlexApiCaptureContextRequest {
+            fields: {
+                payment_information: { card: {
+                    number: { required: true },
+                    expiration_month: { required: true },
+                    expiration_year: { required: true },
+                    security_code: { required: false },
+                } },
+            },
+        }))
+        .await
+        .expect("flex session");
+    let context = CaptureContextVerifier::new()
+        .verify(&client, &jwt)
+        .await
+        .expect("capture context verifies");
+    eprintln!(
+        "context: type={:?} required={:?} optional={:?}",
+        context.kind(),
+        context.required_fields(),
+        context.optional_fields()
+    );
+
+    // Client: encrypt the card to the context and post it to Flex.
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+    let card = CardData::new("4111111111111111", "12", "2031").security_code("123");
+    let request = tokenize_request(&context, &card, now, &OsEntropy).expect("tokenize request");
+    let response = reqwest::Client::new()
+        .post(&request.url)
+        .header("content-type", request.content_type)
+        .body(request.body.clone())
+        .send()
+        .await
+        .expect("flex tokens");
+    let status = response.status().as_u16();
+    let content_type = response
+        .headers()
+        .get("content-type")
+        .map(|v| v.to_str().unwrap_or_default().to_owned());
+    let body = response.bytes().await.unwrap();
+    eprintln!(
+        "tokens: status={status} content-type={content_type:?} body starts {:?}",
+        String::from_utf8_lossy(&body[..body.len().min(40)])
+    );
+    let token = parse_tokenize_response(status, &body).expect("transient token");
+
+    // Server: verify the token with the context's key, then pay with it.
+    let verified = context
+        .verify_transient_token(&token.jwt, now)
+        .expect("transient token verifies");
+    eprintln!(
+        "token: type={:?} content={:?}",
+        verified.kind, verified.content
+    );
+
+    let resp = client
+        .payments()
+        .create_payment(build!(CreatePaymentRequest {
+            client_reference_information: { code: "cybersource-rs-flex" },
+            token_information: { transient_token_jwt: token.jwt.clone() },
+            order_information: {
+                amount_details: { total_amount: "12.00", currency: "USD" },
+                bill_to: {
+                    first_name: "John", last_name: "Doe", address1: "1 Market St",
+                    locality: "San Francisco", administrative_area: "CA", postal_code: "94105",
+                    country: "US", email: "test@cybs.com", phone_number: "4158880000",
+                },
+            },
+        }))
+        .await
+        .expect("payment with transient token");
+    assert_authorized("flex transient token", &resp);
+}

@@ -163,11 +163,17 @@ fn transient_token() -> String {
 wasm_test! {
     fn success_body_is_the_transient_token() {
         let jwt = transient_token();
-        for body in [jwt.clone(), format!("{jwt}\n"), serde_json::to_string(&jwt).unwrap()] {
+        // As testflex sends it (2026-11), and the bare and quoted forms.
+        let observed = json!({ "_embedded": {}, "discoverableServices": {}, "timestamp": 0, "token": jwt }).to_string();
+        for body in [observed, jwt.clone(), format!("{jwt}\n"), serde_json::to_string(&jwt).unwrap()] {
             let token = parse_tokenize_response(201, body.as_bytes()).unwrap();
             assert_eq!(token.jwt, jwt);
             assert_eq!(token.jti.as_deref(), Some("tt-1"));
         }
+        assert!(matches!(
+            parse_tokenize_response(200, br#"{"timestamp":0}"#).unwrap_err(),
+            FlexError::InvalidResponse(_)
+        ));
         // ...and the server can verify it against the context's key.
         let verified = api_context().verify_transient_token(&jwt, NOW).unwrap();
         assert_eq!(verified.content.unwrap()["paymentInformation"]["card"]["number"]["bin"], "411111");
