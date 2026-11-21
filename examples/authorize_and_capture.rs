@@ -6,12 +6,11 @@
 mod common;
 
 use cybersource::flows::PaymentOutcome;
-use cybersource::transport::ReqwestTransport;
 use cybersource::{Client, capture, payment};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new(common::config()?, ReqwestTransport::new());
+    let client = Client::new(common::config()?);
 
     let request = payment! {
         code: "example-order-1",

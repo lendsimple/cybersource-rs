@@ -34,17 +34,16 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
 ```rust
 use cybersource::flows::PaymentOutcome;
-use cybersource::transport::ReqwestTransport;
 use cybersource::{Client, Config, Credentials, Environment, payment};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("your_merchant_id")
         .credentials(Credentials::jwt_shared_secret("key-id", "base64-shared-secret")?)
         .build()?;
-    let client = Client::new(config, ReqwestTransport::new());
+    let client = Client::new(config);
 
     let response = client
         .payments()

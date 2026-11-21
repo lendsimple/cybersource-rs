@@ -15,9 +15,13 @@ First release.
 - The whole Cybersource REST API: 220 operations and 2,068 models,
   generated from the spec in the official Python SDK 0.0.81. Each API area
   has a feature flag.
-- `Client` (async) and `BlockingClient`. Operations are called through
-  `Call` builders: await them, or call `.send()`. `send_with_response`
-  adds the status, headers, correlation ID and ETag.
+- `Client` (async) and `BlockingClient`. `Client::new(config)` sends
+  through reqwest and `BlockingClient::new(config)` through ureq;
+  `with_transport` takes any other transport. The environment defaults to
+  `Environment::Sandbox`, so production is always chosen explicitly.
+  Operations are called through `Call` builders: await them, or call
+  `.send()`. `send_with_response` adds the status, headers, correlation ID
+  and ETag.
 - Authentication: JWT with a shared secret (HS256), or with an RSA key or
   P12 file (RS256). Legacy HTTP Signature is behind `http-signature`. All
   of them are checked against vectors from the official SDK.
@@ -27,7 +31,8 @@ First release.
 - Macros for request bodies: `build!` and `patch!`. Shortcuts for payment
   flows: `payment!`, `capture!`, `refund!`, `reversal!` and `void!`.
   Compile-time checked `amount!` and `currency!`.
-- Typed payment statuses and `PaymentOutcome`. `Error::outcome_unknown`
+- Typed payment statuses and `PaymentOutcome`. `Error::as_api` gives the
+  API error with its status and body. `Error::outcome_unknown`
   flags timeouts and 5xx responses, and `ApiError::is_retry_safe`
   identifies operations that move money.
 - Pagination (`Paged`/`Pager`), ETags, and opt-in `developerId`.

@@ -16,16 +16,15 @@
 //!
 //! ```no_run
 //! use cybersource::flows::PaymentOutcome;
-//! use cybersource::transport::ReqwestTransport;
 //! use cybersource::{Client, Config, Credentials, Environment, payment};
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let config = Config::builder()
-//!     .environment(Environment::Test)
+//!     .environment(Environment::Sandbox)
 //!     .merchant_id("your_merchant_id")
 //!     .credentials(Credentials::jwt_shared_secret("key-id", "base64-shared-secret")?)
 //!     .build()?;
-//! let client = Client::new(config, ReqwestTransport::new());
+//! let client = Client::new(config);
 //!
 //! let response = client
 //!     .payments()
@@ -62,9 +61,8 @@
 //! # #[cfg(all(feature = "ureq", feature = "transactions"))]
 //! # fn run(config: cybersource::Config) -> cybersource::Result<()> {
 //! use cybersource::BlockingClient;
-//! use cybersource::transport::UreqTransport;
 //!
-//! let client = BlockingClient::new(config, UreqTransport::new());
+//! let client = BlockingClient::new(config);
 //! let transaction = client.transactions().get_transaction("7952374019946681903813").send()?;
 //! # Ok(()) }
 //! ```
@@ -134,11 +132,11 @@
 //!   never retries money-moving operations by itself.
 //!
 //! ```no_run
-//! # async fn run(client: cybersource::Client<cybersource::transport::ReqwestTransport>, request: cybersource::models::CreatePaymentRequest) {
+//! # async fn run(client: cybersource::Client, request: cybersource::models::CreatePaymentRequest) {
 //! match client.payments().create_payment(request).await {
 //!     Ok(response) => { /* check the outcome */ }
 //!     Err(e) if e.outcome_unknown() => { /* look the payment up; do not resend blindly */ }
-//!     Err(e) => eprintln!("failed: {e} (correlation id {:?})", e.api().and_then(|a| a.correlation_id.as_deref())),
+//!     Err(e) => eprintln!("failed: {e} (correlation id {:?})", e.as_api().and_then(|a| a.correlation_id.as_deref())),
 //! }
 //! # }
 //! ```

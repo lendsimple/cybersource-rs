@@ -17,7 +17,7 @@
 //!             &env.secret("CYBS_SHARED_SECRET")?.to_string(),
 //!         )?)
 //!         .build()?;
-//!     let client = Client::new(config, FetchTransport::new());
+//!     let client = Client::with_transport(config, FetchTransport::new());
 //!     // ...
 //! }
 //! ```

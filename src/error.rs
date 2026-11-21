@@ -74,7 +74,7 @@ impl Error {
     }
 
     /// The API error, if Cybersource answered with a non-success status.
-    pub fn api(&self) -> Option<&ApiError> {
+    pub fn as_api(&self) -> Option<&ApiError> {
         match self {
             Error::Api(e) => Some(e),
             _ => None,

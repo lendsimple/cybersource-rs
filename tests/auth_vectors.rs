@@ -47,7 +47,7 @@ fn load<T: for<'de> Deserialize<'de>>(file: &str) -> Vec<T> {
 
 fn config(merchant_id: &str, portfolio_id: Option<&str>, credentials: Credentials) -> Config {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id(merchant_id)
         .maybe_portfolio_id(portfolio_id)
         .credentials(credentials)

@@ -6,12 +6,11 @@
 #[path = "common/mod.rs"]
 mod common;
 
-use cybersource::transport::ReqwestTransport;
 use cybersource::{Client, build, models};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new(common::config()?, ReqwestTransport::new());
+    let client = Client::new(common::config()?);
     let tms = client.tms();
 
     let created = tms

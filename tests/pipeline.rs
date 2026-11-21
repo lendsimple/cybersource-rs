@@ -23,7 +23,7 @@ const SECRET: &str = "yBJxy6LjM2TmcPGu+GaJrHtkke25fPpUX+UY6/L/1tE=";
 
 fn config(credentials: Credentials) -> Config {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testrest")
         .credentials(credentials)
         .build()
@@ -31,7 +31,7 @@ fn config(credentials: Credentials) -> Config {
 }
 
 fn jwt_client(mock: &MockTransport) -> Client<MockTransport> {
-    Client::new(
+    Client::with_transport(
         config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap()),
         mock.clone(),
     )
@@ -106,7 +106,7 @@ async fn jwt_request_is_signed_over_the_exact_body() {
 fn blocking_client_runs_the_same_pipeline() {
     let mock = MockTransport::new();
     mock.push_json(201, AUTHORIZED);
-    let client = BlockingClient::new(
+    let client = BlockingClient::with_transport(
         config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap()),
         mock.clone(),
     );
@@ -122,7 +122,7 @@ fn blocking_client_runs_the_same_pipeline() {
 fn http_signature_request_carries_digest_of_sent_body() {
     let mock = MockTransport::new();
     mock.push_json(201, AUTHORIZED);
-    let client = BlockingClient::new(
+    let client = BlockingClient::with_transport(
         config(Credentials::http_signature(KEY_ID, SECRET).unwrap()),
         mock.clone(),
     )
@@ -291,7 +291,7 @@ async fn bad_request_is_a_typed_api_error() {
         .unwrap_err();
 
     assert!(!err.outcome_unknown());
-    let api = err.api().expect("API error");
+    let api = err.as_api().expect("API error");
     assert_eq!(api.status, 400);
     assert_eq!(api.correlation_id.as_deref(), Some("corr-1"));
     let ErrorBody::Pts(body) = &api.body else {
@@ -319,7 +319,7 @@ async fn bad_gateway_on_payment_means_outcome_unknown_and_not_retry_safe() {
         .unwrap_err();
 
     assert!(err.outcome_unknown());
-    assert!(!err.api().unwrap().is_retry_safe());
+    assert!(!err.as_api().unwrap().is_retry_safe());
 }
 
 #[tokio::test]
@@ -454,7 +454,7 @@ async fn calls_can_be_awaited_or_sent() {
 fn blocking_calls_are_sent() {
     let mock = MockTransport::new();
     mock.push_json(200, r#"{"n":3}"#);
-    let client = BlockingClient::new(
+    let client = BlockingClient::with_transport(
         config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap()),
         mock.clone(),
     );
