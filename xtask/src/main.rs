@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
 
 mod codegen;
+mod sandbox_keys;
 mod spec_source;
 mod vectors;
 
@@ -14,6 +15,7 @@ tasks:
   update-spec <tag>     vendor the spec from cybersource-rest-client-python at <tag>
   verify-spec           check spec/cybersource-rest-spec.json matches spec/SOURCE.md
   codegen               regenerate src/generated from the spec
+  sandbox-keys          download Cybersource's public sandbox sample keys into target/
   check-codegen         fail if src/generated is out of date
   codegen --report      build the IR from the spec and print a summary";
 
@@ -31,6 +33,7 @@ fn main() -> ExitCode {
         ["update-spec", tag] => spec_source::update(tag),
         ["verify-spec"] => spec_source::verify().map(|_| ()),
         ["codegen"] => codegen::codegen(),
+        ["sandbox-keys"] => sandbox_keys::fetch(),
         ["check-codegen"] => codegen::check(),
         ["codegen", "--report"] => codegen::report(),
         [] => Err(USAGE.to_string()),

@@ -53,7 +53,7 @@ pub fn token(
             key_id.as_str(),
             JwsKey::Hs256(config.credentials().secret().expect("shared secret")),
         ),
-        Credentials::JwtRsa { kid, key } => (kid.as_str(), JwsKey::Rs256(key)),
+        Credentials::JwtRsa { kid, key, .. } => (kid.as_str(), JwsKey::Rs256(key)),
         #[cfg(feature = "http-signature")]
         Credentials::HttpSignature { .. } => {
             return Err(Error::Auth("credentials are not JWT".into()));

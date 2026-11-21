@@ -197,3 +197,39 @@ mod http_signature {
         }
     }
 }
+
+/// The SDK produced the RS256 vectors from `testmerchant.p12`; loading the
+/// same P12 through our parser must give byte-identical tokens.
+#[cfg(feature = "p12")]
+#[test]
+fn rs256_tokens_match_sdk_via_p12() {
+    let p12 = std::fs::read(format!("{FIXTURES}testmerchant.p12")).unwrap();
+    let vectors: Vec<JwtVector> = load::<JwtVector>("jwt.json")
+        .into_iter()
+        .filter(|v| v.key_pem.is_some())
+        .collect();
+    assert!(!vectors.is_empty());
+    for v in vectors {
+        let credentials = Credentials::jwt_p12(&p12, "testmerchant", "testmerchant").unwrap();
+        let config = config(&v.merchant_id, v.portfolio_id.as_deref(), credentials);
+        let method: Method = v.method.parse().unwrap();
+        let input = SigningInput {
+            method: &method,
+            target: &v.target,
+            body: v.body.as_deref().unwrap_or("").as_bytes(),
+        };
+        let headers = authenticate(
+            &config,
+            &input,
+            &FixedClock(Duration::from_secs(v.epoch)),
+            &entropy_for(&v.jti),
+        )
+        .unwrap();
+        assert_eq!(
+            headers["authorization"].to_str().unwrap(),
+            format!("Bearer {}", v.expected_token),
+            "{}",
+            v.name
+        );
+    }
+}

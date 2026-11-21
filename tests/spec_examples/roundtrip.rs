@@ -1,5 +1,9 @@
 //! Round-trip checking for spec examples (used by the generated
 //! `tests/spec_examples.rs`).
+//!
+//! Unused when no API group feature is enabled.
+
+#![allow(dead_code)]
 
 use serde::Serialize;
 use serde::de::DeserializeOwned;

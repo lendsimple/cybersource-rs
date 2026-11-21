@@ -15,7 +15,7 @@ readme = "README.md"
 exclude = ["/spec", "/xtask", "/tests", "/.github", "/implementation.md"]
 
 [features]
-default = ["server", "reqwest", "rustls", "payments", "tms", "capture-context"]
+default = ["server", "reqwest", "rustls", "p12", "payments", "tms", "capture-context"]
 # Credentialed client: auth, keys, operations. Never enable in browser builds.
 server = []
 # Legacy HTTP Signature auth. Cybersource retires it in March 2027; prefer JWT.
@@ -24,6 +24,8 @@ reqwest = ["server", "dep:reqwest"]
 ureq = ["server", "dep:ureq"]
 rustls = ["reqwest?/rustls", "ureq?/rustls"]
 native-tls = ["reqwest?/native-tls", "ureq?/native-tls"]
+# PKCS#12 (.p12) key loading.
+p12 = ["server", "dep:p12-keystore"]
 
 # API groups (see spec/codegen.toml [groups]); each is `client.<group>()`.
 account-updater = ["server"]
@@ -69,6 +71,7 @@ full = [
     "user-management",
     "webhooks",
     "http-signature",
+    "p12",
 ]
 
 [package.metadata.docs.rs]
@@ -88,14 +91,15 @@ hmac = "0.13"
 sha2 = "0.11"
 secrecy = "0.10"
 zeroize = "1.9"
-x509-cert = { version = "0.3", features = ["pem"] }
+x509-cert = { version = "0.3", features = ["hazmat", "pem"] }
 der = "0.8"
 rsa = { version = "0.10", features = ["pkcs1v15"] }
-pkcs8 = { version = "0.11", features = ["pem"] }
+pkcs8 = { version = "0.11", features = ["encryption", "pem"] }
 pkcs1 = { version = "0.8", features = ["pem"] }
 bon = "3.10"
 httpdate = "1.0"
 percent-encoding = "2.3"
+p12-keystore = { version = "0.4", optional = true }
 
 # Blocking transport; meaningless on wasm, where nothing may block.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]

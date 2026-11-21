@@ -56,6 +56,9 @@ pub enum Credentials {
         kid: String,
         /// The merchant's RSA private key.
         key: Box<PrivateKey>,
+        /// Cybersource's request-encryption certificate, when the key came
+        /// from a Business Center P12 (which includes it).
+        request_mle_cert: Option<Box<CertificateInfo>>,
     },
     /// Legacy HTTP Signature (HMAC-SHA256). Deprecated by Cybersource.
     #[cfg(feature = "http-signature")]
@@ -89,6 +92,24 @@ impl Credentials {
         Ok(Credentials::JwtRsa {
             kid: non_empty("kid", kid.into())?,
             key: Box::new(pem::rsa_private_key_from_pem(private_key_pem)?),
+            request_mle_cert: None,
+        })
+    }
+
+    /// JWT (RS256) from a Business Center P12.
+    ///
+    /// `alias` is the CN of the signing certificate: the merchant ID, or the
+    /// portfolio ID when using a meta key. The `kid` comes from that
+    /// certificate, and the P12's `CyberSource_SJC_US` certificate (if any)
+    /// becomes the default for request message-level encryption.
+    #[cfg(feature = "p12")]
+    pub fn jwt_p12(p12: &[u8], password: &str, alias: &str) -> Result<Self> {
+        let store = crate::keys::p12::P12::parse(p12, password)?;
+        let (key, cert) = store.identity(alias)?;
+        Ok(Credentials::JwtRsa {
+            kid: cert.subject_serial_number()?,
+            key: Box::new(key),
+            request_mle_cert: store.mle_certificate().cloned().map(Box::new),
         })
     }
 
@@ -339,6 +360,29 @@ mod tests {
         )
         .unwrap();
         assert_eq!(creds.key_id(), "1234567890ABCDEF");
+    }
+
+    #[cfg(feature = "p12")]
+    #[test]
+    fn jwt_p12_takes_kid_key_and_mle_cert_from_the_file() {
+        let bytes = std::fs::read(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/tests/fixtures/cybs_shaped.p12"
+        ))
+        .unwrap();
+        let Credentials::JwtRsa {
+            kid,
+            request_mle_cert,
+            ..
+        } = Credentials::jwt_p12(&bytes, "testmerchant", "testmerchant").unwrap()
+        else {
+            panic!("expected JwtRsa");
+        };
+        assert_eq!(kid, "1234567890ABCDEF");
+        assert_eq!(
+            request_mle_cert.unwrap().subject_serial_number().unwrap(),
+            "SJC0000000001"
+        );
     }
 
     #[test]
