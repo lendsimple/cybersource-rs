@@ -787,8 +787,14 @@ pub fn validate(ir: &Ir) -> Vec<String> {
 }
 
 /// Generates every file.
-pub fn generate(ir: &Ir) -> Files {
+pub fn generate(ir: &Ir, sensitive: &super::config::Sensitive) -> Files {
     let mut files = Files::new();
+    let always: Vec<&str> = sensitive.always.iter().map(String::as_str).collect();
+    let parents: Vec<String> = sensitive
+        .number_in_types_containing
+        .iter()
+        .map(|t| t.to_ascii_lowercase())
+        .collect();
     models(ir, &mut files);
     operations(ir, &mut files);
     apis(ir, &mut files);
@@ -807,6 +813,14 @@ pub fn generate(ir: &Ir) -> Files {
             pub mod apis;
             pub mod models;
             pub mod operations;
+
+            /// JSON property names whose values are never logged or printed
+            /// (from `spec/codegen.toml [sensitive]`).
+            pub(crate) const SENSITIVE_FIELDS: &[&str] = &[#(#always),*];
+
+            /// A `number` property is sensitive when its parent's name
+            /// contains one of these (lower case): card, account, ...
+            pub(crate) const SENSITIVE_NUMBER_PARENTS: &[&str] = &[#(#parents),*];
         }),
     );
     files

@@ -35,7 +35,11 @@ pub mod operation;
 #[cfg(feature = "server")]
 pub mod pipeline;
 #[cfg(feature = "server")]
+pub mod redact;
+#[cfg(feature = "server")]
 pub mod response;
+#[cfg(feature = "tracing")]
+mod telemetry;
 #[cfg(feature = "server")]
 pub mod transport;
 pub mod types;

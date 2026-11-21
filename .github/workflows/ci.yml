@@ -24,6 +24,7 @@ jobs:
       - run: cargo clippy --package cybersource --all-targets --no-default-features -- -D warnings
       - run: cargo clippy --package cybersource --all-targets --no-default-features --features server -- -D warnings
       - run: cargo clippy --package cybersource --all-targets --no-default-features --features p12 -- -D warnings
+      - run: cargo clippy --package cybersource --all-targets --no-default-features --features tracing -- -D warnings
       - run: cargo doc --package cybersource --features full --no-deps
         env:
           RUSTDOCFLAGS: -D warnings

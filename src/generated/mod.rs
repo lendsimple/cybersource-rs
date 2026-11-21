@@ -13,3 +13,32 @@
 pub mod apis;
 pub mod models;
 pub mod operations;
+/// JSON property names whose values are never logged or printed
+/// (from `spec/codegen.toml [sensitive]`).
+pub(crate) const SENSITIVE_FIELDS: &[&str] = &[
+    "accessToken",
+    "accountNumber",
+    "cardNumber",
+    "clientSecret",
+    "cryptogram",
+    "cvc",
+    "cvv",
+    "encryptedData",
+    "encryptedRequest",
+    "encryptedResponse",
+    "key",
+    "password",
+    "pin",
+    "privateKey",
+    "refreshToken",
+    "routingNumber",
+    "secret",
+    "securityCode",
+    "track1",
+    "track2",
+    "transientTokenJwt",
+];
+/// A `number` property is sensitive when its parent's name
+/// contains one of these (lower case): card, account, ...
+pub(crate) const SENSITIVE_NUMBER_PARENTS: &[&str] =
+    &["card", "account", "bank", "instrument", "token"];

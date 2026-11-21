@@ -113,7 +113,7 @@ fn rustfmt(source: &str) -> Result<String> {
 /// corpus into `tests_dir`, all rustfmt-formatted.
 pub fn write(dir: &Path, tests_dir: &Path) -> Result {
     let (ir, config) = load()?;
-    let mut files: Vec<(std::path::PathBuf, String)> = emit::generate(&ir)
+    let mut files: Vec<(std::path::PathBuf, String)> = emit::generate(&ir, &config.sensitive)
         .into_iter()
         .map(|(rel, contents)| (dir.join(rel), contents))
         .collect();

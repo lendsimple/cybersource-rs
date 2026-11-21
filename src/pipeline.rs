@@ -53,6 +53,9 @@ pub fn prepare<O: Operation + ?Sized>(
         body = with_developer_id(body, developer_id)?;
     }
 
+    #[cfg(feature = "tracing")]
+    tracing::trace!(body = %crate::redact::redact_body(&body), "request body");
+
     let mle = policy::resolve(meta, config.mle());
     if mle.request && !body.is_empty() {
         body = encrypt_request(meta.id, &body, config, clock, entropy)?;
@@ -121,6 +124,8 @@ pub fn prepare<O: Operation + ?Sized>(
     for (name, value) in &auth_headers {
         headers.insert(name.clone(), value.clone());
     }
+    #[cfg(feature = "tracing")]
+    tracing::trace!(uri = %request.uri(), headers = ?crate::redact::redact_headers(request.headers()), "request");
     Ok(request)
 }
 
@@ -223,6 +228,8 @@ pub fn finish<O: Operation + ?Sized>(
             .map_err(|e| Error::Mle(format!("could not decrypt the response: {e}")))?;
         body = Bytes::from(decrypted.plaintext);
     }
+    #[cfg(feature = "tracing")]
+    tracing::trace!(status = parts.status.as_u16(), body = %crate::redact::redact_body(&body), "response body");
     if !parts.status.is_success() {
         return Err(Error::Api(Box::new(ApiError {
             status: parts.status,

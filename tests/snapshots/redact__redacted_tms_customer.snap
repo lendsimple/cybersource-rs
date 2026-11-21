@@ -1,0 +1,16 @@
+---
+source: tests/redact.rs
+expression: "redact_json(&serde_json::to_value(customer).unwrap())"
+---
+{
+  "buyerInformation": {
+    "email": "[REDACTED]",
+    "merchantCustomerID": "c-1"
+  },
+  "clientReferenceInformation": {
+    "code": "tms"
+  },
+  "defaultPaymentInstrument": {
+    "id": "PI-1"
+  }
+}

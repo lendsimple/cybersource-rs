@@ -1,0 +1,38 @@
+---
+source: tests/redact.rs
+expression: redact_json(&payment)
+---
+{
+  "clientReferenceInformation": {
+    "code": "order-1"
+  },
+  "orderInformation": {
+    "amountDetails": {
+      "currency": "USD",
+      "totalAmount": "10.00"
+    },
+    "billTo": {
+      "address1": "[REDACTED]",
+      "administrativeArea": "CA",
+      "country": "US",
+      "email": "[REDACTED]",
+      "firstName": "[REDACTED]",
+      "lastName": "[REDACTED]",
+      "locality": "San Francisco",
+      "phoneNumber": "[REDACTED]",
+      "postalCode": "94105"
+    }
+  },
+  "paymentInformation": {
+    "card": {
+      "expirationMonth": "12",
+      "expirationYear": "2031",
+      "number": "[REDACTED]",
+      "securityCode": "[REDACTED]"
+    }
+  },
+  "processingInformation": {
+    "capture": false,
+    "commerceIndicator": "internet"
+  }
+}

@@ -262,7 +262,7 @@ impl Config {
             )));
         }
         let mle = resolve_mle(mle.unwrap_or_default(), &credentials)?;
-        Ok(Config {
+        let config = Config {
             environment,
             merchant_id,
             credentials,
@@ -273,7 +273,10 @@ impl Config {
             developer_id: developer_id
                 .map(|d| non_empty("developer id", d))
                 .transpose()?,
-        })
+        };
+        #[cfg(feature = "tracing")]
+        crate::telemetry::config_warnings(&config);
+        Ok(config)
     }
 }
 

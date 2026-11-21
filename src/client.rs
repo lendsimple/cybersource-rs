@@ -122,6 +122,20 @@ impl<T: HttpTransport> Client<T> {
         &self,
         op: &O,
     ) -> Result<Response<O::Output>> {
+        #[cfg(feature = "tracing")]
+        {
+            use tracing::Instrument;
+            let span = crate::telemetry::span(op.meta());
+            let start = web_time::Instant::now();
+            let result = self.run(op).instrument(span.clone()).await;
+            crate::telemetry::finished(&span, &result, start);
+            result
+        }
+        #[cfg(not(feature = "tracing"))]
+        self.run(op).await
+    }
+
+    async fn run<O: Operation + ?Sized>(&self, op: &O) -> Result<Response<O::Output>> {
         let request = self.prepare(op)?;
         let response = self
             .transport
@@ -155,6 +169,19 @@ impl<T: BlockingHttpTransport> BlockingClient<T> {
         &self,
         op: &O,
     ) -> Result<Response<O::Output>> {
+        #[cfg(feature = "tracing")]
+        {
+            let span = crate::telemetry::span(op.meta());
+            let start = web_time::Instant::now();
+            let result = span.in_scope(|| self.run(op));
+            crate::telemetry::finished(&span, &result, start);
+            result
+        }
+        #[cfg(not(feature = "tracing"))]
+        self.run(op)
+    }
+
+    fn run<O: Operation + ?Sized>(&self, op: &O) -> Result<Response<O::Output>> {
         let request = self.prepare(op)?;
         let response = self.transport.send(request).map_err(Error::Transport)?;
         pipeline::finish(op, &self.inner.config, response)

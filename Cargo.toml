@@ -24,6 +24,8 @@ reqwest = ["server", "dep:reqwest"]
 ureq = ["server", "dep:ureq"]
 rustls = ["reqwest?/rustls", "ureq?/rustls"]
 native-tls = ["reqwest?/native-tls", "ureq?/native-tls"]
+# Structured request logging via `tracing`, with PII redacted.
+tracing = ["server", "dep:tracing"]
 # Convert rust_decimal::Decimal into Amount.
 rust_decimal = ["dep:rust_decimal"]
 # PKCS#12 (.p12) key loading.
@@ -74,6 +76,7 @@ full = [
     "webhooks",
     "http-signature",
     "p12",
+    "tracing",
 ]
 
 [package.metadata.docs.rs]
@@ -106,6 +109,7 @@ aes-gcm = { version = "0.11", default-features = false, features = ["aes", "allo
 sha1 = { version = "0.11", default-features = false }
 rust_decimal = { version = "1", optional = true }
 subtle = "2.6"
+tracing = { version = "0.1", optional = true }
 
 # Blocking transport; meaningless on wasm, where nothing may block.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
@@ -115,8 +119,10 @@ ureq = { version = "3.5", default-features = false, optional = true }
 getrandom = { version = "0.4", features = ["wasm_js"] }
 
 [dev-dependencies]
+insta = { version = "1", features = ["json"] }
 proptest = "1"
 tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "time"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "std"] }
 trybuild = "1"
 wiremock = "0.6"
 
