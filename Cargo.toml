@@ -116,6 +116,7 @@ getrandom = { version = "0.4", features = ["wasm_js"] }
 [dev-dependencies]
 proptest = "1"
 tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "time"] }
+trybuild = "1"
 wiremock = "0.6"
 
 [lints.rust]

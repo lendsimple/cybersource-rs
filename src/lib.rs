@@ -15,6 +15,8 @@ pub mod client;
 pub mod clock;
 #[cfg(feature = "server")]
 pub mod config;
+#[cfg(feature = "server")]
+pub mod dsl;
 pub mod entropy;
 pub mod error;
 #[cfg(feature = "server")]

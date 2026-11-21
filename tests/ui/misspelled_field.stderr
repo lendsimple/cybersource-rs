@@ -1,0 +1,10 @@
+error[E0609]: no field `cod` on type `&mut Ptsv2paymentsClientReferenceInformation`
+ --> tests/ui/misspelled_field.rs:5:41
+  |
+5 |         client_reference_information: { cod: "x" },
+  |                                         ^^^ unknown field
+  |
+help: a field with a similar name exists
+  |
+5 |         client_reference_information: { code: "x" },
+  |                                            +
