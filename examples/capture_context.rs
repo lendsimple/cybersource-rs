@@ -6,12 +6,11 @@
 mod common;
 
 use cybersource::capture_context::CaptureContextVerifier;
-use cybersource::transport::ReqwestTransport;
 use cybersource::{Client, build, models};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new(common::config()?, ReqwestTransport::new());
+    let client = Client::new(common::config()?);
 
     let jwt = client
         .capture_context()

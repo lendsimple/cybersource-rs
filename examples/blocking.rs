@@ -5,11 +5,10 @@
 #[path = "common/mod.rs"]
 mod common;
 
-use cybersource::transport::UreqTransport;
 use cybersource::{BlockingClient, payment};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = BlockingClient::new(common::config()?, UreqTransport::new());
+    let client = BlockingClient::new(common::config()?);
     let response = client
         .payments()
         .create_payment(payment! {

@@ -14,6 +14,10 @@ use crate::response::Response;
 #[cfg(not(target_family = "wasm"))]
 use crate::transport::BlockingHttpTransport;
 use crate::transport::HttpTransport;
+#[cfg(feature = "reqwest")]
+use crate::transport::ReqwestTransport;
+#[cfg(all(feature = "ureq", not(target_family = "wasm")))]
+use crate::transport::UreqTransport;
 use crate::{Error, Result};
 
 struct Inner {
@@ -43,8 +47,9 @@ impl Inner {
 macro_rules! client_common {
     ($client:ident, $bound:path) => {
         impl<T: $bound> $client<T> {
-            /// Creates a client from a validated configuration and a transport.
-            pub fn new(config: Config, transport: T) -> Self {
+            /// Creates a client from a validated configuration, sending requests
+            /// through `transport`.
+            pub fn with_transport(config: Config, transport: T) -> Self {
                 $client {
                     inner: Arc::new(Inner::new(config)),
                     transport,
@@ -101,6 +106,21 @@ macro_rules! client_common {
 }
 
 /// An asynchronous Cybersource client.
+///
+/// [`Client::new`] sends requests through a [`ReqwestTransport`];
+/// [`Client::with_transport`] takes any other [`HttpTransport`].
+#[cfg(feature = "reqwest")]
+#[derive(Debug, Clone)]
+pub struct Client<T = ReqwestTransport> {
+    inner: Arc<Inner>,
+    transport: T,
+}
+
+/// An asynchronous Cybersource client.
+///
+/// It sends requests through an [`HttpTransport`]; enable the `reqwest`
+/// feature for a default one.
+#[cfg(not(feature = "reqwest"))]
 #[derive(Debug, Clone)]
 pub struct Client<T> {
     inner: Arc<Inner>,
@@ -108,6 +128,18 @@ pub struct Client<T> {
 }
 
 client_common!(Client, HttpTransport);
+
+#[cfg(feature = "reqwest")]
+impl Client {
+    /// Creates a client that sends requests through a default
+    /// [`ReqwestTransport`].
+    ///
+    /// # Panics
+    /// Like `reqwest::Client::new`, if the TLS backend cannot be initialized.
+    pub fn new(config: Config) -> Self {
+        Self::with_transport(config, ReqwestTransport::new())
+    }
+}
 
 impl<T: HttpTransport> Client<T> {
     /// Runs an operation and returns its decoded body.
@@ -147,7 +179,22 @@ impl<T: HttpTransport> Client<T> {
 }
 
 /// A blocking Cybersource client. Not available on WebAssembly.
-#[cfg(not(target_family = "wasm"))]
+///
+/// [`BlockingClient::new`] sends requests through a [`UreqTransport`];
+/// [`BlockingClient::with_transport`] takes any other
+/// [`BlockingHttpTransport`].
+#[cfg(all(feature = "ureq", not(target_family = "wasm")))]
+#[derive(Debug, Clone)]
+pub struct BlockingClient<T = UreqTransport> {
+    inner: Arc<Inner>,
+    transport: T,
+}
+
+/// A blocking Cybersource client. Not available on WebAssembly.
+///
+/// It sends requests through a [`BlockingHttpTransport`]; enable the `ureq`
+/// feature for a default one.
+#[cfg(all(not(feature = "ureq"), not(target_family = "wasm")))]
 #[derive(Debug, Clone)]
 pub struct BlockingClient<T> {
     inner: Arc<Inner>,
@@ -156,6 +203,15 @@ pub struct BlockingClient<T> {
 
 #[cfg(not(target_family = "wasm"))]
 client_common!(BlockingClient, BlockingHttpTransport);
+
+#[cfg(all(feature = "ureq", not(target_family = "wasm")))]
+impl BlockingClient {
+    /// Creates a client that sends requests through a default
+    /// [`UreqTransport`].
+    pub fn new(config: Config) -> Self {
+        Self::with_transport(config, UreqTransport::new())
+    }
+}
 
 #[cfg(not(target_family = "wasm"))]
 impl<T: BlockingHttpTransport> BlockingClient<T> {

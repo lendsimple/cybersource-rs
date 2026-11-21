@@ -71,7 +71,7 @@ mod tracing_output {
                 .unwrap(),
         );
         let config = Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id("testrest")
             .credentials(
                 Credentials::jwt_shared_secret(
@@ -82,7 +82,7 @@ mod tracing_output {
             )
             .build()
             .unwrap();
-        let client = cybersource::BlockingClient::new(config, mock.clone());
+        let client = cybersource::BlockingClient::with_transport(config, mock.clone());
 
         tracing::subscriber::with_default(subscriber, || {
             client

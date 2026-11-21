@@ -170,7 +170,7 @@ fn non_rs256_capture_contexts_are_rejected() {
 
 fn client(mock: &MockTransport) -> Client<MockTransport> {
     let config = Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testrest")
         .credentials(
             Credentials::jwt_shared_secret(
@@ -181,7 +181,7 @@ fn client(mock: &MockTransport) -> Client<MockTransport> {
         )
         .build()
         .unwrap();
-    Client::new(config, mock.clone()).with_clock(FixedClock::from_secs(NOW as u64))
+    Client::with_transport(config, mock.clone()).with_clock(FixedClock::from_secs(NOW as u64))
 }
 
 fn jwk_body(key: &PrivateKey) -> String {
@@ -250,5 +250,5 @@ async fn unknown_kid_is_an_api_error() {
         .verify(&client(&mock), &capture_context(NOW + 600))
         .await
         .unwrap_err();
-    assert_eq!(err.api().unwrap().status, 404);
+    assert_eq!(err.as_api().unwrap().status, 404);
 }

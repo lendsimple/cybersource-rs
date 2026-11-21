@@ -36,7 +36,7 @@ pub(crate) fn finished<T>(span: &Span, result: &Result<Response<T>>, start: Inst
             tracing::debug!(parent: span, status = response.status.as_u16(), elapsed_ms, "cybersource request succeeded");
         }
         Err(error) => {
-            if let Some(api) = error.api() {
+            if let Some(api) = error.as_api() {
                 span.record("status", api.status.as_u16());
                 if let Some(id) = &api.correlation_id {
                     span.record("correlation_id", id.as_str());

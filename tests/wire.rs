@@ -24,7 +24,7 @@ const AUTHORIZED: &str = r#"{"id":"7000000000000000000001","status":"AUTHORIZED"
 
 fn config() -> Config {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testrest")
         .credentials(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap())
         .build()
@@ -70,7 +70,7 @@ async fn reqwest_round_trip() {
     let transport = ReqwestTransport::new()
         .with_base_url(&server.uri())
         .unwrap();
-    let client = Client::new(config(), transport);
+    let client = Client::with_transport(config(), transport);
 
     let resp = client.payments().create_payment(payment()).await.unwrap();
 
@@ -86,7 +86,7 @@ async fn ureq_round_trip() {
 
     let resp = tokio::task::spawn_blocking(move || {
         let transport = UreqTransport::new().with_base_url(&base_url).unwrap();
-        BlockingClient::new(config(), transport)
+        BlockingClient::with_transport(config(), transport)
             .payments()
             .create_payment(payment())
             .send()
@@ -109,13 +109,13 @@ async fn reqwest_maps_error_status_to_api_error() {
         .with_base_url(&server.uri())
         .unwrap();
 
-    let err = Client::new(config(), transport)
+    let err = Client::with_transport(config(), transport)
         .payments()
         .create_payment(payment())
         .await
         .unwrap_err();
 
-    let api = err.api().expect("API error");
+    let api = err.as_api().expect("API error");
     assert_eq!(api.status, 400);
     assert_eq!(api.correlation_id.as_deref(), Some("corr-wire"));
 }
@@ -127,7 +127,7 @@ async fn ureq_maps_error_status_to_api_error_not_transport_error() {
 
     let err = tokio::task::spawn_blocking(move || {
         let transport = UreqTransport::new().with_base_url(&base_url).unwrap();
-        BlockingClient::new(config(), transport)
+        BlockingClient::with_transport(config(), transport)
             .payments()
             .create_payment(payment())
             .send()
@@ -136,7 +136,7 @@ async fn ureq_maps_error_status_to_api_error_not_transport_error() {
     .unwrap()
     .unwrap_err();
 
-    assert_eq!(err.api().expect("API error").status, 400);
+    assert_eq!(err.as_api().expect("API error").status, 400);
 }
 
 #[tokio::test]
@@ -151,7 +151,7 @@ async fn connection_failure_is_a_transport_error() {
         .with_base_url(&format!("http://127.0.0.1:{port}"))
         .unwrap();
 
-    let err = Client::new(config(), transport)
+    let err = Client::with_transport(config(), transport)
         .payments()
         .create_payment(payment())
         .await

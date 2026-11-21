@@ -14,7 +14,7 @@ const SECRET: &str = "yBJxy6LjM2TmcPGu+GaJrHtkke25fPpUX+UY6/L/1tE=";
 
 fn config(developer_id: Option<&str>) -> Config {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testrest")
         .credentials(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap())
         .maybe_developer_id(developer_id)
@@ -39,7 +39,7 @@ async fn walks_pages_until_the_total() {
     mock.push_json(200, page(0, 2, 5))
         .push_json(200, page(2, 2, 5))
         .push_json(200, page(4, 1, 5));
-    let client = Client::new(config(None), mock.clone());
+    let client = Client::with_transport(config(None), mock.clone());
 
     let mut pages = client
         .tms()
@@ -63,7 +63,7 @@ async fn stops_on_a_short_page_even_without_a_total() {
     let mock = MockTransport::new();
     mock.push_json(200, r#"{"count":2}"#)
         .push_json(200, r#"{"count":1}"#);
-    let client = Client::new(config(None), mock.clone());
+    let client = Client::with_transport(config(None), mock.clone());
 
     let mut pages = client
         .tms()
@@ -83,7 +83,7 @@ async fn stops_on_a_short_page_even_without_a_total() {
 async fn an_error_ends_the_walk_after_being_reported() {
     let mock = MockTransport::new();
     mock.push_json(200, page(0, 2, 10)).push_json(500, "{}");
-    let client = Client::new(config(None), mock.clone());
+    let client = Client::with_transport(config(None), mock.clone());
 
     let mut pages = client
         .tms()
@@ -101,7 +101,7 @@ fn blocking_pages_are_an_iterator() {
     let mock = MockTransport::new();
     mock.push_json(200, page(0, 2, 3))
         .push_json(200, page(2, 1, 3));
-    let client = BlockingClient::new(config(None), mock.clone());
+    let client = BlockingClient::with_transport(config(None), mock.clone());
 
     let counts: Vec<i64> = client
         .tms()
@@ -124,7 +124,7 @@ async fn etag_is_exposed_for_conditional_updates() {
             .body(Bytes::from_static(b"{}"))
             .unwrap(),
     );
-    let client = Client::new(config(None), mock.clone());
+    let client = Client::with_transport(config(None), mock.clone());
 
     let resp = client
         .tms()
@@ -147,7 +147,7 @@ async fn developer_id_is_added_only_when_configured_and_absent() {
         mock.push_json(201, r#"{"status":"AUTHORIZED"}"#);
     }
 
-    let without = Client::new(config(None), mock.clone());
+    let without = Client::with_transport(config(None), mock.clone());
     without
         .payments()
         .create_payment(common::payment("a", "1.00"))
@@ -159,7 +159,7 @@ async fn developer_id_is_added_only_when_configured_and_absent() {
             .is_none()
     );
 
-    let with = Client::new(config(Some("DEV123")), mock.clone());
+    let with = Client::with_transport(config(Some("DEV123")), mock.clone());
     let original = common::payment("b", "1.00");
     with.payments()
         .create_payment(original.clone())
@@ -196,7 +196,7 @@ async fn developer_id_is_added_only_when_configured_and_absent() {
 async fn developer_id_is_not_added_to_bodies_without_the_field() {
     let mock = MockTransport::new();
     mock.push_json(201, "{}");
-    let client = Client::new(config(Some("DEV123")), mock.clone());
+    let client = Client::with_transport(config(Some("DEV123")), mock.clone());
 
     let customer = cybersource::build!(cybersource::models::PostCustomerRequest {
         buyer_information: { email: "a@b.example" },

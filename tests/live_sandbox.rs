@@ -23,7 +23,6 @@
 mod common;
 
 use cybersource::models::PtsV2PaymentsPost201Response;
-use cybersource::transport::{ReqwestTransport, UreqTransport};
 use cybersource::{BlockingClient, Client, Config, Credentials, Environment};
 
 fn env_or(name: &str, default: &str) -> String {
@@ -42,7 +41,7 @@ fn live_config(credentials: fn(&str, &str) -> cybersource::Result<Credentials>) 
     );
     Some(
         Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id(env_or("CYBS_MERCHANT_ID", "testrest"))
             .credentials(credentials(&key_id, &secret).unwrap())
             .build()
@@ -74,7 +73,7 @@ async fn authorize_async(
     let Some(config) = live_config(credentials) else {
         return;
     };
-    let client = Client::new(config, ReqwestTransport::new());
+    let client = Client::new(config);
     let resp = client
         .payments()
         .create_payment(common::payment(
@@ -95,7 +94,7 @@ fn authorize_blocking(
     let Some(config) = live_config(credentials) else {
         return;
     };
-    let client = BlockingClient::new(config, UreqTransport::new());
+    let client = BlockingClient::new(config);
     let resp = client
         .payments()
         .create_payment(common::payment(
@@ -146,7 +145,7 @@ async fn generated_operations_round_trip() {
     let Some(config) = live_config(jwt) else {
         return;
     };
-    let client = Client::new(config, ReqwestTransport::new());
+    let client = Client::new(config);
 
     let auth = client
         .payments()
@@ -185,7 +184,7 @@ async fn generated_operations_round_trip() {
                 details = Some(d);
                 break;
             }
-            Err(e) if e.api().is_some_and(|a| a.status == 404) => {
+            Err(e) if e.as_api().is_some_and(|a| a.status == 404) => {
                 tokio::time::sleep(std::time::Duration::from_secs(2)).await;
             }
             Err(e) => panic!("get_transaction: {e}"),
@@ -254,7 +253,7 @@ mod p12_and_mle {
 
     fn config(mle: Option<MleConfig>) -> Config {
         Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id(MERCHANT)
             .credentials(
                 Credentials::jwt_p12(
@@ -332,7 +331,7 @@ mod p12_and_mle {
         if !live() {
             return;
         }
-        let client = Client::new(config(None), Recording::default());
+        let client = Client::with_transport(config(None), Recording::default());
         search(&client, "p12-rs256").await;
         assert!(starts_with(&client.transport().sent, "{\"limit\""));
     }
@@ -343,7 +342,7 @@ mod p12_and_mle {
         if !live() {
             return;
         }
-        let client = Client::new(
+        let client = Client::with_transport(
             config(Some(MleConfig::new().optional_globally(true))),
             Recording::default(),
         );
@@ -385,7 +384,7 @@ mod p12_and_mle {
             eprintln!("skipping: Cybersource's sample response-MLE certificate has expired");
             return;
         }
-        let client = Client::new(config, Recording::default());
+        let client = Client::with_transport(config, Recording::default());
         search(&client, "response-mle").await;
         assert!(starts_with(
             &client.transport().sent,
@@ -414,7 +413,7 @@ async fn flex_api_tokenization_end_to_end() {
     let Some(config) = live_config(jwt) else {
         return;
     };
-    let client = Client::new(config, ReqwestTransport::new());
+    let client = Client::new(config);
 
     // Server: a session that requires the card number and expiry.
     let jwt = client

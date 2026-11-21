@@ -44,7 +44,7 @@ macro_rules! wasm_test {
 
 fn config(credentials: Credentials, mle: Option<MleConfig>) -> Config {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testmerchant")
         .credentials(credentials)
         .maybe_mle(mle)
@@ -123,7 +123,7 @@ wasm_test! {
         )
         .unwrap();
         mock.push_json(201, serde_json::json!({ "encryptedResponse": token }).to_string());
-        let client = Client::new(
+        let client = Client::with_transport(
             config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap(), Some(mle)),
             mock.clone(),
         );
@@ -175,9 +175,9 @@ async fn live_round_trip<T: cybersource::transport::HttpTransport>(transport: T)
     use cybersource::capture_context::GetFlexPublicKey;
     use cybersource::types::PaymentStatus;
 
-    let client = Client::new(
+    let client = Client::with_transport(
         Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id("testrest")
             .credentials(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap())
             .build()

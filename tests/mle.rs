@@ -36,7 +36,7 @@ fn response_key() -> ResponseMleKey {
 
 fn build(credentials: Credentials, mle: Option<MleConfig>) -> cybersource::Result<Config> {
     Config::builder()
-        .environment(Environment::Test)
+        .environment(Environment::Sandbox)
         .merchant_id("testmerchant")
         .credentials(credentials)
         .maybe_mle(mle)
@@ -182,7 +182,7 @@ use http::{Method, StatusCode};
 const AUTHORIZED: &str = r#"{"id":"7000000000000000000001","status":"AUTHORIZED"}"#;
 
 fn client(config: Config, mock: &MockTransport) -> Client<MockTransport> {
-    Client::new(config, mock.clone()).with_clock(FixedClock::from_secs(1_793_865_600))
+    Client::with_transport(config, mock.clone()).with_clock(FixedClock::from_secs(1_793_865_600))
 }
 
 fn claims(request: &http::Request<Bytes>) -> serde_json::Value {
@@ -330,7 +330,7 @@ async fn encrypted_error_response_is_decrypted_into_the_api_error() {
         .await
         .unwrap_err();
 
-    let ErrorBody::Pts(body) = &err.api().unwrap().body else {
+    let ErrorBody::Pts(body) = &err.as_api().unwrap().body else {
         panic!("expected a PTS error, got {err:?}");
     };
     assert_eq!(body.reason.as_deref(), Some("MISSING_FIELD"));

@@ -12,11 +12,12 @@ use crate::mle::{MleConfig, RequestMleCert};
 use crate::{Error, Result};
 
 /// The Cybersource environment (API host) to talk to.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum Environment {
-    /// Sandbox: `apitest.cybersource.com`.
-    Test,
+    /// Sandbox: `apitest.cybersource.com`. The default.
+    #[default]
+    Sandbox,
     /// Production: `api.cybersource.com`.
     Production,
     /// Production for India: `api.in.cybersource.com`.
@@ -29,7 +30,7 @@ impl Environment {
     /// The API host name. This is also the host every request is signed for.
     pub fn host(&self) -> &str {
         match self {
-            Environment::Test => "apitest.cybersource.com",
+            Environment::Sandbox => "apitest.cybersource.com",
             Environment::Production => "api.cybersource.com",
             Environment::ProductionIndia => "api.in.cybersource.com",
             Environment::Custom(host) => host,
@@ -214,7 +215,7 @@ impl Config {
     /// ```
     /// # use cybersource::config::{Config, Credentials, Environment};
     /// let config = Config::builder()
-    ///     .environment(Environment::Test)
+    ///     .environment(Environment::Sandbox)
     ///     .merchant_id("testrest")
     ///     .credentials(Credentials::jwt_shared_secret(
     ///         "08c94330-f618-42a3-b09d-e1e43be5efda",
@@ -225,8 +226,9 @@ impl Config {
     /// ```
     #[builder]
     pub fn new(
-        /// Which Cybersource host to use. There is no default, so production
-        /// is never chosen by accident.
+        /// Which Cybersource host to use. Defaults to the sandbox, so
+        /// production is only ever chosen explicitly.
+        #[builder(default)]
         environment: Environment,
         /// The transacting merchant ID.
         #[builder(into)]
@@ -425,7 +427,7 @@ mod tests {
 
     #[test]
     fn environment_hosts() {
-        assert_eq!(Environment::Test.host(), "apitest.cybersource.com");
+        assert_eq!(Environment::Sandbox.host(), "apitest.cybersource.com");
         assert_eq!(Environment::Production.host(), "api.cybersource.com");
         assert_eq!(
             Environment::ProductionIndia.host(),
@@ -436,7 +438,7 @@ mod tests {
     #[test]
     fn builds_valid_config() {
         let config = Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id("m1")
             .credentials(creds())
             .build()
@@ -447,9 +449,19 @@ mod tests {
     }
 
     #[test]
+    fn environment_defaults_to_sandbox() {
+        let config = Config::builder()
+            .merchant_id("m1")
+            .credentials(creds())
+            .build()
+            .unwrap();
+        assert_eq!(config.environment(), &Environment::Sandbox);
+    }
+
+    #[test]
     fn meta_key_owner_is_portfolio() {
         let config = Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id("m1")
             .portfolio_id("p1")
             .credentials(creds())
@@ -461,7 +473,7 @@ mod tests {
     #[test]
     fn rejects_empty_merchant_id() {
         let err = Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id(" ")
             .credentials(creds())
             .build()
@@ -522,7 +534,7 @@ mod tests {
     #[test]
     fn debug_never_prints_secrets() {
         let config = Config::builder()
-            .environment(Environment::Test)
+            .environment(Environment::Sandbox)
             .merchant_id("m1")
             .credentials(creds())
             .build()
