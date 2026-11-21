@@ -32,7 +32,7 @@ cybersource = "0.1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
-```rust
+```rust,no_run
 use cybersource::flows::PaymentOutcome;
 use cybersource::{Client, Config, Credentials, Environment, payment};
 

@@ -1,6 +1,12 @@
 [alias]
 xtask = "run --quiet --package xtask --"
 
+# Set for every cargo command run in this repository, but not part of the published
+# package: tests that only make sense here (the compile-error snapshots, which
+# follow one rustc's wording) check it and skip when the crate is tested elsewhere.
+[env]
+CYBERSOURCE_UI_TESTS = "1"
+
 # Runners for `cargo test --target <wasm target>`.
 # wasm-bindgen-cli must match the resolved wasm-bindgen version exactly
 # (`cargo install wasm-bindgen-cli --version <version>`).
