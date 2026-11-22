@@ -15,6 +15,7 @@ use cybersource::jose::b64;
 use cybersource::models::CreatePaymentRequest;
 use cybersource::operation::{Operation, OperationMeta, json_decode};
 use cybersource::transport::MockTransport;
+use cybersource::validate::{self, Validate, ValidationError};
 use cybersource::{BlockingClient, Call, Client, Config, Credentials, Environment, Error};
 use http::{HeaderMap, Method, StatusCode};
 
@@ -153,6 +154,8 @@ struct Probe {
     headers: HeaderMap,
     body: Option<Bytes>,
     accept: Option<&'static str>,
+    /// Makes `validate` fail, as a body with a too-long field would.
+    invalid: bool,
 }
 
 static PROBE_GET: OperationMeta = OperationMeta::new("probe", Method::GET, "/probe/v1/items");
@@ -171,6 +174,17 @@ impl Operation for Probe {
     }
     fn accept(&self) -> Option<&'static str> {
         self.accept
+    }
+    fn validate(&self) -> Result<(), ValidationError> {
+        struct Currency(&'static str);
+        impl Validate for Currency {
+            fn validate_into(&self, path: &mut validate::Path, out: &mut Vec<validate::Violation>) {
+                path.push_field("currency");
+                validate::check_length(self.0, None, Some(3), path, out);
+                path.pop();
+            }
+        }
+        Currency(if self.invalid { "US dollars" } else { "USD" }).validate()
     }
     fn path(&self) -> Cow<'_, str> {
         "/probe/v1/items".into()
@@ -193,6 +207,7 @@ fn probe(meta: &'static OperationMeta) -> Probe {
         headers: HeaderMap::new(),
         body: None,
         accept: None,
+        invalid: false,
     }
 }
 
@@ -231,6 +246,59 @@ async fn empty_post_sends_an_empty_json_object() {
     let req = mock.last_request();
     assert_eq!(req.body().as_ref(), b"{}");
     assert_eq!(jwt_claims(&req)["digest"], digest::sha256_b64(b"{}"));
+}
+
+#[tokio::test]
+async fn invalid_request_is_not_sent() {
+    let mock = MockTransport::new();
+    let mut op = probe(&PROBE_POST);
+    op.invalid = true;
+
+    let err = jwt_client(&mock).execute(&op).await.unwrap_err();
+
+    let Error::Validation(err) = err else {
+        panic!("expected Validation, got {err:?}");
+    };
+    assert_eq!(
+        err.to_string(),
+        "currency: must be at most 3 characters, not 10"
+    );
+    assert!(mock.requests().is_empty());
+}
+
+#[test]
+fn blocking_client_does_not_send_an_invalid_request() {
+    let mock = MockTransport::new();
+    let client = BlockingClient::with_transport(
+        config(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap()),
+        mock.clone(),
+    );
+    let mut op = probe(&PROBE_POST);
+    op.invalid = true;
+
+    assert!(matches!(client.execute(&op), Err(Error::Validation(_))));
+    assert!(mock.requests().is_empty());
+}
+
+#[tokio::test]
+async fn validation_can_be_turned_off() {
+    let mock = MockTransport::new();
+    mock.push_json(200, "{}");
+    let config = Config::builder()
+        .merchant_id("testrest")
+        .credentials(Credentials::jwt_shared_secret(KEY_ID, SECRET).unwrap())
+        .validate_requests(false)
+        .build()
+        .unwrap();
+    let mut op = probe(&PROBE_POST);
+    op.invalid = true;
+
+    Client::with_transport(config, mock.clone())
+        .execute(&op)
+        .await
+        .unwrap();
+
+    assert_eq!(mock.requests().len(), 1);
 }
 
 #[tokio::test]

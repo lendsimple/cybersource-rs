@@ -213,6 +213,7 @@ mod telemetry;
 #[cfg(feature = "server")]
 pub mod transport;
 pub mod types;
+pub mod validate;
 pub mod webhook;
 
 #[cfg(feature = "server")]

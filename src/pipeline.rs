@@ -39,6 +39,10 @@ pub fn prepare<O: Operation + ?Sized>(
         .parse()
         .map_err(|e| Error::Request(format!("invalid request URI for {target:?}: {e}")))?;
 
+    if config.validate_requests() {
+        op.validate()?;
+    }
+
     let body_method = matches!(meta.method, Method::POST | Method::PUT | Method::PATCH);
     let mut body = match op.body()? {
         Some(body) => body,

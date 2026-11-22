@@ -11,6 +11,7 @@ use http::{HeaderMap, Method, StatusCode};
 use percent_encoding::{AsciiSet, NON_ALPHANUMERIC, utf8_percent_encode};
 use serde::de::DeserializeOwned;
 
+use crate::validate::ValidationError;
 use crate::{Error, Result};
 
 /// Whether an operation uses message-level encryption (from the spec's
@@ -117,6 +118,12 @@ pub trait Operation {
     /// body send `{}`; a GET or DELETE body is sent as given.
     fn body(&self) -> Result<Option<Bytes>> {
         Ok(None)
+    }
+
+    /// Checks the request body against the spec's constraints. Run before
+    /// [`body`](Operation::body) unless validation is turned off.
+    fn validate(&self) -> std::result::Result<(), ValidationError> {
+        Ok(())
     }
 
     /// The `Accept` header, for operations that return non-JSON content

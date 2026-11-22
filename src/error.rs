@@ -4,6 +4,8 @@ use bytes::Bytes;
 use http::StatusCode;
 use serde::Deserialize;
 
+use crate::validate::ValidationError;
+
 /// Convenience alias for results returned by this crate.
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
@@ -46,6 +48,11 @@ pub enum Error {
     /// A request could not be built (body serialization, invalid URI or header).
     #[error("invalid request: {0}")]
     Request(String),
+
+    /// The request body breaks the spec's constraints, so it was not sent.
+    /// [`ValidationError::violations`] lists every problem with its field path.
+    #[error("invalid request: {0}")]
+    Validation(#[from] ValidationError),
 
     /// Cybersource answered with a success status the operation does not document.
     #[error("unexpected success status {0}")]
