@@ -15,6 +15,9 @@ with async, blocking and WebAssembly support.
 - **Message-level encryption** of requests and responses (JWE).
 - **Macros** for request bodies: `build!`, `payment!`, `capture!`, `refund!`,
   plus compile-time checked amounts and currencies.
+- **Request validation:** bodies are checked against the spec's lengths,
+  patterns, ranges and required fields before they are sent, and every
+  problem is reported with its field path.
 - **Safe defaults for money:** declines are outcomes, not errors.
   "Outcome unknown" failures are flagged, and money-moving calls are
   never retried automatically.

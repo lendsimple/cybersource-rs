@@ -131,6 +131,15 @@
 //!   payment may have gone through. Look it up before retrying. The client
 //!   never retries money-moving operations by itself.
 //!
+//! Request bodies are validated before they are sent: a value longer than
+//! the spec allows, or one that breaks its pattern, range or required
+//! fields, fails with [`Error::Validation`] and never leaves the process.
+//! [`validate::ValidationError::violations`] lists every problem with its
+//! field path (`orderInformation.amountDetails.currency: must be at most 3
+//! characters, not 10`). Constraints that Cybersource's own examples break
+//! are not enforced. Turn validation off with
+//! `Config::builder().validate_requests(false)`.
+//!
 //! ```no_run
 //! # async fn run(client: cybersource::Client, request: cybersource::models::CreatePaymentRequest) {
 //! match client.payments().create_payment(request).await {

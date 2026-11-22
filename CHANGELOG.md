@@ -6,6 +6,30 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Request validation. Request bodies are checked against the spec before
+  they are sent: string lengths, patterns, numeric ranges, list sizes and
+  required fields. A body that breaks them fails with the new
+  `Error::Validation`, whose `ValidationError::violations()` gives every
+  problem with its JSON field path, and nothing is sent. It is on by
+  default; `Config::builder().validate_requests(false)` turns it off.
+  Every generated request model implements `cybersource::validate::Validate`,
+  so a body can also be checked by hand with `.validate()`.
+- `Operation::validate`, which the pipeline runs before serializing the
+  body. Hand-written operations inherit a default that accepts anything.
+
+### Notes
+
+- Patterns are compiled with the `regex` crate, now a dependency of the
+  `server` feature. The spec's patterns are written for Java and
+  JavaScript; those Rust cannot compile as written are repaired or skipped
+  in `spec/codegen.toml`.
+- Constraints that Cybersource's own request examples break (for example
+  2-character `administrativeArea` against "NSW", or 30-character sender
+  names against 35-character ones) are not enforced, so validation does not
+  reject requests Cybersource documents as valid.
+
 ## [0.1.0] - 2026-11-21
 
 First release.
