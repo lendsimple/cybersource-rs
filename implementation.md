@@ -825,7 +825,7 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - **Before the first release:** do the one-time setup in `RELEASING.md` (the `crates-io` environment and `CARGO_REGISTRY_TOKEN`).
 
 ### Stage 7: Request validation before sending
-**Status:** In Progress
+**Status:** Complete (2026-11-22)
 **Goal:** Check request bodies against the spec's constraints before sending them, as authorizenet-rs does, so a bad value is reported with its field path instead of an opaque `400 INVALID_DATA`.
 
 **Decisions**
@@ -843,15 +843,22 @@ Each stage leaves the crate compiling with green tests, and each is committed in
   - `impl Validate` for every model reachable from a request body.
   - `Operation::validate` overrides on the generated operations.
 - **7d, tests.**
-  - Every request-body spec example passes validation; the exceptions are an explicit allow-list.
+  - Every request-body spec example passes validation. A constraint an official example breaks is dropped through a `[relax]` table in `spec/codegen.toml`, keyed by operation and JSON path, so the client never rejects what Cybersource documents as valid.
   - Client tests: invalid requests are never sent, and validation can be turned off.
 - **7e, docs.** CHANGELOG, README and this outcome.
 
 **Success criteria**
 - The pipeline tests show that an invalid body never reaches the transport, through both the async and the blocking client.
 - `cargo xtask check-codegen` is clean, and every non-skipped spec pattern compiles.
-- Every request spec example validates, apart from the listed exceptions.
+- Every request spec example validates.
 - Wasm builds still pass, and the `full` build stays within the Stage 2 budget.
+
+**Outcome**
+- **Coverage:** 1,315 request models get an `impl Validate`. The spec's request bodies have 78 distinct patterns, 76 of them enforced; 5 lookaround patterns are rewritten under `[patterns]` as a regex plus reject lists, 1 unmatchable pattern is repaired, and 2 contradictory ones are skipped. A generated test compiles every pattern with the crate's `regex` features (`std`, `unicode-perl`).
+- **Spec errata:** 41 of Cybersource's request examples broke a constraint, across 17 fields, so those constraints are relaxed. Examples: `administrativeArea` max 2 against "NSW"; 30-character sender names against the 35-character AFT example; alpha-3 countries; `required` on fields that are really conditional (boarding processor `merchantId`, bank-account-validation `paymentInformation`).
+- **Size:** `src/generated/models` grew from 72k to 112k lines, about one helper call per constrained field (`v::string`, `v::number`, `v::nested`, ...), plus a 700-line `patterns.rs`.
+- **Compile time:** a non-incremental debug rebuild of the crate with `--features full` is unchanged, at 45.9 s against 47.3 s on `main`.
+- **Not done:** `format` (date and date-time), and `enum`, which appears only on path and query parameters.
 
 ---
 
