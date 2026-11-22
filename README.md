@@ -31,7 +31,7 @@ with async, blocking and WebAssembly support.
 
 ```toml
 [dependencies]
-cybersource = "0.1"
+cybersource = "0.2"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
