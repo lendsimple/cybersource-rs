@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateSearchRequest {
@@ -48,6 +50,9 @@ pub struct CreateSearchRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub timezone: Option<String>,
+}
+impl v::Validate for CreateSearchRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "merchantInitiatedTransactionObject")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -100,6 +105,19 @@ pub struct ParseEmvTagsRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub requestor: Option<String>,
+}
+impl v::Validate for ParseEmvTagsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "emvDetailsList",
+            &self.emv_details_list,
+            true,
+            (None, None),
+        );
+        v::present(path, out, "requestor", &self.requestor);
+    }
 }
 #[doc(alias = "ptsV1TransactionBatchesGet200Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3060,4 +3078,28 @@ pub struct Tssv2transactionsemvTagDetailsEmvDetailsList {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub request_id: Option<String>,
+}
+impl v::Validate for Tssv2transactionsemvTagDetailsEmvDetailsList {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "emvRequestCombinedTags",
+            &self.emv_request_combined_tags,
+            true,
+            None,
+            Some(1998),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestId",
+            &self.request_id,
+            true,
+            None,
+            Some(26),
+            None,
+        );
+    }
 }

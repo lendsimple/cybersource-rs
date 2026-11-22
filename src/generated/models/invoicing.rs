@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateInvoiceRequest {
@@ -35,6 +37,32 @@ pub struct CreateInvoiceRequest {
     )]
     pub processing_information: Option<Invoicingv2invoicesProcessingInformation>,
 }
+impl v::Validate for CreateInvoiceRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "customerInformation",
+            &self.customer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "invoiceInformation",
+            &self.invoice_information,
+            true,
+        );
+        v::nested(path, out, "orderInformation", &self.order_information, true);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreatePaymentLinkRequest {
@@ -64,6 +92,32 @@ pub struct CreatePaymentLinkRequest {
     )]
     pub purchase_information: Option<Iplv2paymentlinksPurchaseInformation>,
 }
+impl v::Validate for CreatePaymentLinkRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(path, out, "orderInformation", &self.order_information, true);
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "purchaseInformation",
+            &self.purchase_information,
+            true,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct InvoiceSettingsRequest {
@@ -72,6 +126,17 @@ pub struct InvoiceSettingsRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub invoice_settings_information: Option<Invoicingv2invoiceSettingsInvoiceSettingsInformation>,
+}
+impl v::Validate for InvoiceSettingsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "invoiceSettingsInformation",
+            &self.invoice_settings_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "invoicingV2InvoiceSettingsGet200Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -235,6 +300,42 @@ pub struct InvoicingV2InvoiceSettingsGet200ResponseInvoiceSettingsInformationCus
     )]
     pub payment_rejected: Option<String>,
 }
+impl v::Validate
+    for InvoicingV2InvoiceSettingsGet200ResponseInvoiceSettingsInformationCustomRedirectUrls
+{
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentAccepted",
+            &self.payment_accepted,
+            false,
+            None,
+            Some(500),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentPending",
+            &self.payment_pending,
+            false,
+            None,
+            Some(500),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentRejected",
+            &self.payment_rejected,
+            false,
+            None,
+            Some(500),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct InvoicingV2InvoiceSettingsGet200ResponseInvoiceSettingsInformationHeaderStyle {
@@ -252,6 +353,30 @@ pub struct InvoicingV2InvoiceSettingsGet200ResponseInvoiceSettingsInformationHea
         deserialize_with = "crate::types::lenient::string"
     )]
     pub font_color: Option<String>,
+}
+impl v::Validate for InvoicingV2InvoiceSettingsGet200ResponseInvoiceSettingsInformationHeaderStyle {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "backgroundColor",
+            &self.background_color,
+            false,
+            None,
+            Some(7),
+            Some(&crate::generated::patterns::P21),
+        );
+        v::string(
+            path,
+            out,
+            "fontColor",
+            &self.font_color,
+            false,
+            None,
+            Some(7),
+            Some(&crate::generated::patterns::P21),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -759,6 +884,11 @@ impl ::std::fmt::Debug for InvoicingV2InvoicesPost201ResponseInvoiceInformationC
             .finish()
     }
 }
+impl v::Validate for InvoicingV2InvoicesPost201ResponseInvoiceInformationCustomLabels {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "value", &self.value, false, None, Some(25), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct InvoicingV2InvoicesPost201ResponseMerchantDefinedFieldValuesWithDefinition {
@@ -1209,11 +1339,116 @@ pub struct Invoicingv2invoiceSettingsInvoiceSettingsInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Invoicingv2invoiceSettingsInvoiceSettingsInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "customEmailMessage",
+            &self.custom_email_message,
+            false,
+            None,
+            Some(2000),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "customLabels",
+            &self.custom_labels,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "customRedirectUrls",
+            &self.custom_redirect_urls,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "defaultCurrencyCode",
+            &self.default_currency_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deliveryLanguage",
+            &self.delivery_language,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::nested(path, out, "headerStyle", &self.header_style, false);
+        v::string(
+            path,
+            out,
+            "merchantDisplayName",
+            &self.merchant_display_name,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantEmail",
+            &self.merchant_email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantLogo",
+            &self.merchant_logo,
+            false,
+            None,
+            Some(10000000),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "payerAuthenticationInInvoicing",
+            &self.payer_authentication_in_invoicing,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Invoicingv2invoicesClientReferenceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Invoicingv2invoicesClientReferenceInformationPartner>,
+}
+impl v::Validate for Invoicingv2invoicesClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "partner", &self.partner, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1232,6 +1467,30 @@ pub struct Invoicingv2invoicesClientReferenceInformationPartner {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub solution_id: Option<String>,
+}
+impl v::Validate for Invoicingv2invoicesClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
 }
 /// Contains all of the customer-related fields for the invoice.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1259,6 +1518,32 @@ pub struct Invoicingv2invoicesCustomerInformation {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesCustomerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "company", &self.company, false);
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(100), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Invoicingv2invoicesCustomerInformationCompany {
@@ -1268,6 +1553,11 @@ pub struct Invoicingv2invoicesCustomerInformationCompany {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Invoicingv2invoicesCustomerInformationCompany {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "name", &self.name, false, None, Some(60), None);
+    }
 }
 /// Contains all of the invoice-specific fields, such as the invoice number and due date.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1329,6 +1619,50 @@ pub struct Invoicingv2invoicesInvoiceInformation {
     )]
     pub transaction_reference_number: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesInvoiceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            true,
+            None,
+            Some(2000),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dueDate",
+            &self.due_date,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationDate",
+            &self.expiration_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionReferenceNumber",
+            &self.transaction_reference_number,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Invoicingv2invoicesMerchantDefinedFieldValues {
@@ -1344,6 +1678,9 @@ pub struct Invoicingv2invoicesMerchantDefinedFieldValues {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesMerchantDefinedFieldValues {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Contains all of the order-related fields, such as the amount and line item details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1354,6 +1691,19 @@ pub struct Invoicingv2invoicesOrderInformation {
     /// List of the line items from the order.
     #[serde(rename = "lineItems", skip_serializing_if = "Option::is_none")]
     pub line_items: Option<Vec<Invoicingv2invoicesOrderInformationLineItems>>,
+}
+impl v::Validate for Invoicingv2invoicesOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, true);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, Some(30)),
+        );
+    }
 }
 /// Contains all of the amount-related fields.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1407,6 +1757,62 @@ pub struct Invoicingv2invoicesOrderInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountPercent",
+            &self.discount_percent,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::nested(path, out, "freight", &self.freight, false);
+        v::string(
+            path,
+            out,
+            "subAmount",
+            &self.sub_amount,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::nested(path, out, "taxDetails", &self.tax_details, false);
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            true,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 /// Contains all of the shipping-related fields for the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1431,6 +1837,30 @@ pub struct Invoicingv2invoicesOrderInformationAmountDetailsFreight {
     )]
     pub taxable: Option<bool>,
 }
+impl v::Validate for Invoicingv2invoicesOrderInformationAmountDetailsFreight {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+    }
+}
 /// Contains all of the tax-related fields for the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1453,6 +1883,21 @@ pub struct Invoicingv2invoicesOrderInformationAmountDetailsTaxDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Invoicingv2invoicesOrderInformationAmountDetailsTaxDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(path, out, "rate", &self.rate, false, None, Some(6), None);
+    }
 }
 /// Line item from the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1521,6 +1966,99 @@ pub struct Invoicingv2invoicesOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountPercent",
+            &self.discount_percent,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 /// Contains processing information, such as collection details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1539,6 +2077,9 @@ pub struct Invoicingv2invoicesProcessingInformation {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub request_shipping: Option<bool>,
+}
+impl v::Validate for Invoicingv2invoicesProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Contains the updatable invoice information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1593,6 +2134,50 @@ pub struct Invoicingv2invoicesidInvoiceInformation {
     )]
     pub transaction_reference_number: Option<String>,
 }
+impl v::Validate for Invoicingv2invoicesidInvoiceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            true,
+            None,
+            Some(2000),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dueDate",
+            &self.due_date,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationDate",
+            &self.expiration_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionReferenceNumber",
+            &self.transaction_reference_number,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
+}
 /// Contains all of the order-related fields, such as the amount and line item details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1603,6 +2188,19 @@ pub struct Iplv2paymentlinksOrderInformation {
     /// List of the line items from the order.
     #[serde(rename = "lineItems", skip_serializing_if = "Option::is_none")]
     pub line_items: Option<Vec<Iplv2paymentlinksOrderInformationLineItems>>,
+}
+impl v::Validate for Iplv2paymentlinksOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, true);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            true,
+            (None, Some(30)),
+        );
+    }
 }
 /// Contains all of the amount-related fields.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1635,6 +2233,30 @@ pub struct Iplv2paymentlinksOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for Iplv2paymentlinksOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 /// Line item from the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1710,6 +2332,109 @@ pub struct Iplv2paymentlinksOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Iplv2paymentlinksOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountPercent",
+            &self.discount_percent,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productDescription",
+            &self.product_description,
+            false,
+            None,
+            Some(2000),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 /// Contains processing information, such as the type and collection details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1735,6 +2460,11 @@ pub struct Iplv2paymentlinksProcessingInformation {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub request_shipping: Option<bool>,
+}
+impl v::Validate for Iplv2paymentlinksProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "linkType", &self.link_type);
+    }
 }
 /// Contains link specific detail.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1776,6 +2506,60 @@ pub struct Iplv2paymentlinksPurchaseInformation {
     )]
     pub transaction_reference_number: Option<String>,
 }
+impl v::Validate for Iplv2paymentlinksPurchaseInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationAmount",
+            &self.expiration_amount,
+            false,
+            None,
+            Some(19),
+            Some(&crate::generated::patterns::P41),
+        );
+        v::string(
+            path,
+            out,
+            "expirationDate",
+            &self.expiration_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationQuantity",
+            &self.expiration_quantity,
+            false,
+            None,
+            Some(19),
+            Some(&crate::generated::patterns::P40),
+        );
+        v::string(
+            path,
+            out,
+            "purchaseNumber",
+            &self.purchase_number,
+            true,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionReferenceNumber",
+            &self.transaction_reference_number,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
+}
 /// Contains all of the order-related fields, such as the amount and line item details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1786,6 +2570,19 @@ pub struct Iplv2paymentlinksidOrderInformation {
     /// List of the line items from the order.
     #[serde(rename = "lineItems", skip_serializing_if = "Option::is_none")]
     pub line_items: Option<Vec<Iplv2paymentlinksOrderInformationLineItems>>,
+}
+impl v::Validate for Iplv2paymentlinksidOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            true,
+            (None, Some(30)),
+        );
+    }
 }
 /// Contains processing information, such as the type and collection details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1812,6 +2609,9 @@ pub struct Iplv2paymentlinksidProcessingInformation {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub request_shipping: Option<bool>,
+}
+impl v::Validate for Iplv2paymentlinksidProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Contains link specific detail.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1852,6 +2652,60 @@ pub struct Iplv2paymentlinksidPurchaseInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub transaction_reference_number: Option<String>,
+}
+impl v::Validate for Iplv2paymentlinksidPurchaseInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationAmount",
+            &self.expiration_amount,
+            false,
+            None,
+            Some(19),
+            Some(&crate::generated::patterns::P41),
+        );
+        v::string(
+            path,
+            out,
+            "expirationDate",
+            &self.expiration_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationQuantity",
+            &self.expiration_quantity,
+            false,
+            None,
+            Some(19),
+            Some(&crate::generated::patterns::P40),
+        );
+        v::string(
+            path,
+            out,
+            "purchaseNumber",
+            &self.purchase_number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionReferenceNumber",
+            &self.transaction_reference_number,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1914,6 +2768,38 @@ pub struct MerchantDefinedFieldDefinitionRequest {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub text_min_length: Option<i64>,
+}
+impl v::Validate for MerchantDefinedFieldDefinitionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "fieldType", &self.field_type);
+        v::string(path, out, "label", &self.label, true, None, Some(100), None);
+        v::present(
+            path,
+            out,
+            "merchantDefinedDataIndex",
+            &self.merchant_defined_data_index,
+        );
+        v::string(
+            path,
+            out,
+            "possibleValues",
+            &self.possible_values,
+            false,
+            None,
+            Some(600),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "textDefaultValue",
+            &self.text_default_value,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
 }
 #[doc(alias = "merchantDefinedFieldWithIdResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2052,6 +2938,38 @@ pub struct PblMerchantDefinedFieldDefinitionRequest {
     )]
     pub text_min_length: Option<i64>,
 }
+impl v::Validate for PblMerchantDefinedFieldDefinitionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "fieldType", &self.field_type);
+        v::string(path, out, "label", &self.label, true, None, Some(100), None);
+        v::present(
+            path,
+            out,
+            "merchantDefinedDataIndex",
+            &self.merchant_defined_data_index,
+        );
+        v::string(
+            path,
+            out,
+            "possibleValues",
+            &self.possible_values,
+            false,
+            None,
+            Some(600),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "textDefaultValue",
+            &self.text_default_value,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[doc(alias = "pblPaymentLinksAllGet200Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2116,6 +3034,30 @@ pub struct PblPaymentLinksAllGet200ResponseOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for PblPaymentLinksAllGet200ResponseOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 /// Line item from the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2448,6 +3390,25 @@ pub struct UpdateInvoiceRequest {
     )]
     pub processing_information: Option<Invoicingv2invoicesProcessingInformation>,
 }
+impl v::Validate for UpdateInvoiceRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "customerInformation",
+            &self.customer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "invoiceInformation",
+            &self.invoice_information,
+            true,
+        );
+        v::nested(path, out, "orderInformation", &self.order_information, true);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UpdateMerchantDefinedFieldCoreByIdRequest {
@@ -2510,6 +3471,38 @@ pub struct UpdateMerchantDefinedFieldCoreByIdRequest {
     )]
     pub text_min_length: Option<i64>,
 }
+impl v::Validate for UpdateMerchantDefinedFieldCoreByIdRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "fieldType", &self.field_type);
+        v::string(path, out, "label", &self.label, true, None, Some(100), None);
+        v::present(
+            path,
+            out,
+            "merchantDefinedDataIndex",
+            &self.merchant_defined_data_index,
+        );
+        v::string(
+            path,
+            out,
+            "possibleValues",
+            &self.possible_values,
+            false,
+            None,
+            Some(600),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "textDefaultValue",
+            &self.text_default_value,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UpdatePaymentLinkRequest {
@@ -2544,6 +3537,31 @@ pub struct UpdatePaymentLinkRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub status: Option<String>,
+}
+impl v::Validate for UpdatePaymentLinkRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "purchaseInformation",
+            &self.purchase_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2606,4 +3624,36 @@ pub struct UpdatePblMerchantDefinedFieldCoreByIdRequest {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub text_min_length: Option<i64>,
+}
+impl v::Validate for UpdatePblMerchantDefinedFieldCoreByIdRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "fieldType", &self.field_type);
+        v::string(path, out, "label", &self.label, true, None, Some(100), None);
+        v::present(
+            path,
+            out,
+            "merchantDefinedDataIndex",
+            &self.merchant_defined_data_index,
+        );
+        v::string(
+            path,
+            out,
+            "possibleValues",
+            &self.possible_values,
+            false,
+            None,
+            Some(600),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "textDefaultValue",
+            &self.text_default_value,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
 }

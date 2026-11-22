@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DeAssociationRequestBody {
@@ -13,6 +15,9 @@ pub struct DeAssociationRequestBody {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub device_id: Option<String>,
+}
+impl v::Validate for DeAssociationRequestBody {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -31,6 +36,30 @@ pub struct DeviceDeAssociateV3Request {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub organization_id: Option<String>,
+}
+impl v::Validate for DeviceDeAssociateV3Request {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "deviceId",
+            &self.device_id,
+            true,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "organizationId",
+            &self.organization_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
 }
 #[doc(alias = "deviceDeAssociateV3Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -349,6 +378,9 @@ pub struct PostDeviceSearchRequest {
     )]
     pub sort: Option<String>,
 }
+impl v::Validate for PostDeviceSearchRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostDeviceSearchRequestV3 {
@@ -376,4 +408,7 @@ pub struct PostDeviceSearchRequestV3 {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub sort: Option<String>,
+}
+impl v::Validate for PostDeviceSearchRequestV3 {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }

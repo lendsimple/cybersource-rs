@@ -3,11 +3,18 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Accountupdaterv1batchesIncluded {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tokens: Option<Vec<Accountupdaterv1batchesIncludedTokens>>,
+}
+impl v::Validate for Accountupdaterv1batchesIncluded {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(path, out, "tokens", &self.tokens, false, (None, None));
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -29,6 +36,31 @@ pub struct Accountupdaterv1batchesIncludedTokens {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Accountupdaterv1batchesIncludedTokens {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            Some(2),
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            Some(4),
+            Some(4),
+            None,
+        );
+        v::string(path, out, "id", &self.id, true, Some(1), Some(32), None);
+    }
 }
 #[doc(alias = "batchCreateResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -613,4 +645,20 @@ pub struct PostBatchRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for PostBatchRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "included", &self.included, true);
+        v::string(
+            path,
+            out,
+            "merchantReference",
+            &self.merchant_reference,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::present(path, out, "notificationEmail", &self.notification_email);
+    }
 }

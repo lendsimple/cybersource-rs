@@ -91,6 +91,9 @@ impl Operation for PostDeAssociateV3Terminal {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         match status.as_u16() {
             200 => Ok(PostDeAssociateV3TerminalResponse::Ok(json_decode(body)?)),

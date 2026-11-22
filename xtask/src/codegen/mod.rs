@@ -6,6 +6,7 @@ pub mod emit;
 pub mod examples;
 pub mod ir;
 pub mod naming;
+pub mod patterns;
 
 use std::fs;
 use std::path::Path;
@@ -15,7 +16,7 @@ use crate::{Result, spec_source, workspace_root};
 
 /// Loads the vendored spec and settings and builds the IR, reporting every
 /// problem at once.
-pub fn load() -> Result<(ir::Ir, config::Config)> {
+pub fn load() -> Result<(ir::Ir, config::Config, patterns::Patterns)> {
     let bytes = spec_source::verify()?;
     let spec: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|e| format!("spec is not JSON: {e}"))?;
@@ -28,7 +29,8 @@ pub fn load() -> Result<(ir::Ir, config::Config)> {
         return Err(problems(errors));
     }
     check_features(&ir)?;
-    Ok((ir, config))
+    let patterns = patterns::resolve(&ir, &config.patterns).map_err(problems)?;
+    Ok((ir, config, patterns))
 }
 
 fn problems(errors: Vec<String>) -> String {
@@ -112,11 +114,12 @@ fn rustfmt(source: &str) -> Result<String> {
 /// Writes the generated files into `dir` (replacing it), plus the example
 /// corpus into `tests_dir`, all rustfmt-formatted.
 pub fn write(dir: &Path, tests_dir: &Path) -> Result {
-    let (ir, config) = load()?;
-    let mut files: Vec<(std::path::PathBuf, String)> = emit::generate(&ir, &config.sensitive)
-        .into_iter()
-        .map(|(rel, contents)| (dir.join(rel), contents))
-        .collect();
+    let (ir, config, patterns) = load()?;
+    let mut files: Vec<(std::path::PathBuf, String)> =
+        emit::generate(&ir, &config.sensitive, &patterns)
+            .into_iter()
+            .map(|(rel, contents)| (dir.join(rel), contents))
+            .collect();
     let (test_rs, examples_json) = examples::generate(&ir, &config.example_allowlist);
     files.push((tests_dir.join("spec_examples.rs"), test_rs));
 
@@ -207,7 +210,7 @@ fn walk(dir: &Path) -> Result<Vec<std::path::PathBuf>> {
 
 /// `cargo xtask codegen --report`: prints what would be generated.
 pub fn report() -> Result {
-    let (ir, _) = load()?;
+    let (ir, _, _) = load()?;
     let mut by_group = std::collections::BTreeMap::<&str, usize>::new();
     for op in &ir.operations {
         *by_group.entry(&op.group).or_default() += 1;

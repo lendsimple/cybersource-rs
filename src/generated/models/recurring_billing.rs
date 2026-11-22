@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[doc(alias = "activateDeactivatePlanResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -148,6 +150,38 @@ pub struct CreateFollowOnSubscriptionRequest {
     )]
     pub subscription_information: Option<Rbsv1subscriptionsSubscriptionInformation>,
 }
+impl v::Validate for CreateFollowOnSubscriptionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "subscriptionInformation",
+            &self.subscription_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreatePlanRequest {
@@ -155,6 +189,18 @@ pub struct CreatePlanRequest {
     pub order_information: Option<Rbsv1plansOrderInformation>,
     #[serde(rename = "planInformation", skip_serializing_if = "Option::is_none")]
     pub plan_information: Option<Rbsv1plansPlanInformation>,
+}
+impl v::Validate for CreatePlanRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(path, out, "planInformation", &self.plan_information, false);
+    }
 }
 #[doc(alias = "createPlanResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -224,6 +270,45 @@ pub struct CreateSubscriptionRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub subscription_information: Option<Rbsv1subscriptionsSubscriptionInformation>,
+}
+impl v::Validate for CreateSubscriptionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "subscriptionInformation",
+            &self.subscription_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "createSubscriptionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -444,6 +529,11 @@ pub struct GetAllPlansResponseOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<GetAllPlansResponseOrderInformationAmountDetails>,
 }
+impl v::Validate for GetAllPlansResponseOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct GetAllPlansResponseOrderInformationAmountDetails {
@@ -467,6 +557,40 @@ pub struct GetAllPlansResponseOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub setup_fee: Option<String>,
+}
+impl v::Validate for GetAllPlansResponseOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "billingAmount",
+            &self.billing_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "setupFee",
+            &self.setup_fee,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -528,6 +652,9 @@ pub struct GetAllPlansResponsePlanInformationBillingPeriod {
     )]
     pub unit: Option<String>,
 }
+impl v::Validate for GetAllPlansResponsePlanInformationBillingPeriod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Plan list.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -578,6 +705,11 @@ pub struct GetAllSubscriptionsResponseClientReferenceInformation {
     )]
     pub code: Option<String>,
 }
+impl v::Validate for GetAllSubscriptionsResponseClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct GetAllSubscriptionsResponseLinks {
@@ -624,6 +756,41 @@ pub struct GetAllSubscriptionsResponseOrderInformationAmountDetails {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub surcharge: Option<GetAllSubscriptionsResponseOrderInformationAmountDetailsSurcharge>,
 }
+impl v::Validate for GetAllSubscriptionsResponseOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "billingAmount",
+            &self.billing_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "setupFee",
+            &self.setup_fee,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::nested(path, out, "surcharge", &self.surcharge, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct GetAllSubscriptionsResponseOrderInformationAmountDetailsSurcharge {
@@ -639,6 +806,30 @@ pub struct GetAllSubscriptionsResponseOrderInformationAmountDetailsSurcharge {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub description: Option<String>,
+}
+impl v::Validate for GetAllSubscriptionsResponseOrderInformationAmountDetailsSurcharge {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1207,6 +1398,9 @@ pub struct RbsAuthorizationOptions {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub initiator: Option<RbsAuthorizationOptionsInitiator>,
 }
+impl v::Validate for RbsAuthorizationOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct RbsAuthorizationOptionsInitiator {
@@ -1217,11 +1411,19 @@ pub struct RbsAuthorizationOptionsInitiator {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for RbsAuthorizationOptionsInitiator {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1plansOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Rbsv1plansOrderInformationAmountDetails>,
+}
+impl v::Validate for Rbsv1plansOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1246,6 +1448,40 @@ pub struct Rbsv1plansOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub setup_fee: Option<String>,
+}
+impl v::Validate for Rbsv1plansOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "billingAmount",
+            &self.billing_amount,
+            true,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "setupFee",
+            &self.setup_fee,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1281,6 +1517,23 @@ pub struct Rbsv1plansPlanInformation {
     )]
     pub status: Option<String>,
 }
+impl v::Validate for Rbsv1plansPlanInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "billingPeriod", &self.billing_period);
+        v::string(path, out, "code", &self.code, false, None, Some(10), None);
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(path, out, "name", &self.name, true, None, Some(100), None);
+    }
+}
 /// Number of times customer is going to be billed
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1291,6 +1544,9 @@ pub struct Rbsv1plansPlanInformationBillingCycles {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total: Option<String>,
+}
+impl v::Validate for Rbsv1plansPlanInformationBillingCycles {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1326,6 +1582,22 @@ pub struct Rbsv1plansidPlanInformation {
     )]
     pub status: Option<String>,
 }
+impl v::Validate for Rbsv1plansidPlanInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(10), None);
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(100), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1plansidProcessingInformation {
@@ -1335,6 +1607,9 @@ pub struct Rbsv1plansidProcessingInformation {
     )]
     pub subscription_billing_options:
         Option<Rbsv1plansidProcessingInformationSubscriptionBillingOptions>,
+}
+impl v::Validate for Rbsv1plansidProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1347,17 +1622,30 @@ pub struct Rbsv1plansidProcessingInformationSubscriptionBillingOptions {
     )]
     pub apply_to: Option<String>,
 }
+impl v::Validate for Rbsv1plansidProcessingInformationSubscriptionBillingOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1subscriptionsOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<GetAllSubscriptionsResponseOrderInformationAmountDetails>,
 }
+impl v::Validate for Rbsv1subscriptionsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1subscriptionsPaymentInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub customer: Option<Rbsv1subscriptionsPaymentInformationCustomer>,
+}
+impl v::Validate for Rbsv1subscriptionsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "customer", &self.customer, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1369,6 +1657,11 @@ pub struct Rbsv1subscriptionsPaymentInformationCustomer {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Rbsv1subscriptionsPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, true, Some(1), Some(32), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1subscriptionsPlanInformation {
@@ -1378,6 +1671,9 @@ pub struct Rbsv1subscriptionsPlanInformation {
     /// Billing Frequency
     #[serde(rename = "billingPeriod", skip_serializing_if = "Option::is_none")]
     pub billing_period: Option<GetAllPlansResponsePlanInformationBillingPeriod>,
+}
+impl v::Validate for Rbsv1subscriptionsPlanInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1394,6 +1690,20 @@ pub struct Rbsv1subscriptionsProcessingInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub commerce_indicator: Option<String>,
+}
+impl v::Validate for Rbsv1subscriptionsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commerceIndicator",
+            &self.commerce_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1439,11 +1749,53 @@ pub struct Rbsv1subscriptionsSubscriptionInformation {
     )]
     pub start_date: Option<String>,
 }
+impl v::Validate for Rbsv1subscriptionsSubscriptionInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(10), None);
+        v::string(path, out, "name", &self.name, true, None, Some(100), None);
+        v::string(
+            path,
+            out,
+            "originalTransactionAuthorizedAmount",
+            &self.original_transaction_authorized_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalTransactionId",
+            &self.original_transaction_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "planId",
+            &self.plan_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::present(path, out, "startDate", &self.start_date);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1subscriptionsidOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Rbsv1subscriptionsidOrderInformationAmountDetails>,
+}
+impl v::Validate for Rbsv1subscriptionsidOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1465,12 +1817,40 @@ pub struct Rbsv1subscriptionsidOrderInformationAmountDetails {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub surcharge: Option<GetAllSubscriptionsResponseOrderInformationAmountDetailsSurcharge>,
 }
+impl v::Validate for Rbsv1subscriptionsidOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "billingAmount",
+            &self.billing_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "setupFee",
+            &self.setup_fee,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::nested(path, out, "surcharge", &self.surcharge, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Rbsv1subscriptionsidPlanInformation {
     /// Number of times customer is going to be billed
     #[serde(rename = "billingCycles", skip_serializing_if = "Option::is_none")]
     pub billing_cycles: Option<Rbsv1plansPlanInformationBillingCycles>,
+}
+impl v::Validate for Rbsv1subscriptionsidPlanInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1501,6 +1881,22 @@ pub struct Rbsv1subscriptionsidSubscriptionInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub start_date: Option<String>,
+}
+impl v::Validate for Rbsv1subscriptionsidSubscriptionInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(10), None);
+        v::string(path, out, "name", &self.name, false, None, Some(100), None);
+        v::string(
+            path,
+            out,
+            "planId",
+            &self.plan_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+    }
 }
 #[doc(alias = "suspendSubscriptionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1559,6 +1955,9 @@ pub struct UpdatePayments {
     )]
     pub billing_cycles_to_skip: Option<Vec<i64>>,
 }
+impl v::Validate for UpdatePayments {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UpdatePlanRequest {
@@ -1571,6 +1970,18 @@ pub struct UpdatePlanRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Rbsv1plansidProcessingInformation>,
+}
+impl v::Validate for UpdatePlanRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(path, out, "planInformation", &self.plan_information, false);
+    }
 }
 #[doc(alias = "updatePlanResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1638,6 +2049,38 @@ pub struct UpdateSubscription {
         skip_serializing_if = "Option::is_none"
     )]
     pub subscription_information: Option<Rbsv1subscriptionsidSubscriptionInformation>,
+}
+impl v::Validate for UpdateSubscription {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "subscriptionInformation",
+            &self.subscription_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "updateSubscriptionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[doc(alias = "createOfferResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -273,6 +275,38 @@ pub struct OfferRequest {
     )]
     pub point_of_sale_information: Option<Vasv1currencyconversionPointOfSaleInformation>,
 }
+impl v::Validate for OfferRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv1currencyconversionClientReferenceInformation {
@@ -306,6 +340,42 @@ pub struct Vasv1currencyconversionClientReferenceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Vasv1currencyconversionClientReferenceInformationPartner>,
 }
+impl v::Validate for Vasv1currencyconversionClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "applicationName",
+            &self.application_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "applicationUser",
+            &self.application_user,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "applicationVersion",
+            &self.application_version,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(50), None);
+        v::nested(path, out, "partner", &self.partner, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv1currencyconversionClientReferenceInformationPartner {
@@ -324,6 +394,30 @@ pub struct Vasv1currencyconversionClientReferenceInformationPartner {
     )]
     pub solution_id: Option<String>,
 }
+impl v::Validate for Vasv1currencyconversionClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv1currencyconversionOrderInformation {
@@ -331,6 +425,18 @@ pub struct Vasv1currencyconversionOrderInformation {
     pub amount_details: Option<Vasv1currencyconversionOrderInformationAmountDetails>,
     #[serde(rename = "currencyConversion", skip_serializing_if = "Option::is_none")]
     pub currency_conversion: Option<Vasv1currencyconversionOrderInformationCurrencyConversion>,
+}
+impl v::Validate for Vasv1currencyconversionOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(
+            path,
+            out,
+            "currencyConversion",
+            &self.currency_conversion,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -350,6 +456,30 @@ pub struct Vasv1currencyconversionOrderInformationAmountDetails {
     )]
     pub original_currency: Option<String>,
 }
+impl v::Validate for Vasv1currencyconversionOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "originalAmount",
+            &self.original_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalCurrency",
+            &self.original_currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv1currencyconversionOrderInformationCurrencyConversion {
@@ -360,11 +490,21 @@ pub struct Vasv1currencyconversionOrderInformationCurrencyConversion {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Vasv1currencyconversionOrderInformationCurrencyConversion {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "type", &self.r#type, false, None, Some(3), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv1currencyconversionPaymentInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub card: Option<Vasv1currencyconversionPaymentInformationCard>,
+}
+impl v::Validate for Vasv1currencyconversionPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -381,6 +521,20 @@ impl ::std::fmt::Debug for Vasv1currencyconversionPaymentInformationCard {
         f.debug_struct("Vasv1currencyconversionPaymentInformationCard")
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .finish()
+    }
+}
+impl v::Validate for Vasv1currencyconversionPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(11),
+            None,
+        );
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -400,4 +554,28 @@ pub struct Vasv1currencyconversionPointOfSaleInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub terminal_id: Option<String>,
+}
+impl v::Validate for Vasv1currencyconversionPointOfSaleInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "entryMode",
+            &self.entry_mode,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalId",
+            &self.terminal_id,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+    }
 }
