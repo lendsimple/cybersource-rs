@@ -33,9 +33,10 @@ lcov.info
 *.pem
 *.key
 
-# Editors / OS
+# Editors / OS / tools
 .idea/
 .vscode/
+.claude/
 *.swp
 .DS_Store
 
