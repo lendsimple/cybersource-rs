@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct AddNegativeListRequest {
@@ -25,6 +27,46 @@ pub struct AddNegativeListRequest {
     #[serde(rename = "riskInformation", skip_serializing_if = "Option::is_none")]
     pub risk_information: Option<Riskv1liststypeentriesRiskInformation>,
 }
+impl v::Validate for AddNegativeListRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(path, out, "riskInformation", &self.risk_information, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CaseManagementActionsRequest {
@@ -38,6 +80,17 @@ pub struct CaseManagementActionsRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Riskv1decisionsidactionsProcessingInformation>,
+}
+impl v::Validate for CaseManagementActionsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "decisionInformation",
+            &self.decision_information,
+            true,
+        );
+    }
 }
 #[doc(alias = "caseManagementActionsResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -165,6 +218,20 @@ pub struct CaseManagementCommentsRequest {
     )]
     pub comments: Option<String>,
 }
+impl v::Validate for CaseManagementCommentsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "comments",
+            &self.comments,
+            true,
+            None,
+            Some(4000),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CheckPayerAuthEnrollmentRequest {
@@ -219,6 +286,103 @@ pub struct CheckPayerAuthEnrollmentRequest {
     pub token_information: Option<Riskv1authenticationsetupsTokenInformation>,
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Riskv1authenticationsTravelInformation>,
+}
+impl v::Validate for CheckPayerAuthEnrollmentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "acquirerInformation",
+            &self.acquirer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recurringPaymentInformation",
+            &self.recurring_payment_information,
+            false,
+        );
+        v::nested(path, out, "riskInformation", &self.risk_information, false);
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "commentDecisionManagerCaseResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -326,6 +490,132 @@ pub struct CreateBundledDecisionManagerCaseRequest {
     )]
     pub watchlist_screening_information: Option<Ptsv2paymentsWatchlistScreeningInformation>,
 }
+impl v::Validate for CreateBundledDecisionManagerCaseRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "acquirerInformation",
+            &self.acquirer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(path, out, "orderInformation", &self.order_information, true);
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recipientInformation",
+            &self.recipient_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recurringPaymentInformation",
+            &self.recurring_payment_information,
+            false,
+        );
+        v::nested(path, out, "riskInformation", &self.risk_information, false);
+        v::nested(
+            path,
+            out,
+            "senderInformation",
+            &self.sender_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "watchlistScreeningInformation",
+            &self.watchlist_screening_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct FraudMarkingActionRequest {
@@ -337,6 +627,18 @@ pub struct FraudMarkingActionRequest {
         Option<RiskV1DecisionsPost201ResponseClientReferenceInformation>,
     #[serde(rename = "riskInformation", skip_serializing_if = "Option::is_none")]
     pub risk_information: Option<Riskv1decisionsidmarkingRiskInformation>,
+}
+impl v::Validate for FraudMarkingActionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(path, out, "riskInformation", &self.risk_information, true);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -355,6 +657,38 @@ pub struct PayerAuthSetupRequest {
     pub processing_information: Option<Riskv1authenticationsetupsProcessingInformation>,
     #[serde(rename = "tokenInformation", skip_serializing_if = "Option::is_none")]
     pub token_information: Option<Riskv1authenticationsetupsTokenInformation>,
+}
+impl v::Validate for PayerAuthSetupRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "riskAddressVerificationInformation")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -556,6 +890,40 @@ pub struct RiskInformationBuyerHistoryCustomerAccount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub password_history: Option<String>,
+}
+impl v::Validate for RiskInformationBuyerHistoryCustomerAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "createDate",
+            &self.create_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastChangeDate",
+            &self.last_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passwordChangeDate",
+            &self.password_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[doc(alias = "riskV1AddressVerificationsPost201Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1135,6 +1503,22 @@ pub struct RiskV1DecisionsPost201ResponseClientReferenceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Riskv1decisionsClientReferenceInformationPartner>,
 }
+impl v::Validate for RiskV1DecisionsPost201ResponseClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::string(
+            path,
+            out,
+            "comments",
+            &self.comments,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "partner", &self.partner, false);
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct RiskV1DecisionsPost201ResponseConsumerAuthenticationInformation {
@@ -1709,6 +2093,20 @@ pub struct Riskv1addressverificationsBuyerInformation {
     )]
     pub merchant_customer_id: Option<String>,
 }
+impl v::Validate for Riskv1addressverificationsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1addressverificationsOrderInformation {
@@ -1718,6 +2116,20 @@ pub struct Riskv1addressverificationsOrderInformation {
     pub line_items: Option<Vec<Riskv1addressverificationsOrderInformationLineItems>>,
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Riskv1addressverificationsOrderInformationShipTo>,
+}
+impl v::Validate for Riskv1addressverificationsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1773,6 +2185,90 @@ pub struct Riskv1addressverificationsOrderInformationBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1addressverificationsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address4",
+            &self.address4,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            true,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1addressverificationsOrderInformationLineItems {
@@ -1817,6 +2313,69 @@ pub struct Riskv1addressverificationsOrderInformationLineItems {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub unit_price: Option<String>,
+}
+impl v::Validate for Riskv1addressverificationsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productRisk",
+            &self.product_risk,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSKU",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1871,6 +2430,90 @@ pub struct Riskv1addressverificationsOrderInformationShipTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Riskv1addressverificationsOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address4",
+            &self.address4,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1932,12 +2575,81 @@ pub struct Riskv1authenticationresultsConsumerAuthenticationInformation {
     )]
     pub white_list_status: Option<String>,
 }
+impl v::Validate for Riskv1authenticationresultsConsumerAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationTransactionContext",
+            &self.authentication_transaction_context,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationTransactionId",
+            &self.authentication_transaction_id,
+            true,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "credentialEncrypted",
+            &self.credential_encrypted,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "otpToken",
+            &self.otp_token,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "signedParesStatusReason",
+            &self.signed_pares_status_reason,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "whiteListStatus",
+            &self.white_list_status,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationresultsOrderInformation {
     /// Contains \`currency\` and \`totalAmount\` for this order.
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Riskv1authenticationresultsOrderInformationAmountDetails>,
+}
+impl v::Validate for Riskv1authenticationresultsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 /// Contains \`currency\` and \`totalAmount\` for this order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1957,6 +2669,30 @@ pub struct Riskv1authenticationresultsOrderInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Riskv1authenticationresultsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationresultsPaymentInformation {
@@ -1968,6 +2704,14 @@ pub struct Riskv1authenticationresultsPaymentInformation {
     pub fluid_data: Option<Riskv1authenticationresultsPaymentInformationFluidData>,
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Riskv1authenticationresultsPaymentInformationTokenizedCard>,
+}
+impl v::Validate for Riskv1authenticationresultsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "fluidData", &self.fluid_data, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2009,6 +2753,40 @@ impl ::std::fmt::Debug for Riskv1authenticationresultsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Riskv1authenticationresultsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationresultsPaymentInformationFluidData {
@@ -2037,6 +2815,40 @@ pub struct Riskv1authenticationresultsPaymentInformationFluidData {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for Riskv1authenticationresultsPaymentInformationFluidData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "descriptor",
+            &self.descriptor,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encoding",
+            &self.encoding,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(4000),
+            None,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2086,6 +2898,50 @@ impl ::std::fmt::Debug for Riskv1authenticationresultsPaymentInformationTokenize
             .finish()
     }
 }
+impl v::Validate for Riskv1authenticationresultsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsBuyerInformation {
@@ -2116,6 +2972,29 @@ pub struct Riskv1authenticationsBuyerInformation {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub work_phone: Option<i64>,
+}
+impl v::Validate for Riskv1authenticationsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::present(path, out, "mobilePhone", &self.mobile_phone);
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2200,6 +3079,107 @@ pub struct Riskv1authenticationsDeviceInformation {
     )]
     pub user_agent_browser_value: Option<String>,
 }
+impl v::Validate for Riskv1authenticationsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "httpAcceptBrowserValue",
+            &self.http_accept_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptContent",
+            &self.http_accept_content,
+            true,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserColorDepth",
+            &self.http_browser_color_depth,
+            true,
+            None,
+            Some(2),
+            None,
+        );
+        v::present(
+            path,
+            out,
+            "httpBrowserJavaEnabled",
+            &self.http_browser_java_enabled,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserLanguage",
+            &self.http_browser_language,
+            true,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenHeight",
+            &self.http_browser_screen_height,
+            true,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenWidth",
+            &self.http_browser_screen_width,
+            true,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserTimeDifference",
+            &self.http_browser_time_difference,
+            true,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::list(path, out, "rawData", &self.raw_data, false, (None, None));
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsMerchantInformation {
@@ -2212,6 +3192,27 @@ pub struct Riskv1authenticationsMerchantInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub merchant_name: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2254,6 +3255,41 @@ pub struct Riskv1authenticationsOrderInformation {
     )]
     pub total_offers_count: Option<String>,
 }
+impl v::Validate for Riskv1authenticationsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "preOrderDate",
+            &self.pre_order_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::string(
+            path,
+            out,
+            "totalOffersCount",
+            &self.total_offers_count,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 /// Contains \`currency\` and \`totalAmount\` for this order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2271,6 +3307,30 @@ pub struct Riskv1authenticationsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            true,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2346,6 +3406,111 @@ pub struct Riskv1authenticationsOrderInformationBillTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            true,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "email", &self.email, true, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2486,6 +3651,160 @@ pub struct Riskv1authenticationsOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Riskv1authenticationsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "passenger", &self.passenger, false);
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSKU",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "shippingAddress1",
+            &self.shipping_address1,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingAddress2",
+            &self.shipping_address2,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingCity",
+            &self.shipping_city,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingCountryCode",
+            &self.shipping_country_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDestinationTypes",
+            &self.shipping_destination_types,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingFirstName",
+            &self.shipping_first_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingLastName",
+            &self.shipping_last_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingMiddleName",
+            &self.shipping_middle_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingState",
+            &self.shipping_state,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            true,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsPaymentInformation {
@@ -2497,6 +3816,14 @@ pub struct Riskv1authenticationsPaymentInformation {
     pub fluid_data: Option<Riskv1authenticationsetupsPaymentInformationFluidData>,
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Riskv1authenticationsPaymentInformationTokenizedCard>,
+}
+impl v::Validate for Riskv1authenticationsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "fluidData", &self.fluid_data, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2514,6 +3841,21 @@ pub struct Riskv1authenticationsPaymentInformationCustomer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "customerId",
+            &self.customer_id,
+            true,
+            Some(1),
+            Some(32),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2584,6 +3926,71 @@ impl ::std::fmt::Debug for Riskv1authenticationsPaymentInformationTokenizedCard 
             .finish()
     }
 }
+impl v::Validate for Riskv1authenticationsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cryptogram",
+            &self.cryptogram,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            true,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            true,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            true,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            true,
+            None,
+            Some(1),
+            None,
+        );
+        v::present(path, out, "type", &self.r#type);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsPreviousLoginIpAddress {
@@ -2601,11 +4008,40 @@ pub struct Riskv1authenticationsPreviousLoginIpAddress {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1authenticationsPreviousLoginIpAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsRiskInformation {
     #[serde(rename = "buyerHistory", skip_serializing_if = "Option::is_none")]
     pub buyer_history: Option<Riskv1decisionsRiskInformationBuyerHistory>,
+}
+impl v::Validate for Riskv1authenticationsRiskInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "buyerHistory", &self.buyer_history, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2622,6 +4058,19 @@ pub struct Riskv1authenticationsTravelInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub passengers: Option<Vec<Riskv1decisionsTravelInformationPassengers>>,
 }
+impl v::Validate for Riskv1authenticationsTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(path, out, "legs", &self.legs, false, (None, None));
+        v::list(
+            path,
+            out,
+            "passengers",
+            &self.passengers,
+            false,
+            (None, None),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsetupsPaymentInformation {
@@ -2633,6 +4082,14 @@ pub struct Riskv1authenticationsetupsPaymentInformation {
     pub fluid_data: Option<Riskv1authenticationsetupsPaymentInformationFluidData>,
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Riskv1authenticationsetupsPaymentInformationTokenizedCard>,
+}
+impl v::Validate for Riskv1authenticationsetupsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "fluidData", &self.fluid_data, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2674,6 +4131,40 @@ impl ::std::fmt::Debug for Riskv1authenticationsetupsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Riskv1authenticationsetupsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            true,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            true,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsetupsPaymentInformationCustomer {
@@ -2684,6 +4175,20 @@ pub struct Riskv1authenticationsetupsPaymentInformationCustomer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub customer_id: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsetupsPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "customerId",
+            &self.customer_id,
+            true,
+            Some(1),
+            Some(32),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2713,6 +4218,40 @@ pub struct Riskv1authenticationsetupsPaymentInformationFluidData {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsetupsPaymentInformationFluidData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "descriptor",
+            &self.descriptor,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encoding",
+            &self.encoding,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            true,
+            None,
+            Some(4000),
+            None,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2762,6 +4301,51 @@ impl ::std::fmt::Debug for Riskv1authenticationsetupsPaymentInformationTokenized
             .finish()
     }
 }
+impl v::Validate for Riskv1authenticationsetupsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            true,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            true,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            true,
+            None,
+            Some(1),
+            None,
+        );
+        v::present(path, out, "type", &self.r#type);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsetupsProcessingInformation {
@@ -2780,6 +4364,30 @@ pub struct Riskv1authenticationsetupsProcessingInformation {
     )]
     pub visa_checkout_id: Option<String>,
 }
+impl v::Validate for Riskv1authenticationsetupsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1authenticationsetupsTokenInformation {
@@ -2796,6 +4404,11 @@ pub struct Riskv1authenticationsetupsTokenInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub transient_token: Option<String>,
+}
+impl v::Validate for Riskv1authenticationsetupsTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2837,6 +4450,50 @@ impl ::std::fmt::Debug for Riskv1decisionsAcquirerInformation {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsAcquirerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acquirerBin",
+            &self.acquirer_bin,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "password",
+            &self.password,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsAggregatorInformation {
@@ -2847,6 +4504,20 @@ pub struct Riskv1decisionsAggregatorInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub service_provider_name: Option<String>,
+}
+impl v::Validate for Riskv1decisionsAggregatorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "serviceProviderName",
+            &self.service_provider_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3137,6 +4808,288 @@ pub struct Riskv1decisionsBundledConsumerAuthenticationInformation {
     )]
     pub white_list_status: Option<String>,
 }
+impl v::Validate for Riskv1decisionsBundledConsumerAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acsWindowSize",
+            &self.acs_window_size,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationData",
+            &self.alternate_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationDate",
+            &self.alternate_authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationDate",
+            &self.authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationTransactionId",
+            &self.authentication_transaction_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "challengeStatus",
+            &self.challenge_status,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerCardAlias",
+            &self.customer_card_alias,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationIndicator",
+            &self.decoupled_authentication_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationMaxTime",
+            &self.decoupled_authentication_max_time,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deviceChannel",
+            &self.device_channel,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "marketingSource",
+            &self.marketing_source,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(path, out, "mcc", &self.mcc, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "merchantFraudRate",
+            &self.merchant_fraud_rate,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "npaCode",
+            &self.npa_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "overrideCountryCode",
+            &self.override_country_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationData",
+            &self.prior_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationMethod",
+            &self.prior_authentication_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationReferenceId",
+            &self.prior_authentication_reference_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationTime",
+            &self.prior_authentication_time,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceId",
+            &self.reference_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorId",
+            &self.requestor_id,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorInitiatedAuthenticationIndicator",
+            &self.requestor_initiated_authentication_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorName",
+            &self.requestor_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "returnUrl",
+            &self.return_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sdkMaxTimeout",
+            &self.sdk_max_timeout,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secureCorporatePaymentIndicator",
+            &self.secure_corporate_payment_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "strongAuthentication",
+            &self.strong_authentication,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "whiteListStatus",
+            &self.white_list_status,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsBundledOrderInformationShipTo {
@@ -3252,6 +5205,170 @@ pub struct Riskv1decisionsBundledOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1decisionsBundledOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "carrierName",
+            &self.carrier_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destinationTypes",
+            &self.destination_types,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsBundledRiskInformationBuyerHistory {
@@ -3315,6 +5432,12 @@ pub struct Riskv1decisionsBundledRiskInformationBuyerHistory {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub transaction_count_year: Option<i64>,
+}
+impl v::Validate for Riskv1decisionsBundledRiskInformationBuyerHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "accountHistory", &self.account_history, false);
+        v::nested(path, out, "customerAccount", &self.customer_account, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3396,6 +5519,52 @@ pub struct Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccount {
     )]
     pub total_orders_count: Option<f64>,
 }
+impl v::Validate for Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "createDate",
+            &self.create_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastChangeDate",
+            &self.last_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastEmailChangeDate",
+            &self.last_email_change_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passwordChangeDate",
+            &self.password_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "previousLogin", &self.previous_login, false);
+        v::nested(path, out, "previousOrder", &self.previous_order, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPreviousLogin {
@@ -3428,6 +5597,42 @@ pub struct Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPrevi
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPreviousLogin {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "date", &self.date, false, None, Some(8), None);
+        v::string(
+            path,
+            out,
+            "deviceId",
+            &self.device_id,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deviceType",
+            &self.device_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "ipAddress", &self.ip_address, false);
+        v::string(
+            path,
+            out,
+            "type",
+            &self.r#type,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPreviousOrder {
@@ -3437,6 +5642,11 @@ pub struct Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPrevi
         deserialize_with = "crate::types::lenient::string"
     )]
     pub date: Option<String>,
+}
+impl v::Validate for Riskv1decisionsBundledRiskInformationBuyerHistoryCustomerAccountPreviousOrder {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "date", &self.date, false, None, Some(8), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3488,6 +5698,51 @@ pub struct Riskv1decisionsBundledTravelInformationLegs {
     )]
     pub origination: Option<String>,
 }
+impl v::Validate for Riskv1decisionsBundledTravelInformationLegs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "carrierCode",
+            &self.carrier_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destination",
+            &self.destination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "flightNumber",
+            &self.flight_number,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "origination",
+            &self.origination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 /// Contains information about the buyer.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3527,6 +5782,59 @@ pub struct Riskv1decisionsBuyerInformation {
     )]
     pub username: Option<String>,
 }
+impl v::Validate for Riskv1decisionsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hashedPassword",
+            &self.hashed_password,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::nested(path, out, "loyalty", &self.loyalty, false);
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "username",
+            &self.username,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsBuyerInformationLoyalty {
@@ -3555,6 +5863,30 @@ impl ::std::fmt::Debug for Riskv1decisionsBuyerInformationLoyalty {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsBuyerInformationLoyalty {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountNumber",
+            &self.account_number,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "level",
+            &self.level,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsClientReferenceInformation {
@@ -3579,6 +5911,32 @@ pub struct Riskv1decisionsClientReferenceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub paused_request_id: Option<String>,
+}
+impl v::Validate for Riskv1decisionsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::string(
+            path,
+            out,
+            "comments",
+            &self.comments,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "pausedRequestId",
+            &self.paused_request_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3862,6 +6220,288 @@ pub struct Riskv1decisionsConsumerAuthenticationInformation {
     )]
     pub white_list_status: Option<String>,
 }
+impl v::Validate for Riskv1decisionsConsumerAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acsWindowSize",
+            &self.acs_window_size,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationData",
+            &self.alternate_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationDate",
+            &self.alternate_authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationDate",
+            &self.authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationTransactionId",
+            &self.authentication_transaction_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "challengeStatus",
+            &self.challenge_status,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerCardAlias",
+            &self.customer_card_alias,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationIndicator",
+            &self.decoupled_authentication_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationMaxTime",
+            &self.decoupled_authentication_max_time,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deviceChannel",
+            &self.device_channel,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "marketingSource",
+            &self.marketing_source,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(path, out, "mcc", &self.mcc, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "merchantFraudRate",
+            &self.merchant_fraud_rate,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "npaCode",
+            &self.npa_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "overrideCountryCode",
+            &self.override_country_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationData",
+            &self.prior_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationMethod",
+            &self.prior_authentication_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationReferenceId",
+            &self.prior_authentication_reference_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationTime",
+            &self.prior_authentication_time,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceId",
+            &self.reference_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorId",
+            &self.requestor_id,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorInitiatedAuthenticationIndicator",
+            &self.requestor_initiated_authentication_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorName",
+            &self.requestor_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "returnUrl",
+            &self.return_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sdkMaxTimeout",
+            &self.sdk_max_timeout,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secureCorporatePaymentIndicator",
+            &self.secure_corporate_payment_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "strongAuthentication",
+            &self.strong_authentication,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "whiteListStatus",
+            &self.white_list_status,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsConsumerAuthenticationInformationStrongAuthentication {
@@ -3872,6 +6512,20 @@ pub struct Riskv1decisionsConsumerAuthenticationInformationStrongAuthentication 
         deserialize_with = "crate::types::lenient::string"
     )]
     pub authentication_indicator: Option<String>,
+}
+impl v::Validate for Riskv1decisionsConsumerAuthenticationInformationStrongAuthentication {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationIndicator",
+            &self.authentication_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3998,6 +6652,121 @@ pub struct Riskv1decisionsDeviceInformation {
     )]
     pub user_agent_browser_value: Option<String>,
 }
+impl v::Validate for Riskv1decisionsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptBrowserValue",
+            &self.http_accept_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptContent",
+            &self.http_accept_content,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserColorDepth",
+            &self.http_browser_color_depth,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserLanguage",
+            &self.http_browser_language,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenHeight",
+            &self.http_browser_screen_height,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenWidth",
+            &self.http_browser_screen_width,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserTimeDifference",
+            &self.http_browser_time_difference,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::list(path, out, "rawData", &self.raw_data, false, (None, None));
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 /// Contains merchant-defined key-value pairs.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4023,6 +6792,21 @@ impl ::std::fmt::Debug for Riskv1decisionsMerchantDefinedInformation {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsMerchantDefinedInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "key", &self.key, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsMerchantInformation {
@@ -4043,6 +6827,37 @@ pub struct Riskv1decisionsMerchantInformation {
     )]
     pub merchant_name: Option<String>,
 }
+impl v::Validate for Riskv1decisionsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsMerchantInformationMerchantDescriptor {
@@ -4058,6 +6873,11 @@ pub struct Riskv1decisionsMerchantInformationMerchantDescriptor {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub url: Option<String>,
+}
+impl v::Validate for Riskv1decisionsMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "url", &self.url, false, None, Some(255), None);
+    }
 }
 /// Contains detailed order-level information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4121,6 +6941,43 @@ pub struct Riskv1decisionsOrderInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub vouchers: Option<Vec<Riskv1decisionsOrderInformationVouchers>>,
 }
+impl v::Validate for Riskv1decisionsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "preOrderDate",
+            &self.pre_order_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+        v::string(
+            path,
+            out,
+            "totalOffersCount",
+            &self.total_offers_count,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::list(path, out, "vouchers", &self.vouchers, false, (None, None));
+    }
+}
 /// Contains \`currency\` and \`totalAmount\` for this order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4145,6 +7002,40 @@ pub struct Riskv1decisionsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for Riskv1decisionsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4214,6 +7105,110 @@ pub struct Riskv1decisionsOrderInformationBillTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Riskv1decisionsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4328,6 +7323,120 @@ pub struct Riskv1decisionsOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Riskv1decisionsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "distributorProductSku",
+            &self.distributor_product_sku,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::nested(path, out, "passenger", &self.passenger, false);
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productRisk",
+            &self.product_risk,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSKU",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productType",
+            &self.product_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "shippingDestinationTypes",
+            &self.shipping_destination_types,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsOrderInformationShipTo {
@@ -4436,6 +7545,160 @@ pub struct Riskv1decisionsOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1decisionsOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destinationTypes",
+            &self.destination_types,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 /// Contains shipping information not related to address.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4455,6 +7718,20 @@ pub struct Riskv1decisionsOrderInformationShippingDetails {
     )]
     pub shipping_method: Option<String>,
 }
+impl v::Validate for Riskv1decisionsOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsOrderInformationVouchers {
@@ -4464,6 +7741,11 @@ pub struct Riskv1decisionsOrderInformationVouchers {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Riskv1decisionsOrderInformationVouchers {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(255), None);
+    }
 }
 /// Contains the payment data for this transaction.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4492,6 +7774,31 @@ pub struct Riskv1decisionsPaymentInformation {
     /// Use this object to submit a payment network token instead of card-based values.
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Riskv1decisionsPaymentInformationTokenizedCard>,
+}
+impl v::Validate for Riskv1decisionsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentAccountReference",
+            &self.payment_account_reference,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
 }
 /// Use this for a non-tokenized payment card.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4541,6 +7848,41 @@ impl ::std::fmt::Debug for Riskv1decisionsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "bin", &self.bin, false, None, Some(6), None);
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsPaymentInformationPaymentAccountReference {
@@ -4550,6 +7892,11 @@ pub struct Riskv1decisionsPaymentInformationPaymentAccountReference {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Riskv1decisionsPaymentInformationPaymentAccountReference {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(29), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4563,6 +7910,9 @@ pub struct Riskv1decisionsPaymentInformationPaymentType {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Riskv1decisionsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsPaymentInformationPaymentTypeMethod {
@@ -4572,6 +7922,9 @@ pub struct Riskv1decisionsPaymentInformationPaymentTypeMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Riskv1decisionsPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Use this object to submit a payment network token instead of card-based values.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4622,6 +7975,50 @@ impl ::std::fmt::Debug for Riskv1decisionsPaymentInformationTokenizedCard {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 /// Decides whether to call Payer Authentication or Watchlist Screening service along with DM or not.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4663,6 +8060,40 @@ pub struct Riskv1decisionsProcessingInformation {
     )]
     pub purpose_of_payment: Option<String>,
 }
+impl v::Validate for Riskv1decisionsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "preAuthResponseCode",
+            &self.pre_auth_response_code,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "preAuthStatus",
+            &self.pre_auth_status,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purposeOfPayment",
+            &self.purpose_of_payment,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsProcessingInformationAuthorizationOptions {
@@ -4674,6 +8105,9 @@ pub struct Riskv1decisionsProcessingInformationAuthorizationOptions {
     )]
     pub aft_indicator: Option<bool>,
 }
+impl v::Validate for Riskv1decisionsProcessingInformationAuthorizationOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Contains information related to the payment processor.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4683,6 +8117,18 @@ pub struct Riskv1decisionsProcessorInformation {
     pub avs: Option<Riskv1decisionsProcessorInformationAvs>,
     #[serde(rename = "cardVerification", skip_serializing_if = "Option::is_none")]
     pub card_verification: Option<Riskv1decisionsProcessorInformationCardVerification>,
+}
+impl v::Validate for Riskv1decisionsProcessorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "avs", &self.avs, false);
+        v::nested(
+            path,
+            out,
+            "cardVerification",
+            &self.card_verification,
+            false,
+        );
+    }
 }
 /// Address Verification Service
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4694,6 +8140,11 @@ pub struct Riskv1decisionsProcessorInformationAvs {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Riskv1decisionsProcessorInformationAvs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(3), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4812,6 +8263,180 @@ pub struct Riskv1decisionsRecipientInformation {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1decisionsRecipientInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountId",
+            &self.account_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "accountType",
+            &self.account_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryOfBirth",
+            &self.country_of_birth,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "majorCountrySubdivisionCode",
+            &self.major_country_subdivision_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "minorCountrySubdivisionCode",
+            &self.minor_country_subdivision_code,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationality",
+            &self.nationality,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "occupation",
+            &self.occupation,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsRiskInformation {
@@ -4849,6 +8474,42 @@ pub struct Riskv1decisionsRiskInformation {
     /// Store information for transactions
     #[serde(skip_serializing_if = "Option::is_none")]
     pub store: Option<Riskv1decisionsRiskInformationStore>,
+}
+impl v::Validate for Riskv1decisionsRiskInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationType",
+            &self.authentication_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "auxiliaryData",
+            &self.auxiliary_data,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "buyerHistory", &self.buyer_history, false);
+        v::string(
+            path,
+            out,
+            "eventType",
+            &self.event_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "externalScore", &self.external_score, false);
+        v::nested(path, out, "profile", &self.profile, false);
+        v::nested(path, out, "store", &self.store, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4907,6 +8568,12 @@ pub struct Riskv1decisionsRiskInformationBuyerHistory {
     )]
     pub transaction_count_year: Option<i64>,
 }
+impl v::Validate for Riskv1decisionsRiskInformationBuyerHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "accountHistory", &self.account_history, false);
+        v::nested(path, out, "customerAccount", &self.customer_account, false);
+    }
+}
 /// External or in-house rating system score information
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4924,6 +8591,20 @@ pub struct Riskv1decisionsRiskInformationExternalScore {
         deserialize_with = "crate::types::lenient::f64"
     )]
     pub value: Option<f64>,
+}
+impl v::Validate for Riskv1decisionsRiskInformationExternalScore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "providerName",
+            &self.provider_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 /// Store information for transactions
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4960,6 +8641,51 @@ pub struct Riskv1decisionsRiskInformationStore {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Riskv1decisionsRiskInformationStore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address",
+            &self.address,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5081,6 +8807,163 @@ pub struct Riskv1decisionsSenderInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Riskv1decisionsSenderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryCode",
+            &self.country_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            Some(8),
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "identificationNumber",
+            &self.identification_number,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(100), None);
+        v::string(
+            path,
+            out,
+            "personalIdType",
+            &self.personal_id_type,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceNumber",
+            &self.reference_number,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsSenderInformationAccount {
@@ -5113,6 +8996,31 @@ impl ::std::fmt::Debug for Riskv1decisionsSenderInformationAccount {
             .finish()
     }
 }
+impl v::Validate for Riskv1decisionsSenderInformationAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "fundsSource",
+            &self.funds_source,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(2), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsTokenInformation {
@@ -5122,6 +9030,11 @@ pub struct Riskv1decisionsTokenInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub jti: Option<String>,
+}
+impl v::Validate for Riskv1decisionsTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5168,6 +9081,60 @@ pub struct Riskv1decisionsTravelInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub passengers: Option<Vec<Riskv1decisionsTravelInformationPassengers>>,
 }
+impl v::Validate for Riskv1decisionsTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "actualFinalDestination",
+            &self.actual_final_destination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "completeRoute",
+            &self.complete_route,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "departureTime",
+            &self.departure_time,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "journeyType",
+            &self.journey_type,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::list(path, out, "legs", &self.legs, false, (None, None));
+        v::nested(path, out, "lodging", &self.lodging, false);
+        v::list(
+            path,
+            out,
+            "passengers",
+            &self.passengers,
+            false,
+            (None, None),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsTravelInformationLegs {
@@ -5205,6 +9172,40 @@ pub struct Riskv1decisionsTravelInformationLegs {
     )]
     pub origination: Option<String>,
 }
+impl v::Validate for Riskv1decisionsTravelInformationLegs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "carrierCode",
+            &self.carrier_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destination",
+            &self.destination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "origination",
+            &self.origination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsTravelInformationLodging {
@@ -5229,6 +9230,31 @@ pub struct Riskv1decisionsTravelInformationLodging {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Riskv1decisionsTravelInformationLodging {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "checkInDate",
+            &self.check_in_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkOutDate",
+            &self.check_out_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(255), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsTravelInformationPassengers {
@@ -5247,6 +9273,30 @@ pub struct Riskv1decisionsTravelInformationPassengers {
     )]
     pub last_name: Option<String>,
 }
+impl v::Validate for Riskv1decisionsTravelInformationPassengers {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsidactionsDecisionInformation {
@@ -5263,6 +9313,20 @@ pub struct Riskv1decisionsidactionsDecisionInformation {
     )]
     pub decision: Option<String>,
 }
+impl v::Validate for Riskv1decisionsidactionsDecisionInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "comments",
+            &self.comments,
+            false,
+            None,
+            Some(4000),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsidactionsProcessingInformation {
@@ -5270,12 +9334,20 @@ pub struct Riskv1decisionsidactionsProcessingInformation {
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
 }
+impl v::Validate for Riskv1decisionsidactionsProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1decisionsidmarkingRiskInformation {
     /// Details for marking the transaction.
     #[serde(rename = "markingDetails", skip_serializing_if = "Option::is_none")]
     pub marking_details: Option<Riskv1decisionsidmarkingRiskInformationMarkingDetails>,
+}
+impl v::Validate for Riskv1decisionsidmarkingRiskInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "markingDetails", &self.marking_details, false);
+    }
 }
 /// Details for marking the transaction.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5303,6 +9375,30 @@ pub struct Riskv1decisionsidmarkingRiskInformationMarkingDetails {
     )]
     pub reason: Option<String>,
 }
+impl v::Validate for Riskv1decisionsidmarkingRiskInformationMarkingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "notes",
+            &self.notes,
+            false,
+            None,
+            Some(120),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reason",
+            &self.reason,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1exportcomplianceinquiriesDeviceInformation {
@@ -5321,6 +9417,30 @@ pub struct Riskv1exportcomplianceinquiriesDeviceInformation {
     )]
     pub ip_address: Option<String>,
 }
+impl v::Validate for Riskv1exportcomplianceinquiriesDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1exportcomplianceinquiriesExportComplianceInformation {
@@ -5337,6 +9457,22 @@ pub struct Riskv1exportcomplianceinquiriesExportComplianceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub weights: Option<Ptsv2paymentsWatchlistScreeningInformationWeights>,
 }
+impl v::Validate for Riskv1exportcomplianceinquiriesExportComplianceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::strings(
+            path,
+            out,
+            "sanctionLists",
+            &self.sanction_lists,
+            false,
+            (None, None),
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "weights", &self.weights, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1exportcomplianceinquiriesOrderInformation {
@@ -5346,6 +9482,20 @@ pub struct Riskv1exportcomplianceinquiriesOrderInformation {
     pub line_items: Option<Vec<Riskv1exportcomplianceinquiriesOrderInformationLineItems>>,
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Riskv1exportcomplianceinquiriesOrderInformationShipTo>,
+}
+impl v::Validate for Riskv1exportcomplianceinquiriesOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5423,6 +9573,112 @@ pub struct Riskv1exportcomplianceinquiriesOrderInformationBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1exportcomplianceinquiriesOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            true,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address4",
+            &self.address4,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::nested(path, out, "company", &self.company, false);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "email", &self.email, true, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            true,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            true,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1exportcomplianceinquiriesOrderInformationBillToCompany {
@@ -5432,6 +9688,11 @@ pub struct Riskv1exportcomplianceinquiriesOrderInformationBillToCompany {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Riskv1exportcomplianceinquiriesOrderInformationBillToCompany {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "name", &self.name, false, None, Some(60), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5488,6 +9749,69 @@ pub struct Riskv1exportcomplianceinquiriesOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Riskv1exportcomplianceinquiriesOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productRisk",
+            &self.product_risk,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSKU",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1exportcomplianceinquiriesOrderInformationShipTo {
@@ -5512,6 +9836,40 @@ pub struct Riskv1exportcomplianceinquiriesOrderInformationShipTo {
     )]
     pub last_name: Option<String>,
 }
+impl v::Validate for Riskv1exportcomplianceinquiriesOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
+}
 /// Contains information about the buyer.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5521,6 +9879,18 @@ pub struct Riskv1liststypeentriesBuyerInformation {
         skip_serializing_if = "Option::is_none"
     )]
     pub personal_identification: Option<Vec<Ptsv2paymentsBuyerInformationPersonalIdentification>>,
+}
+impl v::Validate for Riskv1liststypeentriesBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5540,6 +9910,30 @@ pub struct Riskv1liststypeentriesDeviceInformation {
     )]
     pub network_ip_address: Option<String>,
 }
+impl v::Validate for Riskv1liststypeentriesDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "networkIpAddress",
+            &self.network_ip_address,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1liststypeentriesOrderInformation {
@@ -5554,6 +9948,21 @@ pub struct Riskv1liststypeentriesOrderInformation {
     /// Contains recipient shipping information.
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Riskv1liststypeentriesOrderInformationShipTo>,
+}
+impl v::Validate for Riskv1liststypeentriesOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "address", &self.address, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 /// Contains address information related to the order
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5597,6 +10006,70 @@ pub struct Riskv1liststypeentriesOrderInformationAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Riskv1liststypeentriesOrderInformationAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5674,6 +10147,120 @@ pub struct Riskv1liststypeentriesOrderInformationBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1liststypeentriesOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "emailDomain",
+            &self.email_domain,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1liststypeentriesOrderInformationLineItems {
@@ -5684,6 +10271,20 @@ pub struct Riskv1liststypeentriesOrderInformationLineItems {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub unit_price: Option<String>,
+}
+impl v::Validate for Riskv1liststypeentriesOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 /// Contains recipient shipping information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5728,6 +10329,70 @@ pub struct Riskv1liststypeentriesOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Riskv1liststypeentriesOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 /// Contains the payment data for updating in List Management.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5737,6 +10402,12 @@ pub struct Riskv1liststypeentriesPaymentInformation {
     pub bank: Option<Riskv1liststypeentriesPaymentInformationBank>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub card: Option<Riskv1liststypeentriesPaymentInformationCard>,
+}
+impl v::Validate for Riskv1liststypeentriesPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+    }
 }
 /// Customer's bank account details
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5781,6 +10452,32 @@ impl ::std::fmt::Debug for Riskv1liststypeentriesPaymentInformationBank {
             .finish()
     }
 }
+impl v::Validate for Riskv1liststypeentriesPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountNumber",
+            &self.account_number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(15), None);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "iban", &self.iban, false, None, Some(30), None);
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1liststypeentriesPaymentInformationCard {
@@ -5812,12 +10509,32 @@ impl ::std::fmt::Debug for Riskv1liststypeentriesPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Riskv1liststypeentriesPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "bin", &self.bin, false, None, Some(6), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Riskv1liststypeentriesRiskInformation {
     /// Details for marking the transaction as either positive or negative.
     #[serde(rename = "markingDetails", skip_serializing_if = "Option::is_none")]
     pub marking_details: Option<Riskv1liststypeentriesRiskInformationMarkingDetails>,
+}
+impl v::Validate for Riskv1liststypeentriesRiskInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "markingDetails", &self.marking_details, false);
+    }
 }
 /// Details for marking the transaction as either positive or negative.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5848,6 +10565,40 @@ pub struct Riskv1liststypeentriesRiskInformationMarkingDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub record_name: Option<String>,
+}
+impl v::Validate for Riskv1liststypeentriesRiskInformationMarkingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "notes",
+            &self.notes,
+            false,
+            None,
+            Some(120),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reason",
+            &self.reason,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "recordName",
+            &self.record_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 /// Fully successful risk assessment response envelope returned for HTTP 201. All requested actions completed without errors. Neither the root-level errors field nor reason/message on action responses will be populated.
 #[doc(alias = "unifiedRiskPost201Response")]
@@ -6066,6 +10817,9 @@ pub struct UnifiedriskAccount {
     )]
     pub source_of_funds: Option<String>,
 }
+impl v::Validate for UnifiedriskAccount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Acquirer identification, credentials, and country information
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6142,6 +10896,50 @@ impl ::std::fmt::Debug for UnifiedriskAcquirer {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskAcquirer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acquirerBin",
+            &self.acquirer_bin,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "password",
+            &self.password,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 /// Container for the merchant's acquiring bank account details, security deposits, and settlement configuration
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6177,6 +10975,9 @@ pub struct UnifiedriskAcquirerMerchantAccount {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub settlement_frequency: Option<i64>,
+}
+impl v::Validate for UnifiedriskAcquirerMerchantAccount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Container for security deposit or holdback amount details, including currency and value representations
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -6222,6 +11023,9 @@ pub struct UnifiedriskAcquirerMerchantAccountSecurityAmount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskAcquirerMerchantAccountSecurityAmount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6341,6 +11145,50 @@ pub struct UnifiedriskAuthentication {
     )]
     pub version: Option<String>,
 }
+impl v::Validate for UnifiedriskAuthentication {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationId",
+            &self.authentication_id,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(254),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+    }
+}
 /// 3DS challenge preferences including indicator and preferred ACS window dimensions
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6359,6 +11207,9 @@ pub struct UnifiedriskAuthenticationChallenge {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub challenge_indicator: Option<String>,
+}
+impl v::Validate for UnifiedriskAuthenticationChallenge {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6382,6 +11233,9 @@ pub struct UnifiedriskAuthorization {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub rule_override: Option<bool>,
+}
+impl v::Validate for UnifiedriskAuthorization {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6506,6 +11360,100 @@ pub struct UnifiedriskBrowser {
     )]
     pub user_id: Option<String>,
 }
+impl v::Validate for UnifiedriskBrowser {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "httpAcceptBrowserValue",
+            &self.http_accept_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptContent",
+            &self.http_accept_content,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserColorDepth",
+            &self.http_browser_color_depth,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserLanguage",
+            &self.http_browser_language,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenHeight",
+            &self.http_browser_screen_height,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenWidth",
+            &self.http_browser_screen_width,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserTimeDifference",
+            &self.http_browser_time_difference,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 /// Customer identity, profile information, account history, and personal identification documents
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6617,6 +11565,76 @@ pub struct UnifiedriskCustomer {
     )]
     pub username: Option<String>,
 }
+impl v::Validate for UnifiedriskCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::number(
+            path,
+            out,
+            "agentConfidenceScore",
+            &self.agent_confidence_score,
+            false,
+            Some(0f64),
+            Some(1f64),
+        );
+        v::string(
+            path,
+            out,
+            "agentId",
+            &self.agent_id,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "businessName",
+            &self.business_name,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hashedPassword",
+            &self.hashed_password,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "username",
+            &self.username,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 /// Address of the customer
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6681,6 +11699,9 @@ pub struct UnifiedriskCustomerAddress {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for UnifiedriskCustomerAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskCustomerPersonalIdentification {
@@ -6738,6 +11759,51 @@ pub struct UnifiedriskCustomerPersonalIdentification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub work_phone_number: Option<String>,
+}
+impl v::Validate for UnifiedriskCustomerPersonalIdentification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(254),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "phone", &self.phone, false, None, Some(16), None);
+    }
 }
 /// Device hardware, network information, location data, and point-of-sale context
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7043,6 +12109,40 @@ pub struct UnifiedriskDevice {
     )]
     pub user_agent_string: Option<String>,
 }
+impl v::Validate for UnifiedriskDevice {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "deviceFingerprintProvider",
+            &self.device_fingerprint_provider,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskDevicePointOfSale {
@@ -7152,6 +12252,9 @@ pub struct UnifiedriskDevicePointOfSale {
     )]
     pub unattended_level_category: Option<String>,
 }
+impl v::Validate for UnifiedriskDevicePointOfSale {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskInitiatingParty {
@@ -7181,6 +12284,9 @@ pub struct UnifiedriskInitiatingParty {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for UnifiedriskInitiatingParty {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Post-transaction labeling for fraud outcomes and decisions
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7206,6 +12312,9 @@ pub struct UnifiedriskLabels {
     #[serde(rename = "transactionOutcome", skip_serializing_if = "Option::is_none")]
     pub transaction_outcome: Option<UnifiedriskLabelsTransactionOutcome>,
 }
+impl v::Validate for UnifiedriskLabels {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskLabelsAuthenticationOutcome {
@@ -7223,6 +12332,9 @@ pub struct UnifiedriskLabelsAuthenticationOutcome {
     )]
     pub label_timestamp: Option<String>,
 }
+impl v::Validate for UnifiedriskLabelsAuthenticationOutcome {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskLabelsPaymentAuthorizationDecision {
@@ -7239,6 +12351,9 @@ pub struct UnifiedriskLabelsPaymentAuthorizationDecision {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub label_timestamp: Option<String>,
+}
+impl v::Validate for UnifiedriskLabelsPaymentAuthorizationDecision {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Container for return or refund classification labels applied post-transaction for dispute management and fraud pattern analysis
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7259,6 +12374,9 @@ pub struct UnifiedriskLabelsReturn {
     )]
     pub return_type: Option<String>,
 }
+impl v::Validate for UnifiedriskLabelsReturn {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskLabelsTransactionDecision {
@@ -7276,6 +12394,9 @@ pub struct UnifiedriskLabelsTransactionDecision {
     )]
     pub label_timestamp: Option<String>,
 }
+impl v::Validate for UnifiedriskLabelsTransactionDecision {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskLabelsTransactionOutcome {
@@ -7292,6 +12413,9 @@ pub struct UnifiedriskLabelsTransactionOutcome {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub label_timestamp: Option<String>,
+}
+impl v::Validate for UnifiedriskLabelsTransactionOutcome {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Merchant identification, location, category code, and local currency
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7370,6 +12494,28 @@ pub struct UnifiedriskMerchant {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for UnifiedriskMerchant {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "address", &self.address, false);
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7461,6 +12607,20 @@ pub struct UnifiedriskMerchantAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub town_name: Option<String>,
+}
+impl v::Validate for UnifiedriskMerchantAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7586,6 +12746,11 @@ pub struct UnifiedriskMerchantMerchantDescriptor {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for UnifiedriskMerchantMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "url", &self.url, false, None, Some(255), None);
+    }
+}
 /// Merchant's projected annual sales volume and value, declared during onboarding and used for risk threshold calibration
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7644,6 +12809,9 @@ pub struct UnifiedriskMerchantMerchantDescriptorExpectedAnnualSales {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskMerchantMerchantDescriptorExpectedAnnualSales {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// The merchant's expected average transaction value, used during underwriting to establish baseline risk thresholds and detect anomalous transaction sizes
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7688,6 +12856,9 @@ pub struct UnifiedriskMerchantMerchantDescriptorExpectedAverageTicketSize {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskMerchantMerchantDescriptorExpectedAverageTicketSize {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Merchant's projected monthly sales volume and value, used for real-time velocity monitoring and fraud threshold calibration
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7747,6 +12918,9 @@ pub struct UnifiedriskMerchantMerchantDescriptorExpectedMonthlySales {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskMerchantMerchantDescriptorExpectedMonthlySales {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Merchant hierarchy defining chain and group relationships for aggregated risk analysis and settlement processing
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7779,6 +12953,9 @@ pub struct UnifiedriskMerchantMerchantDescriptorHierarchy {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub group_name: Option<String>,
+}
+impl v::Validate for UnifiedriskMerchantMerchantDescriptorHierarchy {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// The monetary limit applied to the merchant based on the limitType, used for transaction controls and risk management
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7831,6 +13008,9 @@ pub struct UnifiedriskMerchantMerchantDescriptorLimitValue {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskMerchantMerchantDescriptorLimitValue {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// The merchant's trading or operating address where business activities take place, which may differ from the registered legal address
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7910,6 +13090,9 @@ pub struct UnifiedriskMerchantTradingAddress {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for UnifiedriskMerchantTradingAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// E-commerce order details including line items, billing/shipping addresses, and shipping preferences
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7948,6 +13131,20 @@ pub struct UnifiedriskOrder {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub total_items_count: Option<i64>,
+}
+impl v::Validate for UnifiedriskOrder {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billing", &self.billing, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipping", &self.shipping, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8027,6 +13224,110 @@ pub struct UnifiedriskOrderBilling {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for UnifiedriskOrderBilling {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "addressLine1",
+            &self.address_line1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "addressLine2",
+            &self.address_line2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskOrderLineItems {
@@ -8074,6 +13375,20 @@ pub struct UnifiedriskOrderLineItems {
         deserialize_with = "crate::types::lenient::f64"
     )]
     pub r#type: Option<f64>,
+}
+impl v::Validate for UnifiedriskOrderLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currencyCode",
+            &self.currency_code,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8200,6 +13515,141 @@ pub struct UnifiedriskOrderShipping {
     #[serde(rename = "storeAddress", skip_serializing_if = "Option::is_none")]
     pub store_address: Option<UnifiedriskOrderShippingStoreAddress>,
 }
+impl v::Validate for UnifiedriskOrderShipping {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "addressLine1",
+            &self.address_line1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "addressLine2",
+            &self.address_line2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "addressLine3",
+            &self.address_line3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destinationTypes",
+            &self.destination_types,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::nested(path, out, "store", &self.store, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskOrderShippingStore {
@@ -8235,6 +13685,40 @@ pub struct UnifiedriskOrderShippingStore {
     )]
     pub store_phone: Option<String>,
 }
+impl v::Validate for UnifiedriskOrderShippingStore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "storeId",
+            &self.store_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storeName",
+            &self.store_name,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storePhone",
+            &self.store_phone,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+    }
+}
 /// Physical store postal address details for store pickup or curbside delivery fulfillment
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8246,6 +13730,9 @@ pub struct UnifiedriskOrderShippingStoreAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for UnifiedriskOrderShippingStoreAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Store address for pickup
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -8285,6 +13772,9 @@ pub struct UnifiedriskOrderShippingStoreStoreAddress {
     )]
     pub locality: Option<String>,
 }
+impl v::Validate for UnifiedriskOrderShippingStoreStoreAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Partner integration identifiers for developer and solution tracking
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8303,6 +13793,30 @@ pub struct UnifiedriskPartner {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub solution_id: Option<String>,
+}
+impl v::Validate for UnifiedriskPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
 }
 /// Payment instrument details including card/bank account information, tokens, wallet, and comprehensive verification results
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -8407,6 +13921,34 @@ pub struct UnifiedriskPayment {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub wire: Option<UnifiedriskPaymentWire>,
 }
+impl v::Validate for UnifiedriskPayment {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::string(
+            path,
+            out,
+            "customerId",
+            &self.customer_id,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "verification", &self.verification, false);
+        v::nested(path, out, "wire", &self.wire, false);
+    }
+}
 /// Container for payment approval workflow metadata, including required approver IDs and approval status for high-value or flagged transactions
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8414,6 +13956,9 @@ pub struct UnifiedriskPaymentApprovals {
     /// An array containing identifiers of any approvers required to approve this action (be it making a payment, adding a payee, updating some details, etc.). Do not populate this attribute if additional app
     #[serde(rename = "approverIds", skip_serializing_if = "Option::is_none")]
     pub approver_ids: Option<Vec<String>>,
+}
+impl v::Validate for UnifiedriskPaymentApprovals {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8564,6 +14109,85 @@ impl ::std::fmt::Debug for UnifiedriskPaymentBankAccount {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountHolderName",
+            &self.account_holder_name,
+            false,
+            None,
+            Some(200),
+            None,
+        );
+        v::nested(path, out, "balanceBefore", &self.balance_before, false);
+        v::string(
+            path,
+            out,
+            "bankCode",
+            &self.bank_code,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::nested(path, out, "branchAddress", &self.branch_address, false);
+        v::string(
+            path,
+            out,
+            "checkImageReference",
+            &self.check_image_reference,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkNumber",
+            &self.check_number,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::nested(path, out, "creditLimit", &self.credit_limit, false);
+        v::string(
+            path,
+            out,
+            "encoderId",
+            &self.encoder_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "iban", &self.iban, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(17),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "routingNumber",
+            &self.routing_number,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentBankAccountBalanceBefore {
@@ -8607,6 +14231,30 @@ pub struct UnifiedriskPaymentBankAccountBalanceBefore {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentBankAccountBalanceBefore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "baseCurrency",
+            &self.base_currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8699,6 +14347,20 @@ pub struct UnifiedriskPaymentBankAccountBranchAddress {
     )]
     pub town_name: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentBankAccountBranchAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentBankAccountCreditLimit {
@@ -8743,6 +14405,30 @@ pub struct UnifiedriskPaymentBankAccountCreditLimit {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentBankAccountCreditLimit {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "baseCurrency",
+            &self.base_currency,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentBankAccountFinancialInstitution {
@@ -8764,6 +14450,9 @@ pub struct UnifiedriskPaymentBankAccountFinancialInstitution {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentBankAccountFinancialInstitution {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Container for ACH/BACS batch payment metadata including file control fields, batch counts, and integrity checksums
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -8860,6 +14549,9 @@ pub struct UnifiedriskPaymentBatch {
         deserialize_with = "crate::types::lenient::f64"
     )]
     pub total_transit_count_in_file: Option<f64>,
+}
+impl v::Validate for UnifiedriskPaymentBatch {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9033,6 +14725,64 @@ impl ::std::fmt::Debug for UnifiedriskPaymentCard {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "bin", &self.bin, false, None, Some(6), None);
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "issuerCountry",
+            &self.issuer_country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "last4", &self.last4, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(path, out, "parDetails", &self.par_details, false);
+        v::nested(path, out, "tokenDetails", &self.token_details, false);
+        v::string(
+            path,
+            out,
+            "tokenTransactionType",
+            &self.token_transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentCardParDetails {
@@ -9043,6 +14793,20 @@ pub struct UnifiedriskPaymentCardParDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub par_id: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentCardParDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "parId",
+            &self.par_id,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9170,6 +14934,43 @@ impl ::std::fmt::Debug for UnifiedriskPaymentCardTokenDetails {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentCardTokenDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "bin", &self.bin, false, None, Some(11), None);
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+        v::string(path, out, "last4", &self.last4, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(64),
+            None,
+        );
+    }
+}
 /// Container for check-specific payment details including MICR line data, deposit location, and split deposit information
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9241,6 +15042,9 @@ pub struct UnifiedriskPaymentCheck {
     )]
     pub split_deposit_flag: Option<bool>,
 }
+impl v::Validate for UnifiedriskPaymentCheck {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Physical address of where the check was deposited (branch, ATM, or remote deposit location), used for geographic fraud analysis
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9304,6 +15108,9 @@ pub struct UnifiedriskPaymentCheckDepositLocation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentCheckDepositLocation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9369,6 +15176,9 @@ pub struct UnifiedriskPaymentCounterparty {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentCounterparty {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Counterparty's postal or residential address used for identity verification and sanctions screening
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9433,6 +15243,9 @@ pub struct UnifiedriskPaymentCounterpartyAddress {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentCounterpartyAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Physical address of the counterparty's bank branch, used for geographic risk analysis and cross-border payment validation
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9496,6 +15309,9 @@ pub struct UnifiedriskPaymentCounterpartyBranchAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentCounterpartyBranchAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Container for 3DS SDK authentication data, including device encryption keys, application identifiers, and authentication flow parameters
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -9574,6 +15390,9 @@ impl ::std::fmt::Debug for UnifiedriskPaymentSdk {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentSdk {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Container for payment token data used in tokenized or 3DS SDK flows where a transient token replaces direct payment credentials
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9598,6 +15417,9 @@ pub struct UnifiedriskPaymentToken {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentToken {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentVerification {
@@ -9615,6 +15437,11 @@ pub struct UnifiedriskPaymentVerification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub result: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentVerification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "cardSecurity", &self.card_security, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9668,6 +15495,9 @@ pub struct UnifiedriskPaymentVerificationAdditional {
     )]
     pub sim_swap: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentVerificationAdditional {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentVerificationAuthentication {
@@ -9705,6 +15535,9 @@ impl ::std::fmt::Debug for UnifiedriskPaymentVerificationAuthentication {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentVerificationAuthentication {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentVerificationAuthenticationPin {
@@ -9721,6 +15554,9 @@ pub struct UnifiedriskPaymentVerificationAuthenticationPin {
     )]
     pub online: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentVerificationAuthenticationPin {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[doc(alias = "UnifiedriskPaymentVerificationAuthenticationThreeDS")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9731,6 +15567,9 @@ pub struct UnifiedriskPaymentVerificationAuthenticationThreeDs {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub result: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentVerificationAuthenticationThreeDs {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9746,6 +15585,12 @@ impl ::std::fmt::Debug for UnifiedriskPaymentVerificationCardSecurity {
             .field("avs", &self.avs)
             .field("cvv", &self.cvv.as_ref().map(|_| "[REDACTED]"))
             .finish()
+    }
+}
+impl v::Validate for UnifiedriskPaymentVerificationCardSecurity {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "avs", &self.avs, false);
+        v::nested(path, out, "cvv", &self.cvv, false);
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -9772,6 +15617,11 @@ pub struct UnifiedriskPaymentVerificationCardSecurityAvs {
     )]
     pub times_valid: Option<i64>,
 }
+impl v::Validate for UnifiedriskPaymentVerificationCardSecurityAvs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(3), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentVerificationCardSecurityCvv {
@@ -9781,6 +15631,11 @@ pub struct UnifiedriskPaymentVerificationCardSecurityCvv {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentVerificationCardSecurityCvv {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(1), None);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9818,6 +15673,9 @@ impl ::std::fmt::Debug for UnifiedriskPaymentVerificationDigital {
             .finish()
     }
 }
+impl v::Validate for UnifiedriskPaymentVerificationDigital {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskPaymentWallet {
@@ -9835,6 +15693,9 @@ pub struct UnifiedriskPaymentWallet {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub provider_name: Option<String>,
+}
+impl v::Validate for UnifiedriskPaymentWallet {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Container for Fedwire and SWIFT wire transfer specific fields, including IMAD/OMAD tracking data, OFAC compliance flags, and inter-agent messaging
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -9938,6 +15799,59 @@ pub struct UnifiedriskPaymentWire {
     )]
     pub supervisor_override_flag: Option<String>,
 }
+impl v::Validate for UnifiedriskPaymentWire {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "imadInputSequenceNumber",
+            &self.imad_input_sequence_number,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "imadInputSource",
+            &self.imad_input_source,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "omadOutputDestinationId",
+            &self.omad_output_destination_id,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "omadOutputSequencer",
+            &self.omad_output_sequencer,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "omadOutputTime",
+            &self.omad_output_time,
+            false,
+            Some(0i32),
+            Some(2359i32),
+        );
+    }
+}
 /// Risk scoring configuration, buyer history, transaction counts, and third-party risk indicators
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10008,6 +15922,11 @@ pub struct UnifiedriskRiskAssessment {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub vital4: Option<UnifiedriskRiskAssessmentVital4>,
 }
+impl v::Validate for UnifiedriskRiskAssessment {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "buyerHistory", &self.buyer_history, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskRiskAssessmentBuyerHistory {
@@ -10065,6 +15984,12 @@ pub struct UnifiedriskRiskAssessmentBuyerHistory {
     )]
     pub transaction_count_year: Option<i64>,
 }
+impl v::Validate for UnifiedriskRiskAssessmentBuyerHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "accountHistory", &self.account_history, false);
+        v::nested(path, out, "customerAccount", &self.customer_account, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskRiskAssessmentBuyerHistoryAccountHistory {
@@ -10082,6 +16007,20 @@ pub struct UnifiedriskRiskAssessmentBuyerHistoryAccountHistory {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub shipping_address_usage_date: Option<String>,
+}
+impl v::Validate for UnifiedriskRiskAssessmentBuyerHistoryAccountHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shippingAddressUsageDate",
+            &self.shipping_address_usage_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10135,6 +16074,40 @@ pub struct UnifiedriskRiskAssessmentBuyerHistoryCustomerAccount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub password_history: Option<String>,
+}
+impl v::Validate for UnifiedriskRiskAssessmentBuyerHistoryCustomerAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "createDate",
+            &self.create_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastChangeDate",
+            &self.last_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passwordChangeDate",
+            &self.password_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 /// Alternate or prior authentication details used to supplement 3DS risk decisioning with additional cardholder authentication evidence
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -10190,6 +16163,9 @@ pub struct UnifiedriskRiskAssessmentBuyerHistoryCustomerAccountAlertnateAuthenti
     )]
     pub prior_authentication_ref: Option<String>,
 }
+impl v::Validate for UnifiedriskRiskAssessmentBuyerHistoryCustomerAccountAlertnateAuthentication {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Vital4 third-party screening configuration, indicating whether sanctions, PEP, or adverse media checks should be performed for this transaction's parties
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10201,6 +16177,9 @@ pub struct UnifiedriskRiskAssessmentVital4 {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub screening_required: Option<bool>,
+}
+impl v::Validate for UnifiedriskRiskAssessmentVital4 {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Session tracking information including session ID and start time
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -10220,6 +16199,9 @@ pub struct UnifiedriskSession {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub session_start_time: Option<String>,
+}
+impl v::Validate for UnifiedriskSession {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10248,6 +16230,20 @@ pub struct UnifiedriskTerminal {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for UnifiedriskTerminal {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+    }
 }
 /// Physical address of the terminal (branch, ATM, or POS device), used for geographic risk analysis and distance-to-home fraud detection
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -10327,6 +16323,9 @@ pub struct UnifiedriskTerminalAddress {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for UnifiedriskTerminalAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskTerminalCapabilities {
@@ -10364,6 +16363,9 @@ pub struct UnifiedriskTerminalCapabilities {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub pin_pad_inoperative: Option<bool>,
+}
+impl v::Validate for UnifiedriskTerminalCapabilities {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10683,11 +16685,45 @@ pub struct UnifiedriskThirdPartyRisk {
     )]
     pub wifi_longitude: Option<f64>,
 }
+impl v::Validate for UnifiedriskThirdPartyRisk {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::number(
+            path,
+            out,
+            "wifiAccuracy",
+            &self.wifi_accuracy,
+            false,
+            Some(0f64),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "wifiLatitude",
+            &self.wifi_latitude,
+            false,
+            Some(-90f64),
+            Some(90f64),
+        );
+        v::number(
+            path,
+            out,
+            "wifiLongitude",
+            &self.wifi_longitude,
+            false,
+            Some(-180f64),
+            Some(180f64),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskThirdPartyRiskRawData {
     #[serde(rename = "rawData", skip_serializing_if = "Option::is_none")]
     pub raw_data: Option<::serde_json::Value>,
+}
+impl v::Validate for UnifiedriskThirdPartyRiskRawData {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Financial transaction metadata including amounts, status, type, channel, and recurring payment details
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -10858,6 +16894,29 @@ pub struct UnifiedriskTransaction {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for UnifiedriskTransaction {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "additionalFees", &self.additional_fees, false);
+        v::nested(path, out, "amount", &self.amount, false);
+        v::string(
+            path,
+            out,
+            "destinationCountry",
+            &self.destination_country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "recurringDetails",
+            &self.recurring_details,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UnifiedriskTransactionAdditionalFees {
@@ -10901,6 +16960,30 @@ pub struct UnifiedriskTransactionAdditionalFees {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskTransactionAdditionalFees {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "baseCurrency",
+            &self.base_currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10946,6 +17029,30 @@ pub struct UnifiedriskTransactionAmount {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskTransactionAmount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "baseCurrency",
+            &self.base_currency,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            Some(3),
+            Some(3),
+            None,
+        );
+    }
+}
 /// Batch-level financial control totals for ACH/BACS files, including credit and debit aggregates at both batch and file scope
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10962,6 +17069,9 @@ pub struct UnifiedriskTransactionBatchDetails {
     /// File-level aggregate total of all debit entries across all batches, used for end-of-file control validation
     #[serde(rename = "fileDebits", skip_serializing_if = "Option::is_none")]
     pub file_debits: Option<UnifiedriskTransactionBatchDetailsFileDebits>,
+}
+impl v::Validate for UnifiedriskTransactionBatchDetails {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Aggregate monetary total of all credit (incoming) entries within this ACH/BACS batch, used for batch-level balancing
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -11008,6 +17118,9 @@ pub struct UnifiedriskTransactionBatchDetailsBatchCreditsAmount {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskTransactionBatchDetailsBatchCreditsAmount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Aggregate monetary total of all debit (outgoing) entries within this ACH/BACS batch, used for batch-level balancing
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11052,6 +17165,9 @@ pub struct UnifiedriskTransactionBatchDetailsBatchDebitsAmount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskTransactionBatchDetailsBatchDebitsAmount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// File-level aggregate total of all credit entries across all batches, used for end-of-file control validation
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -11098,6 +17214,9 @@ pub struct UnifiedriskTransactionBatchDetailsFileCredits {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskTransactionBatchDetailsFileCredits {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// File-level aggregate total of all debit entries across all batches, used for end-of-file control validation
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11143,6 +17262,9 @@ pub struct UnifiedriskTransactionBatchDetailsFileDebits {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for UnifiedriskTransactionBatchDetailsFileDebits {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Additional check-specific transaction details for deposit fraud analysis, including cash components of mixed check deposits
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11153,6 +17275,9 @@ pub struct UnifiedriskTransactionCheckDetails {
         skip_serializing_if = "Option::is_none"
     )]
     pub deposited_cash_amount: Option<UnifiedriskTransactionCheckDetailsDepositedCashAmount>,
+}
+impl v::Validate for UnifiedriskTransactionCheckDetails {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// The amount of physical cash deposited alongside the check, used for mixed-deposit fraud detection and cash structuring analysis
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -11198,6 +17323,9 @@ pub struct UnifiedriskTransactionCheckDetailsDepositedCashAmount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for UnifiedriskTransactionCheckDetailsDepositedCashAmount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11284,6 +17412,51 @@ pub struct UnifiedriskTransactionRecurringDetails {
     )]
     pub validation_indicator: Option<String>,
 }
+impl v::Validate for UnifiedriskTransactionRecurringDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amountType",
+            &self.amount_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "occurrence",
+            &self.occurrence,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceNumber",
+            &self.reference_number,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+        v::string(
+            path,
+            out,
+            "validationIndicator",
+            &self.validation_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 /// Travel-specific information for airline/hotel transactions including routes, legs, and passenger details
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11328,6 +17501,50 @@ pub struct UnifiedriskTravel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub passengers: Option<::serde_json::Value>,
 }
+impl v::Validate for UnifiedriskTravel {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "actualFinalDestination",
+            &self.actual_final_destination,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "completeRoute",
+            &self.complete_route,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "departureTime",
+            &self.departure_time,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "journeyType",
+            &self.journey_type,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct ValidateExportComplianceRequest {
@@ -11349,6 +17566,45 @@ pub struct ValidateExportComplianceRequest {
         Option<Riskv1exportcomplianceinquiriesExportComplianceInformation>,
     #[serde(rename = "orderInformation", skip_serializing_if = "Option::is_none")]
     pub order_information: Option<Riskv1exportcomplianceinquiriesOrderInformation>,
+}
+impl v::Validate for ValidateExportComplianceRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "exportComplianceInformation",
+            &self.export_compliance_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11378,6 +17634,59 @@ pub struct ValidateRequest {
     #[serde(rename = "tokenInformation", skip_serializing_if = "Option::is_none")]
     pub token_information: Option<Riskv1decisionsTokenInformation>,
 }
+impl v::Validate for ValidateRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct VerifyCustomerAddressRequest {
@@ -11391,6 +17700,31 @@ pub struct VerifyCustomerAddressRequest {
         Option<RiskV1DecisionsPost201ResponseClientReferenceInformation>,
     #[serde(rename = "orderInformation", skip_serializing_if = "Option::is_none")]
     pub order_information: Option<Riskv1addressverificationsOrderInformation>,
+}
+impl v::Validate for VerifyCustomerAddressRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+    }
 }
 /// Unified risk assessment request with action-based routing
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -11499,6 +17833,38 @@ pub struct VpriRequest {
     /// Travel-specific information for airline/hotel transactions including routes, legs, and passenger details
     #[serde(skip_serializing_if = "Option::is_none")]
     pub travel: Option<UnifiedriskTravel>,
+}
+impl v::Validate for VpriRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "acquirer", &self.acquirer, false);
+        v::present(path, out, "actions", &self.actions);
+        v::nested(path, out, "authentication", &self.authentication, false);
+        v::nested(path, out, "browser", &self.browser, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "device", &self.device, false);
+        v::present(path, out, "eventTime", &self.event_time);
+        v::present(path, out, "events", &self.events);
+        v::nested(path, out, "merchant", &self.merchant, false);
+        v::string(path, out, "mode", &self.mode, false, None, Some(32), None);
+        v::nested(path, out, "order", &self.order, false);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::nested(path, out, "payment", &self.payment, false);
+        v::string(
+            path,
+            out,
+            "requestComments",
+            &self.request_comments,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "riskAssessment", &self.risk_assessment, false);
+        v::nested(path, out, "terminal", &self.terminal, false);
+        v::nested(path, out, "thirdPartyRisk", &self.third_party_risk, false);
+        v::nested(path, out, "transaction", &self.transaction, true);
+        v::nested(path, out, "travel", &self.travel, false);
+    }
 }
 /// Supplementary data enriching the transaction risk assessment, such as card BIN metadata.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

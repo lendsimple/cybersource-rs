@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct SearchRequest {
@@ -34,6 +36,9 @@ pub struct SearchRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub user_name: Option<String>,
+}
+impl v::Validate for SearchRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "umsV1UsersGet200Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

@@ -197,18 +197,23 @@ pub fn check_length(
     }
 }
 
-/// `matches` is the generated matcher for `pattern`, the spec's pattern as
-/// shown to the user.
+/// A spec pattern and its generated matcher.
 #[doc(hidden)]
-pub fn check_pattern(
-    value: &str,
-    pattern: &'static str,
-    matches: fn(&str) -> bool,
-    path: &Path,
-    out: &mut Vec<Violation>,
-) {
-    if !matches(value) {
-        violation(path, out, format!("must match the pattern {pattern}"));
+#[derive(Debug)]
+pub struct Pattern {
+    /// The pattern as the spec writes it, for messages.
+    pub text: &'static str,
+    pub matches: fn(&str) -> bool,
+}
+
+#[doc(hidden)]
+pub fn check_pattern(value: &str, pattern: &Pattern, path: &Path, out: &mut Vec<Violation>) {
+    if !(pattern.matches)(value) {
+        violation(
+            path,
+            out,
+            format!("must match the pattern {}", pattern.text),
+        );
     }
 }
 
@@ -260,6 +265,147 @@ pub fn check_items(
             format!("must have at most {max} items, not {len}"),
         );
     }
+}
+
+// One call per constrained field, so the generated code stays small. Each
+// takes the field's JSON name and whether the spec requires it.
+
+/// A field that is only required.
+#[doc(hidden)]
+pub fn present<T>(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<T>,
+) {
+    if value.is_none() {
+        path.push_field(name);
+        check_required(false, path, out);
+        path.pop();
+    }
+}
+
+/// A string field: length and pattern.
+#[doc(hidden)]
+#[allow(clippy::too_many_arguments)]
+pub fn string(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<String>,
+    required: bool,
+    min: Option<usize>,
+    max: Option<usize>,
+    pattern: Option<&Pattern>,
+) {
+    path.push_field(name);
+    match value {
+        None => check_required(!required, path, out),
+        Some(value) => text(value, min, max, pattern, path, out),
+    }
+    path.pop();
+}
+
+/// A list of strings: item count, and each item's length and pattern.
+#[doc(hidden)]
+#[allow(clippy::too_many_arguments)]
+pub fn strings(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<Vec<String>>,
+    required: bool,
+    items: (Option<usize>, Option<usize>),
+    min: Option<usize>,
+    max: Option<usize>,
+    pattern: Option<&Pattern>,
+) {
+    path.push_field(name);
+    match value {
+        None => check_required(!required, path, out),
+        Some(values) => {
+            check_items(values.len(), items.0, items.1, path, out);
+            for (i, value) in values.iter().enumerate() {
+                path.push_index(i);
+                text(value, min, max, pattern, path, out);
+                path.pop();
+            }
+        }
+    }
+    path.pop();
+}
+
+fn text(
+    value: &str,
+    min: Option<usize>,
+    max: Option<usize>,
+    pattern: Option<&Pattern>,
+    path: &Path,
+    out: &mut Vec<Violation>,
+) {
+    check_length(value, min, max, path, out);
+    if let Some(pattern) = pattern {
+        check_pattern(value, pattern, path, out);
+    }
+}
+
+/// A numeric field: range.
+#[doc(hidden)]
+pub fn number<T>(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<T>,
+    required: bool,
+    min: Option<T>,
+    max: Option<T>,
+) where
+    T: PartialOrd + fmt::Display + Copy,
+{
+    path.push_field(name);
+    match value {
+        None => check_required(!required, path, out),
+        Some(value) => check_range(*value, min, max, path, out),
+    }
+    path.pop();
+}
+
+/// A model (or map of models) with constraints inside it.
+#[doc(hidden)]
+pub fn nested<T: Validate>(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<T>,
+    required: bool,
+) {
+    path.push_field(name);
+    match value {
+        None => check_required(!required, path, out),
+        Some(value) => value.validate_into(path, out),
+    }
+    path.pop();
+}
+
+/// A list: item count, and each item's own constraints.
+#[doc(hidden)]
+pub fn list<T: Validate>(
+    path: &mut Path,
+    out: &mut Vec<Violation>,
+    name: &'static str,
+    value: &Option<Vec<T>>,
+    required: bool,
+    items: (Option<usize>, Option<usize>),
+) {
+    path.push_field(name);
+    match value {
+        None => check_required(!required, path, out),
+        Some(values) => {
+            check_items(values.len(), items.0, items.1, path, out);
+            values.validate_into(path, out);
+        }
+    }
+    path.pop();
 }
 
 #[cfg(test)]
@@ -316,13 +462,116 @@ mod tests {
         );
     }
 
+    static DIGITS: Pattern = Pattern {
+        text: "^[0-9]+$",
+        matches: |s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()),
+    };
+
     #[test]
     fn pattern_uses_the_matcher() {
-        let digits = |s: &str| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit());
-        assert!(run(|p, o| check_pattern("123", "^[0-9]+$", digits, p, o)).is_empty());
+        assert!(run(|p, o| check_pattern("123", &DIGITS, p, o)).is_empty());
         assert_eq!(
-            run(|p, o| check_pattern("12a", "^[0-9]+$", digits, p, o)),
+            run(|p, o| check_pattern("12a", &DIGITS, p, o)),
             ["orderInformation.lineItems[2].productSku: must match the pattern ^[0-9]+$"]
+        );
+    }
+
+    fn field(check: impl FnOnce(&mut Path, &mut Vec<Violation>)) -> Vec<String> {
+        let mut path = Path::default();
+        path.push_field("order");
+        let mut out = Vec::new();
+        check(&mut path, &mut out);
+        out.into_iter().map(|v| v.to_string()).collect()
+    }
+
+    #[test]
+    fn missing_fields_fail_only_when_required() {
+        let none: Option<String> = None;
+        assert!(field(|p, o| string(p, o, "code", &none, false, None, Some(3), None)).is_empty());
+        assert_eq!(
+            field(|p, o| string(p, o, "code", &none, true, None, Some(3), None)),
+            ["order.code: is required"]
+        );
+        assert_eq!(
+            field(|p, o| present(p, o, "id", &None::<bool>)),
+            ["order.id: is required"]
+        );
+        assert!(field(|p, o| present(p, o, "id", &Some(true))).is_empty());
+    }
+
+    #[test]
+    fn string_fields_check_length_and_pattern() {
+        let value = Some("12a4".to_owned());
+        assert_eq!(
+            field(|p, o| string(p, o, "code", &value, false, None, Some(3), Some(&DIGITS))),
+            [
+                "order.code: must be at most 3 characters, not 4",
+                "order.code: must match the pattern ^[0-9]+$",
+            ]
+        );
+    }
+
+    #[test]
+    fn string_lists_check_count_and_each_item() {
+        let value = Some(vec!["1".to_owned(), "x".to_owned()]);
+        assert_eq!(
+            field(|p, o| strings(
+                p,
+                o,
+                "skus",
+                &value,
+                false,
+                (None, Some(1)),
+                None,
+                None,
+                Some(&DIGITS)
+            )),
+            [
+                "order.skus: must have at most 1 items, not 2",
+                "order.skus[1]: must match the pattern ^[0-9]+$",
+            ]
+        );
+    }
+
+    #[test]
+    fn number_fields_check_range() {
+        assert_eq!(
+            field(|p, o| number(p, o, "qty", &Some(0), false, Some(1), None)),
+            ["order.qty: must be at least 1, not 0"]
+        );
+    }
+
+    #[test]
+    fn nested_and_list_fields_recurse() {
+        struct Code(&'static str);
+        impl Validate for Code {
+            fn validate_into(&self, path: &mut Path, out: &mut Vec<Violation>) {
+                string(
+                    path,
+                    out,
+                    "code",
+                    &Some(self.0.to_owned()),
+                    false,
+                    None,
+                    Some(2),
+                    None,
+                );
+            }
+        }
+        assert_eq!(
+            field(|p, o| nested(p, o, "ref", &Some(Code("abc")), false)),
+            ["order.ref.code: must be at most 2 characters, not 3"]
+        );
+        assert_eq!(
+            field(|p, o| list(
+                p,
+                o,
+                "refs",
+                &Some(vec![Code("a"), Code("abc")]),
+                true,
+                (None, None)
+            )),
+            ["order.refs[1].code: must be at most 2 characters, not 3"]
         );
     }
 

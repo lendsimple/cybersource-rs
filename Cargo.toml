@@ -29,7 +29,7 @@ exclude = [
 default = ["server", "reqwest", "rustls", "p12", "payments", "tms", "capture-context"]
 # Credentialed client: auth, keys, operations. Leave it off in builds that
 # ship to end users (Flex tokenization in `flex` needs no features).
-server = []
+server = ["dep:regex"]
 # Legacy HTTP Signature auth. Cybersource retires it in March 2027; prefer JWT.
 http-signature = ["server"]
 reqwest = ["server", "dep:reqwest"]
@@ -122,6 +122,7 @@ pkcs1 = { version = "0.8.0", features = ["pem"] }
 bon = "3.10.3"
 httpdate = "1.0.3"
 percent-encoding = "2.3.2"
+regex = { version = "1.13.2", default-features = false, features = ["std", "unicode-perl"], optional = true }
 p12-keystore = { version = "0.4.1", optional = true }
 aes-gcm = { version = "0.11.1", default-features = false, features = ["aes", "alloc"] }
 sha1 = { version = "0.11.0", default-features = false }

@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TaxRequest {
@@ -22,6 +24,39 @@ pub struct TaxRequest {
     pub order_information: Option<Vasv2taxOrderInformation>,
     #[serde(rename = "taxInformation", skip_serializing_if = "Option::is_none")]
     pub tax_information: Option<Vasv2taxTaxInformation>,
+}
+impl v::Validate for TaxRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(path, out, "taxInformation", &self.tax_information, false);
+    }
 }
 #[doc(alias = "vasV2PaymentsPost201Response")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -279,6 +314,20 @@ pub struct Vasv2taxBuyerInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Vasv2taxBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv2taxClientReferenceInformation {
@@ -297,6 +346,12 @@ pub struct Vasv2taxClientReferenceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Riskv1decisionsClientReferenceInformationPartner>,
 }
+impl v::Validate for Vasv2taxClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv2taxMerchantInformation {
@@ -307,6 +362,20 @@ pub struct Vasv2taxMerchantInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub vat_registration_number: Option<String>,
+}
+impl v::Validate for Vasv2taxMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -329,6 +398,25 @@ pub struct Vasv2taxOrderInformation {
     pub ship_to: Option<Vasv2taxOrderInformationShipTo>,
     #[serde(rename = "shippingDetails", skip_serializing_if = "Option::is_none")]
     pub shipping_details: Option<Vasv2taxOrderInformationShippingDetails>,
+}
+impl v::Validate for Vasv2taxOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "invoiceDetails", &self.invoice_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "orderAcceptance", &self.order_acceptance, false);
+        v::nested(path, out, "orderOrigin", &self.order_origin, false);
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -372,6 +460,70 @@ pub struct Vasv2taxOrderInformationBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Vasv2taxOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv2taxOrderInformationInvoiceDetails {
@@ -382,6 +534,20 @@ pub struct Vasv2taxOrderInformationInvoiceDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub invoice_date: Option<String>,
+}
+impl v::Validate for Vasv2taxOrderInformationInvoiceDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "invoiceDate",
+            &self.invoice_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -476,6 +642,131 @@ pub struct Vasv2taxOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Vasv2taxOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "buyerVatRegistrationNumber",
+            &self.buyer_vat_registration_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::nested(path, out, "orderAcceptance", &self.order_acceptance, false);
+        v::nested(path, out, "orderOrigin", &self.order_origin, false);
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSKU",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "sellerVatRegistrationNumber",
+            &self.seller_vat_registration_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromAdministrativeArea",
+            &self.ship_from_administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromCountry",
+            &self.ship_from_country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromLocality",
+            &self.ship_from_locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromPostalCode",
+            &self.ship_from_postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 /// The Order Acceptance address fields may be used by the tax service to determine the taxability of the order or applicable taxing jurisdictions. You should consult your tax, legal and/or accounting advisors to determine if you should include an Order Acceptance address in your tax service request for some or all of your transactions based on your business.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -507,6 +798,50 @@ pub struct Vasv2taxOrderInformationOrderAcceptance {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Vasv2taxOrderInformationOrderAcceptance {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 /// The Order Origin address fields may be used by the tax service to determine the taxability of the order or applicable taxing jurisdictions. You should consult your tax, legal and/or accounting advisors to determine if you should include an Order Origin address in your tax service request for some or all of your transactions based on your business.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -537,6 +872,50 @@ pub struct Vasv2taxOrderInformationOrderOrigin {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Vasv2taxOrderInformationOrderOrigin {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -586,6 +965,80 @@ pub struct Vasv2taxOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Vasv2taxOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv2taxOrderInformationShippingDetails {
@@ -617,6 +1070,50 @@ pub struct Vasv2taxOrderInformationShippingDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub ship_from_postal_code: Option<String>,
+}
+impl v::Validate for Vasv2taxOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shipFromAdministrativeArea",
+            &self.ship_from_administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromCountry",
+            &self.ship_from_country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromLocality",
+            &self.ship_from_locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shipFromPostalCode",
+            &self.ship_from_postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -663,6 +1160,52 @@ pub struct Vasv2taxTaxInformation {
     )]
     pub show_tax_per_line_item: Option<String>,
 }
+impl v::Validate for Vasv2taxTaxInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOverrideReason",
+            &self.date_override_reason,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::strings(
+            path,
+            out,
+            "nexus",
+            &self.nexus,
+            false,
+            (None, None),
+            None,
+            Some(2),
+            None,
+        );
+        v::strings(
+            path,
+            out,
+            "noNexus",
+            &self.no_nexus,
+            false,
+            (None, None),
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reportingDate",
+            &self.reporting_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Vasv2taxidClientReferenceInformation {
@@ -680,6 +1223,12 @@ pub struct Vasv2taxidClientReferenceInformation {
     pub comments: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Vasv2taxidClientReferenceInformationPartner>,
+}
+impl v::Validate for Vasv2taxidClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -699,6 +1248,30 @@ pub struct Vasv2taxidClientReferenceInformationPartner {
     )]
     pub solution_id: Option<String>,
 }
+impl v::Validate for Vasv2taxidClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct VoidTaxRequest {
@@ -707,4 +1280,15 @@ pub struct VoidTaxRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub client_reference_information: Option<Vasv2taxidClientReferenceInformation>,
+}
+impl v::Validate for VoidTaxRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+    }
 }

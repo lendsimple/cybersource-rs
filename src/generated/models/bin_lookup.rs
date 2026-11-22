@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Binv1binlookupClientReferenceInformation {
@@ -30,6 +32,11 @@ pub struct Binv1binlookupClientReferenceInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partner: Option<Riskv1decisionsClientReferenceInformationPartner>,
 }
+impl v::Validate for Binv1binlookupClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "partner", &self.partner, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Binv1binlookupPaymentInformation {
@@ -44,6 +51,26 @@ pub struct Binv1binlookupPaymentInformation {
     pub instrument_identifier: Option<Ptsv2paymentsPaymentInformationInstrumentIdentifier>,
     #[serde(rename = "paymentInstrument", skip_serializing_if = "Option::is_none")]
     pub payment_instrument: Option<Ptsv2paymentsPaymentInformationPaymentInstrument>,
+}
+impl v::Validate for Binv1binlookupPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -62,6 +89,20 @@ impl ::std::fmt::Debug for Binv1binlookupPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Binv1binlookupPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Binv1binlookupProcessingInformation {
@@ -75,6 +116,9 @@ pub struct Binv1binlookupProcessingInformation {
     /// Payout fields request parameters
     #[serde(rename = "payoutOptions", skip_serializing_if = "Option::is_none")]
     pub payout_options: Option<Binv1binlookupProcessingInformationPayoutOptions>,
+}
+impl v::Validate for Binv1binlookupProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Payout fields request parameters
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -101,6 +145,9 @@ pub struct Binv1binlookupProcessingInformationPayoutOptions {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub payout_inquiry: Option<bool>,
+}
+impl v::Validate for Binv1binlookupProcessingInformationPayoutOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -130,6 +177,11 @@ impl ::std::fmt::Debug for Binv1binlookupTokenInformation {
             .finish()
     }
 }
+impl v::Validate for Binv1binlookupTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateBinLookupRequest {
@@ -147,6 +199,31 @@ pub struct CreateBinLookupRequest {
     pub processing_information: Option<Binv1binlookupProcessingInformation>,
     #[serde(rename = "tokenInformation", skip_serializing_if = "Option::is_none")]
     pub token_information: Option<Binv1binlookupTokenInformation>,
+}
+impl v::Validate for CreateBinLookupRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "getAccountInfoResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

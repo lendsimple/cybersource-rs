@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct AccountValidationsRequest {
@@ -22,6 +24,31 @@ pub struct AccountValidationsRequest {
     /// Optional token information for BAVS detokenization. Only one token type may be provided.
     #[serde(rename = "tokenInformation", skip_serializing_if = "Option::is_none")]
     pub token_information: Option<Bavsv1accountvalidationsTokenInformation>,
+}
+impl v::Validate for AccountValidationsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "bankAccountValidationResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -62,6 +89,9 @@ pub struct Bavsv1accountvalidationsClientReferenceInformation {
     )]
     pub code: Option<String>,
 }
+impl v::Validate for Bavsv1accountvalidationsClientReferenceInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Payment information for account validation. Either tokenized payment data or bank account details must be provided, but not both. When token information is provided, the bank object becomes optional. Only one token type may be included per request.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -78,6 +108,26 @@ pub struct Bavsv1accountvalidationsPaymentInformation {
         Option<Bavsv1accountvalidationsPaymentInformationInstrumentIdentifier>,
     #[serde(rename = "paymentInstrument", skip_serializing_if = "Option::is_none")]
     pub payment_instrument: Option<Bavsv1accountvalidationsPaymentInformationPaymentInstrument>,
+}
+impl v::Validate for Bavsv1accountvalidationsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -103,6 +153,21 @@ impl ::std::fmt::Debug for Bavsv1accountvalidationsPaymentInformationBank {
             .finish()
     }
 }
+impl v::Validate for Bavsv1accountvalidationsPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, true);
+        v::string(
+            path,
+            out,
+            "routingNumber",
+            &self.routing_number,
+            true,
+            Some(9),
+            Some(9),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Bavsv1accountvalidationsPaymentInformationBankAccount {
@@ -120,6 +185,20 @@ impl ::std::fmt::Debug for Bavsv1accountvalidationsPaymentInformationBankAccount
             .finish()
     }
 }
+impl v::Validate for Bavsv1accountvalidationsPaymentInformationBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            true,
+            None,
+            Some(17),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Bavsv1accountvalidationsPaymentInformationCustomer {
@@ -129,6 +208,11 @@ pub struct Bavsv1accountvalidationsPaymentInformationCustomer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Bavsv1accountvalidationsPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -140,6 +224,11 @@ pub struct Bavsv1accountvalidationsPaymentInformationInstrumentIdentifier {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Bavsv1accountvalidationsPaymentInformationInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(12), Some(32), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Bavsv1accountvalidationsPaymentInformationPaymentInstrument {
@@ -149,6 +238,11 @@ pub struct Bavsv1accountvalidationsPaymentInformationPaymentInstrument {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Bavsv1accountvalidationsPaymentInformationPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -160,6 +254,11 @@ pub struct Bavsv1accountvalidationsProcessingInformation {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub validation_level: Option<i64>,
+}
+impl v::Validate for Bavsv1accountvalidationsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "validationLevel", &self.validation_level);
+    }
 }
 /// Optional token information for BAVS detokenization. Only one token type may be provided.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -188,5 +287,10 @@ impl ::std::fmt::Debug for Bavsv1accountvalidationsTokenInformation {
                 &self.transient_token_jwt.as_ref().map(|_| "[REDACTED]"),
             )
             .finish()
+    }
+}
+impl v::Validate for Bavsv1accountvalidationsTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
     }
 }

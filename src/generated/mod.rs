@@ -13,6 +13,7 @@
 pub mod apis;
 pub mod models;
 pub mod operations;
+mod patterns;
 /// JSON property names whose values are never logged or printed
 /// (from `spec/codegen.toml [sensitive]`).
 pub(crate) const SENSITIVE_FIELDS: &[&str] = &[

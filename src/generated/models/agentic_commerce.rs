@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 /// Buyer contact information associated with this session.
 #[doc(alias = "acpCancelCheckoutResponseBuyer")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -74,6 +76,12 @@ pub struct AcpCompleteCheckoutRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub payment_data: Option<Iccv1checkoutSessionssessionIdcompletePaymentData>,
 }
+impl v::Validate for AcpCompleteCheckoutRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "buyer", &self.buyer, false);
+        v::nested(path, out, "payment_data", &self.payment_data, true);
+    }
+}
 /// Buyer information associated with the completed order.
 #[doc(alias = "acpCompleteCheckoutResponseBuyer")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -134,6 +142,21 @@ pub struct AcpCompleteCheckoutSessionBuyer {
     )]
     pub phone_number: Option<String>,
 }
+impl v::Validate for AcpCompleteCheckoutSessionBuyer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "email", &self.email, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "first_name",
+            &self.first_name,
+            true,
+            None,
+            Some(256),
+            None,
+        );
+    }
+}
 /// Buyer contact and shipping information. Can be omitted on creation and supplied later via Update Session before completing the checkout.
 #[doc(alias = "acpCreateCheckoutSessionBuyer")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -164,6 +187,21 @@ pub struct AcpCreateCheckoutSessionBuyer {
     )]
     pub phone_number: Option<String>,
 }
+impl v::Validate for AcpCreateCheckoutSessionBuyer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "email", &self.email, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "first_name",
+            &self.first_name,
+            true,
+            None,
+            Some(256),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct AcpCreateCheckoutSessionRequest {
@@ -176,6 +214,19 @@ pub struct AcpCreateCheckoutSessionRequest {
     /// The items the buyer wants to purchase. At least one item is required. Each \`id\` must match a product already present in the merchant's ACG catalog.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<Iccv1checkoutSessionsItems>>,
+}
+impl v::Validate for AcpCreateCheckoutSessionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "buyer", &self.buyer, false);
+        v::nested(
+            path,
+            out,
+            "fulfillment_address",
+            &self.fulfillment_address,
+            false,
+        );
+        v::list(path, out, "items", &self.items, true, (None, None));
+    }
 }
 /// Updated buyer information.
 #[doc(alias = "acpUpdateCheckoutSessionBuyer")]
@@ -207,6 +258,21 @@ pub struct AcpUpdateCheckoutSessionBuyer {
     )]
     pub phone_number: Option<String>,
 }
+impl v::Validate for AcpUpdateCheckoutSessionBuyer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "email", &self.email, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "first_name",
+            &self.first_name,
+            true,
+            None,
+            Some(256),
+            None,
+        );
+    }
+}
 /// Fields to update on the session. All fields are optional — only included fields are changed. Omitting \`items\` leaves the current cart intact.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -226,6 +292,19 @@ pub struct AcpUpdateCheckoutSessionRequest {
     /// Replacement cart item list. When provided, the entire cart is replaced with this array. To add a single item, include all existing items plus the new one.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Vec<Iccv1checkoutSessionsItems>>,
+}
+impl v::Validate for AcpUpdateCheckoutSessionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "buyer", &self.buyer, false);
+        v::nested(
+            path,
+            out,
+            "fulfillment_address",
+            &self.fulfillment_address,
+            false,
+        );
+        v::list(path, out, "items", &self.items, false, (None, None));
+    }
 }
 /// Response object for a single agent public key, including agent context.
 #[doc(alias = "activateAgentKeyResponse200")]
@@ -419,6 +498,13 @@ pub struct AddAgentKeyRequest {
     )]
     pub public_key: Option<String>,
 }
+impl v::Validate for AddAgentKeyRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "algorithm", &self.algorithm);
+        v::present(path, out, "keyName", &self.key_name);
+        v::present(path, out, "publicKey", &self.public_key);
+    }
+}
 /// Response object for a single agent public key, including agent context.
 #[doc(alias = "addAgentKeyResponse201")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -537,6 +623,12 @@ pub struct AddMerchantKeyRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub key_name: Option<String>,
+}
+impl v::Validate for AddMerchantKeyRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "encryptionKey", &self.encryption_key);
+        v::present(path, out, "keyName", &self.key_name);
+    }
 }
 /// Response object for a single merchant encryption key, including merchant context.
 #[doc(alias = "addMerchantKeyResponse201")]
@@ -797,6 +889,16 @@ pub struct AgentRequest {
     )]
     pub token_requestor_id: Option<String>,
 }
+impl v::Validate for AgentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "contactEmail", &self.contact_email);
+        v::present(path, out, "description", &self.description);
+        v::present(path, out, "domain", &self.domain);
+        v::list(path, out, "keys", &self.keys, false, (None, None));
+        v::present(path, out, "name", &self.name);
+        v::present(path, out, "tokenRequestorId", &self.token_requestor_id);
+    }
+}
 /// Schema for updating an agent. Only name, domain, description, contactEmail, and agentMetadata can be updated. Extra fields (keys, tokenRequestorId, etc.) will cause a 422 Validation Error.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -830,6 +932,9 @@ pub struct AgentUpdate {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for AgentUpdate {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct AgenticCancelPurchaseIntentRequest {
@@ -849,6 +954,42 @@ pub struct AgenticCancelPurchaseIntentRequest {
     /// Payment Information data. References the tokenized payment card to use for this transaction. At least one of customer, paymentInstrument, or instrumentIdentifier must be provided. The instrumentIdentifier is the most commonly used reference. If you have a TMS instrument identifier, provide it in instrumentIdentifier.id.
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Iccv1tokensPaymentInformation>,
+}
+impl v::Validate for AgenticCancelPurchaseIntentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "assuranceData",
+            &self.assurance_data,
+            true,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "agenticCancelPurchaseIntentResponse200")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -913,6 +1054,60 @@ pub struct AgenticCardEnrollmentRequest {
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Iccv1tokensPaymentInformation>,
 }
+impl v::Validate for AgenticCardEnrollmentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "assuranceData",
+            &self.assurance_data,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "billTo", &self.bill_to, true);
+        v::nested(path, out, "buyerInformation", &self.buyer_information, true);
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::list(
+            path,
+            out,
+            "consentData",
+            &self.consent_data,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "consumerIdentity", &self.consumer_identity, true);
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "enrollmentReferenceData",
+            &self.enrollment_reference_data,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+    }
+}
 #[doc(alias = "agenticCardEnrollmentResponse200")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -969,6 +1164,35 @@ pub struct AgenticConfirmTransactionEventsRequest {
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Iccv1tokensPaymentInformation>,
 }
+impl v::Validate for AgenticConfirmTransactionEventsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::list(
+            path,
+            out,
+            "confirmationData",
+            &self.confirmation_data,
+            true,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+    }
+}
 #[doc(alias = "agenticConfirmTransactionEventsResponse202")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1020,6 +1244,60 @@ pub struct AgenticCreatePurchaseIntentRequest {
     /// Payment Information data. References the tokenized payment card to use for this transaction. At least one of customer, paymentInstrument, or instrumentIdentifier must be provided. The instrumentIdentifier is the most commonly used reference. If you have a TMS instrument identifier, provide it in instrumentIdentifier.id.
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Iccv1tokensPaymentInformation>,
+}
+impl v::Validate for AgenticCreatePurchaseIntentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "assuranceData",
+            &self.assurance_data,
+            true,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "consumerPrompt",
+            &self.consumer_prompt,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            true,
+        );
+        v::list(path, out, "mandates", &self.mandates, true, (None, None));
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+    }
 }
 #[doc(alias = "agenticCreatePurchaseIntentResponse200")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1168,6 +1446,35 @@ pub struct AgenticRetrievePaymentCredentialsRequest {
     #[serde(rename = "transactionData", skip_serializing_if = "Option::is_none")]
     pub transaction_data: Option<Vec<Iccv1instructionsinstructionIdcredentialsTransactionData>>,
 }
+impl v::Validate for AgenticRetrievePaymentCredentialsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+        v::list(
+            path,
+            out,
+            "transactionData",
+            &self.transaction_data,
+            true,
+            (None, None),
+        );
+    }
+}
 /// The response maybe in one of two formats: - TransactionResponseComplete - TransactionResponsePendingEvents Only one of the response will be populated in the response
 #[doc(alias = "agenticRetrievePaymentCredentialsResponse200")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1253,6 +1560,60 @@ pub struct AgenticUpdatePurchaseIntentRequest {
     /// Payment Information data. References the tokenized payment card to use for this transaction. At least one of customer, paymentInstrument, or instrumentIdentifier must be provided. The instrumentIdentifier is the most commonly used reference. If you have a TMS instrument identifier, provide it in instrumentIdentifier.id.
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Iccv1tokensPaymentInformation>,
+}
+impl v::Validate for AgenticUpdatePurchaseIntentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "assuranceData",
+            &self.assurance_data,
+            true,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "consumerPrompt",
+            &self.consumer_prompt,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            true,
+        );
+        v::list(path, out, "mandates", &self.mandates, true, (None, None));
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            true,
+        );
+    }
 }
 #[doc(alias = "agenticUpdatePurchaseIntentResponse200")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2305,6 +2666,70 @@ pub struct IccAmountDetail {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for IccAmountDetail {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            Some(3),
+            Some(3),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "handlingAmount",
+            &self.handling_amount,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "shippingAmount",
+            &self.shipping_amount,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "subTotalAmount",
+            &self.sub_total_amount,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            true,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 #[doc(alias = "iccLineItem")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2359,6 +2784,80 @@ pub struct IccLineItem {
     )]
     pub unit_price_currency: Option<String>,
 }
+impl v::Validate for IccLineItem {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "additionalInfo",
+            &self.additional_info,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "amountDetail", &self.amount_detail, false);
+        v::nested(path, out, "policies", &self.policies, false);
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            Some(0),
+            Some(10),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "productUrl",
+            &self.product_url,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(0),
+            Some(10),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "unitPriceCurrency",
+            &self.unit_price_currency,
+            false,
+            Some(3),
+            Some(3),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct IccLineItemAdditionalInfo {
@@ -2381,6 +2880,30 @@ impl ::std::fmt::Debug for IccLineItemAdditionalInfo {
             .field("key", &self.key.as_ref().map(|_| "[REDACTED]"))
             .field("value", &self.value)
             .finish()
+    }
+}
+impl v::Validate for IccLineItemAdditionalInfo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "key",
+            &self.key,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
     }
 }
 /// Policies related to the item.
@@ -2432,6 +2955,70 @@ pub struct IccLineItemPolicies {
     )]
     pub terms_and_conditions: Option<String>,
 }
+impl v::Validate for IccLineItemPolicies {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cancellationPolicy",
+            &self.cancellation_policy,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+        v::string(
+            path,
+            out,
+            "discountAndPromotions",
+            &self.discount_and_promotions,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+        v::string(
+            path,
+            out,
+            "disputePolicy",
+            &self.dispute_policy,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+        v::string(
+            path,
+            out,
+            "refundPolicy",
+            &self.refund_policy,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+        v::string(
+            path,
+            out,
+            "shippingPolicy",
+            &self.shipping_policy,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+        v::string(
+            path,
+            out,
+            "termsAndConditions",
+            &self.terms_and_conditions,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P3),
+        );
+    }
+}
 /// Merchant Descriptor data.
 #[doc(alias = "iccMerchantDescriptor")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2450,6 +3037,30 @@ pub struct IccMerchantDescriptor {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for IccMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            Some(2),
+            Some(2),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "url",
+            &self.url,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
+}
 /// Details of the PAN associated with the enrolled card. Contains processor verification results.
 #[doc(alias = "iccPaymentInstrument")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2460,6 +3071,17 @@ pub struct IccPaymentInstrument {
         skip_serializing_if = "Option::is_none"
     )]
     pub verification_results: Option<IccPaymentInstrumentVerificationResults>,
+}
+impl v::Validate for IccPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "verificationResults",
+            &self.verification_results,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2479,6 +3101,30 @@ pub struct IccPaymentInstrumentVerificationResults {
     )]
     pub cvv2_verification_code: Option<String>,
 }
+impl v::Validate for IccPaymentInstrumentVerificationResults {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "addressVerificationCode",
+            &self.address_verification_code,
+            false,
+            Some(0),
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cvv2VerificationCode",
+            &self.cvv2_verification_code,
+            false,
+            Some(0),
+            Some(2),
+            None,
+        );
+    }
+}
 /// Shipping Details data.
 #[doc(alias = "iccShippingDetails")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2491,6 +3137,20 @@ pub struct IccShippingDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub shipping_method: Option<String>,
+}
+impl v::Validate for IccShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            Some(0),
+            Some(128),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
 }
 #[doc(alias = "iccTransactionResponsePendingEvents")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2531,6 +3191,9 @@ pub struct Iccv1UpdateCheckoutSessionsDiscounts {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub codes: Option<Vec<String>>,
 }
+impl v::Validate for Iccv1UpdateCheckoutSessionsDiscounts {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Updated fulfillment method or delivery destination.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2538,6 +3201,9 @@ pub struct Iccv1UpdateCheckoutSessionsFulfillment {
     /// List of available fulfillment methods for this session.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub methods: Option<Vec<Iccv1checkoutsessionsFulfillmentMethods>>,
+}
+impl v::Validate for Iccv1UpdateCheckoutSessionsFulfillment {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Updated delivery address.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2592,6 +3258,44 @@ pub struct Iccv1UpdateCheckoutSessionsFulfillmentAddress {
     )]
     pub state: Option<String>,
 }
+impl v::Validate for Iccv1UpdateCheckoutSessionsFulfillmentAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "city", &self.city, true, None, Some(60), None);
+        v::present(path, out, "country", &self.country);
+        v::string(
+            path,
+            out,
+            "line_one",
+            &self.line_one,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "line_two",
+            &self.line_two,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(path, out, "name", &self.name, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "postal_code",
+            &self.postal_code,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+        v::present(path, out, "state", &self.state);
+    }
+}
 /// Updated payment instruments and handlers for this session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2608,6 +3312,9 @@ pub struct Iccv1UpdateCheckoutsessionsPayment {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub selected_instrument_id: Option<String>,
+}
+impl v::Validate for Iccv1UpdateCheckoutsessionsPayment {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Delivery address for the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2662,6 +3369,44 @@ pub struct Iccv1checkoutSessionsFulfillmentAddress {
     )]
     pub state: Option<String>,
 }
+impl v::Validate for Iccv1checkoutSessionsFulfillmentAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "city", &self.city, true, None, Some(60), None);
+        v::present(path, out, "country", &self.country);
+        v::string(
+            path,
+            out,
+            "line_one",
+            &self.line_one,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "line_two",
+            &self.line_two,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(path, out, "name", &self.name, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "postal_code",
+            &self.postal_code,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+        v::present(path, out, "state", &self.state);
+    }
+}
 /// A single item in an ACP checkout request.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2678,6 +3423,20 @@ pub struct Iccv1checkoutSessionsItems {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub quantity: Option<i64>,
+}
+impl v::Validate for Iccv1checkoutSessionsItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "id", &self.id);
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            true,
+            Some(1i64),
+            None,
+        );
+    }
 }
 /// Optional. Billing address associated with this payment method.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2732,6 +3491,44 @@ pub struct Iccv1checkoutSessionsPaymentDataBillingAddress {
     )]
     pub state: Option<String>,
 }
+impl v::Validate for Iccv1checkoutSessionsPaymentDataBillingAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "city", &self.city, true, None, Some(60), None);
+        v::present(path, out, "country", &self.country);
+        v::string(
+            path,
+            out,
+            "line_one",
+            &self.line_one,
+            true,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "line_two",
+            &self.line_two,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(path, out, "name", &self.name, true, None, Some(256), None);
+        v::string(
+            path,
+            out,
+            "postal_code",
+            &self.postal_code,
+            true,
+            None,
+            Some(20),
+            None,
+        );
+        v::present(path, out, "state", &self.state);
+    }
+}
 /// Payment token and provider. Required to process the transaction.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2752,6 +3549,13 @@ pub struct Iccv1checkoutSessionssessionIdcompletePaymentData {
     )]
     pub token: Option<String>,
 }
+impl v::Validate for Iccv1checkoutSessionssessionIdcompletePaymentData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billing_address", &self.billing_address, false);
+        v::present(path, out, "provider", &self.provider);
+        v::present(path, out, "token", &self.token);
+    }
+}
 /// Optional. Discount or promo codes to apply to this session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2762,6 +3566,9 @@ pub struct Iccv1checkoutsessionsDiscounts {
     /// List of discount or promotional codes to apply to the session.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub codes: Option<Vec<String>>,
+}
+impl v::Validate for Iccv1checkoutsessionsDiscounts {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// How a discount amount is allocated to a specific item or cart path.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2779,6 +3586,9 @@ pub struct Iccv1checkoutsessionsDiscountsAllocations {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub path: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsDiscountsAllocations {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// A discount that has been successfully applied to the checkout session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2812,6 +3622,9 @@ pub struct Iccv1checkoutsessionsDiscountsApplied {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsDiscountsApplied {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Optional. Fulfillment method and delivery destination for this session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2819,6 +3632,9 @@ pub struct Iccv1checkoutsessionsFulfillment {
     /// List of available fulfillment methods for this session.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub methods: Option<Vec<Iccv1checkoutsessionsFulfillmentMethods>>,
+}
+impl v::Validate for Iccv1checkoutsessionsFulfillment {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// A delivery destination (address) within a UCP fulfillment method.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2861,6 +3677,9 @@ pub struct Iccv1checkoutsessionsFulfillmentDestinations {
     )]
     pub street_address: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsFulfillmentDestinations {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// A group of line items with available fulfillment options within a fulfillment method.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2883,6 +3702,9 @@ pub struct Iccv1checkoutsessionsFulfillmentGroups {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub selected_option_id: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsFulfillmentGroups {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// A single fulfillment method available for this checkout session (e.g. standard shipping, express delivery, in-store pickup).
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2916,6 +3738,9 @@ pub struct Iccv1checkoutsessionsFulfillmentMethods {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsFulfillmentMethods {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// A single fulfillment option (e.g. Standard Shipping, Express) within a group.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2936,6 +3761,9 @@ pub struct Iccv1checkoutsessionsFulfillmentOptions {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub totals: Option<Vec<Iccv1checkoutsessionsFulfillmentTotals>>,
 }
+impl v::Validate for Iccv1checkoutsessionsFulfillmentOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// A single line in the UCP order cost breakdown. Amounts are in cents (not micros).
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2952,6 +3780,9 @@ pub struct Iccv1checkoutsessionsFulfillmentTotals {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsFulfillmentTotals {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Reference to the product being purchased.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2970,6 +3801,11 @@ pub struct Iccv1checkoutsessionsItem {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsItem {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "id", &self.id);
+    }
+}
 /// A single product line item in a UCP create or update request.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2983,6 +3819,12 @@ pub struct Iccv1checkoutsessionsLineItems {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub quantity: Option<i64>,
+}
+impl v::Validate for Iccv1checkoutsessionsLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "item", &self.item, true);
+        v::present(path, out, "quantity", &self.quantity);
+    }
 }
 /// Optional. Payment instruments and handlers for this session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3000,6 +3842,9 @@ pub struct Iccv1checkoutsessionsPayment {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub selected_instrument_id: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsPayment {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Billing address associated with this instrument.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3036,6 +3881,9 @@ pub struct Iccv1checkoutsessionsPaymentBillingAddress {
     )]
     pub street_address: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsPaymentBillingAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Tokenized payment credential.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3052,6 +3900,9 @@ pub struct Iccv1checkoutsessionsPaymentCredential {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsPaymentCredential {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// A payment processor or handler configured for the merchant (e.g. Visa, Google Pay). Defines which instrument types the handler can process.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3090,6 +3941,9 @@ pub struct Iccv1checkoutsessionsPaymentHandlers {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub version: Option<String>,
+}
+impl v::Validate for Iccv1checkoutsessionsPaymentHandlers {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// A single payment instrument used to complete a UCP checkout.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3150,6 +4004,9 @@ pub struct Iccv1checkoutsessionsPaymentInstruments {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Iccv1checkoutsessionsPaymentInstruments {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Discount codes and applied discounts for this session.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3203,6 +4060,30 @@ pub struct Iccv1instructionsDeclineThreshold {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub currency_code: Option<String>,
+}
+impl v::Validate for Iccv1instructionsDeclineThreshold {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "currencyCode",
+            &self.currency_code,
+            false,
+            Some(3),
+            Some(3),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
 }
 /// Mandate data. Defines the consumer's spending authorization for a purchase intent, including merchant preferences, amount limits, and product details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3265,6 +4146,81 @@ pub struct Iccv1instructionsMandates {
     )]
     pub recurring_payment_information: Option<Iccv1instructionsRecurringPaymentInformation>,
 }
+impl v::Validate for Iccv1instructionsMandates {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "declineThreshold", &self.decline_threshold, true);
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "effectiveUntilTime",
+            &self.effective_until_time,
+            true,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "mandateId",
+            &self.mandate_id,
+            true,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "merchantCategory",
+            &self.merchant_category,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "merchantCategoryCode",
+            &self.merchant_category_code,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "preferredMerchantName",
+            &self.preferred_merchant_name,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(0),
+            Some(10),
+            None,
+        );
+    }
+}
 /// Frequency of the transaction. Specifies how often the transaction occurs. If the mandate contains a recurring instruction, a recurring frequency must be provided and the request.isRecurring flag should be set to true.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3275,6 +4231,9 @@ pub struct Iccv1instructionsRecurringPaymentInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub occurrence: Option<String>,
+}
+impl v::Validate for Iccv1instructionsRecurringPaymentInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3303,6 +4262,38 @@ pub struct Iccv1instructionsinstructionIdconfirmationsConfirmationData {
     pub processor_information:
         Option<Iccv1instructionsinstructionIdconfirmationsProcessorInformation>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdconfirmationsConfirmationData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            true,
+        );
+    }
+}
 /// Merchant Information data
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3328,6 +4319,40 @@ pub struct Iccv1instructionsinstructionIdconfirmationsMerchantInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub merchant_name: Option<String>,
+}
+impl v::Validate for Iccv1instructionsinstructionIdconfirmationsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            Some(0),
+            Some(4),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3384,6 +4409,81 @@ pub struct Iccv1instructionsinstructionIdconfirmationsOrderInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub tracking_id: Option<String>,
+}
+impl v::Validate for Iccv1instructionsinstructionIdconfirmationsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetail", &self.amount_detail, false);
+        v::string(
+            path,
+            out,
+            "carrier",
+            &self.carrier,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "expectedDeliveryDate",
+            &self.expected_delivery_date,
+            false,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "orderDate",
+            &self.order_date,
+            false,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "orderId",
+            &self.order_id,
+            false,
+            Some(0),
+            Some(100),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "orderStatus",
+            &self.order_status,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+        v::string(
+            path,
+            out,
+            "trackingId",
+            &self.tracking_id,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
 }
 /// Payment/Transaction Confirmation Data provided by the payment processor/acquirer.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3466,6 +4566,90 @@ pub struct Iccv1instructionsinstructionIdconfirmationsProcessorInformation {
     )]
     pub transaction_type: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdconfirmationsProcessorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acquirerReferenceNumber",
+            &self.acquirer_reference_number,
+            false,
+            Some(0),
+            Some(64),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(path, out, "amountDetail", &self.amount_detail, false);
+        v::string(
+            path,
+            out,
+            "approvalCode",
+            &self.approval_code,
+            false,
+            Some(0),
+            Some(128),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "dynamicDataId",
+            &self.dynamic_data_id,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "responseCode",
+            &self.response_code,
+            false,
+            Some(0),
+            Some(2),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "retrievalReferenceNumber",
+            &self.retrieval_reference_number,
+            false,
+            Some(0),
+            Some(64),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "systemTraceAuditNumber",
+            &self.system_trace_audit_number,
+            false,
+            Some(0),
+            Some(64),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::present(path, out, "transactionStatus", &self.transaction_status);
+        v::string(
+            path,
+            out,
+            "transactionTimestamp",
+            &self.transaction_timestamp,
+            false,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::present(path, out, "transactionType", &self.transaction_type);
+    }
+}
 /// Attachment data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3490,6 +4674,40 @@ pub struct Iccv1instructionsinstructionIdcredentialsAttachments {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsAttachments {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "content",
+            &self.content,
+            false,
+            Some(0),
+            Some(4098),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "contentType",
+            &self.content_type,
+            false,
+            Some(0),
+            Some(30),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "name",
+            &self.name,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 /// Client reference information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3501,6 +4719,20 @@ pub struct Iccv1instructionsinstructionIdcredentialsClientReferenceInformation {
     )]
     pub code: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "code",
+            &self.code,
+            true,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Iccv1instructionsinstructionIdcredentialsMandateReferenceData {
@@ -3511,6 +4743,20 @@ pub struct Iccv1instructionsinstructionIdcredentialsMandateReferenceData {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub mandate_id: Option<String>,
+}
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsMandateReferenceData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "mandateId",
+            &self.mandate_id,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
 }
 /// Merchant Information data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3554,6 +4800,67 @@ pub struct Iccv1instructionsinstructionIdcredentialsMerchantInformation {
     )]
     pub merchant_name: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            Some(0),
+            Some(4),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "domainName",
+            &self.domain_name,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            Some(5),
+            Some(5),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            true,
+        );
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            true,
+            Some(0),
+            Some(40),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
+}
 /// Order information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3574,12 +4881,31 @@ pub struct Iccv1instructionsinstructionIdcredentialsOrderInformation {
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Iccv1instructionsinstructionIdcredentialsOrderInformationShipTo>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetail", &self.amount_detail, true);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
+}
 /// Item details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Iccv1instructionsinstructionIdcredentialsOrderInformationLineItems {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<IccLineItem>,
+}
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "items", &self.items, false);
+    }
 }
 /// Shipping information.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3711,6 +5037,190 @@ pub struct Iccv1instructionsinstructionIdcredentialsOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            Some(1),
+            Some(75),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            Some(0),
+            Some(75),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            Some(0),
+            Some(75),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "addressId",
+            &self.address_id,
+            false,
+            Some(36),
+            Some(36),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            Some(0),
+            Some(30),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            Some(2),
+            Some(2),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "countryCallingCode",
+            &self.country_calling_code,
+            true,
+            Some(1),
+            Some(4),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "createTime",
+            &self.create_time,
+            false,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            Some(0),
+            Some(100),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            Some(0),
+            Some(60),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "instructions",
+            &self.instructions,
+            false,
+            Some(0),
+            Some(1024),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            Some(0),
+            Some(60),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "lastUsedTime",
+            &self.last_used_time,
+            false,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            Some(0),
+            Some(60),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            true,
+            Some(4),
+            Some(14),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            Some(1),
+            Some(16),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 /// Payment Options data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3729,6 +5239,20 @@ pub struct Iccv1instructionsinstructionIdcredentialsPaymentOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub dynamic_data_type: Option<String>,
+}
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsPaymentOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dpaDynamicDataTtlMinutes",
+            &self.dpa_dynamic_data_ttl_minutes,
+            false,
+            Some(0),
+            Some(10),
+            Some(&crate::generated::patterns::P3),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3789,6 +5313,72 @@ pub struct Iccv1instructionsinstructionIdcredentialsTransactionData {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Iccv1instructionsinstructionIdcredentialsTransactionData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "attachments",
+            &self.attachments,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            true,
+        );
+        v::list(
+            path,
+            out,
+            "mandateReferenceData",
+            &self.mandate_reference_data,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            true,
+        );
+        v::string(
+            path,
+            out,
+            "merchantOrderId",
+            &self.merchant_order_id,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::nested(path, out, "orderInformation", &self.order_information, true);
+        v::nested(path, out, "paymentOptions", &self.payment_options, false);
+        v::string(
+            path,
+            out,
+            "paymentServiceProviderName",
+            &self.payment_service_provider_name,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "paymentServiceProviderUrl",
+            &self.payment_service_provider_url,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P2),
+        );
+    }
+}
 /// REST/GraphQL API integration configuration for programmatic agent interactions.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3809,6 +5399,12 @@ pub struct Iccv1merchantsApiIntegrations {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub url: Option<String>,
+}
+impl v::Validate for Iccv1merchantsApiIntegrations {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "integrationSpec", &self.integration_spec);
+        v::present(path, out, "url", &self.url);
+    }
 }
 /// Public encryption key used to wrap payment credentials when \`paymentPayloadType\` is \*\*\*ENCRYPTED\*\*\*. Not required for UNENCRYPTED delivery.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3849,6 +5445,12 @@ pub struct Iccv1merchantsEncryptionKey {
     )]
     pub key_name: Option<String>,
 }
+impl v::Validate for Iccv1merchantsEncryptionKey {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "encryptionKey", &self.encryption_key);
+        v::present(path, out, "keyName", &self.key_name);
+    }
+}
 /// Protocol interaction configuration defining a merchant's endpoint for a given protocol.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3876,6 +5478,12 @@ pub struct Iccv1merchantsProtocolInteractions {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for Iccv1merchantsProtocolInteractions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "protocol", &self.protocol);
+        v::present(path, out, "url", &self.url);
+    }
+}
 /// Web-based checkout integration configuration for browser or app-based agent interactions.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3896,6 +5504,12 @@ pub struct Iccv1merchantsWebIntegrations {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub url: Option<String>,
+}
+impl v::Validate for Iccv1merchantsWebIntegrations {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "integrationSpec", &self.integration_spec);
+        v::present(path, out, "url", &self.url);
+    }
 }
 /// MPP challenge context received from the merchant's 402 response.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3946,6 +5560,45 @@ pub struct Iccv1mppcredentialsChallenge {
     )]
     pub realm: Option<String>,
 }
+impl v::Validate for Iccv1mppcredentialsChallenge {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "acceptedNetworks", &self.accepted_networks);
+        v::string(path, out, "amount", &self.amount, true, Some(1), None, None);
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            Some(3),
+            Some(3),
+            None,
+        );
+        v::nested(path, out, "encryption_jwk", &self.encryption_jwk, true);
+        v::string(path, out, "id", &self.id, true, Some(1), None, None);
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            true,
+            Some(1),
+            None,
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            true,
+            Some(1),
+            None,
+            None,
+        );
+        v::string(path, out, "realm", &self.realm, true, Some(1), None, None);
+    }
+}
 /// Merchant RSA public encryption key as a JSON Web Key (JWK,  RFC 7517). Must be RSA (kty=RSA), alg=RSA-OAEP-256, use=enc. Used to encrypt the token payload using RSA-OAEP with SHA-256 per MPP spec Section 7.4.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3986,6 +5639,16 @@ pub struct Iccv1mppcredentialsChallengeEncryptionJwk {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#use: Option<String>,
+}
+impl v::Validate for Iccv1mppcredentialsChallengeEncryptionJwk {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "alg", &self.alg, true, Some(1), None, None);
+        v::string(path, out, "e", &self.e, true, Some(1), None, None);
+        v::string(path, out, "kid", &self.kid, true, Some(1), None, None);
+        v::string(path, out, "kty", &self.kty, true, Some(1), None, None);
+        v::string(path, out, "n", &self.n, true, Some(1), None, None);
+        v::string(path, out, "use", &self.r#use, true, Some(1), None, None);
+    }
 }
 /// A single product to add to or update in the merchant's ACG catalog.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4469,6 +6132,202 @@ pub struct Iccv1productsfeedProducts {
     )]
     pub width: Option<String>,
 }
+impl v::Validate for Iccv1productsfeedProducts {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "availability",
+            &self.availability,
+            true,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "brand", &self.brand, true, None, Some(70), None);
+        v::string(path, out, "color", &self.color, false, None, Some(40), None);
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            true,
+            Some(3),
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            true,
+            None,
+            Some(5000),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dimensions",
+            &self.dimensions,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "group_id",
+            &self.group_id,
+            true,
+            None,
+            Some(70),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gtin",
+            &self.gtin,
+            false,
+            Some(8),
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "image_url",
+            &self.image_url,
+            true,
+            None,
+            Some(1000),
+            None,
+        );
+        v::present(
+            path,
+            out,
+            "is_eligible_checkout",
+            &self.is_eligible_checkout,
+        );
+        v::present(path, out, "is_eligible_search", &self.is_eligible_search);
+        v::string(
+            path,
+            out,
+            "item_group_title",
+            &self.item_group_title,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "item_id",
+            &self.item_id,
+            true,
+            None,
+            Some(100),
+            None,
+        );
+        v::present(
+            path,
+            out,
+            "listing_has_variations",
+            &self.listing_has_variations,
+        );
+        v::string(
+            path,
+            out,
+            "marketplace_seller",
+            &self.marketplace_seller,
+            false,
+            None,
+            Some(70),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "material",
+            &self.material,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(path, out, "mpn", &self.mpn, false, None, Some(70), None);
+        v::present(path, out, "price", &self.price);
+        v::string(
+            path,
+            out,
+            "pricing_trend",
+            &self.pricing_trend,
+            false,
+            None,
+            Some(80),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "product_category",
+            &self.product_category,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::present(path, out, "return_policy", &self.return_policy);
+        v::string(
+            path,
+            out,
+            "seller_name",
+            &self.seller_name,
+            true,
+            None,
+            Some(70),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "seller_url",
+            &self.seller_url,
+            true,
+            None,
+            Some(1000),
+            None,
+        );
+        v::string(path, out, "size", &self.size, false, None, Some(20), None);
+        v::string(
+            path,
+            out,
+            "store_country",
+            &self.store_country,
+            true,
+            None,
+            Some(2),
+            None,
+        );
+        v::present(path, out, "target_countries", &self.target_countries);
+        v::string(path, out, "title", &self.title, true, None, Some(150), None);
+        v::string(path, out, "url", &self.url, true, None, Some(1000), None);
+        v::string(
+            path,
+            out,
+            "weight",
+            &self.weight,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 /// Assurance data. Contains identity verification details that prove the consumer or device has been authenticated before the payment operation.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4531,6 +6390,29 @@ pub struct Iccv1tokensAssuranceData {
     )]
     pub verification_type: Option<String>,
 }
+impl v::Validate for Iccv1tokensAssuranceData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "authenticatedIdentities",
+            &self.authenticated_identities,
+            false,
+        );
+        v::present(path, out, "verificationMethod", &self.verification_method);
+        v::present(path, out, "verificationResults", &self.verification_results);
+        v::string(
+            path,
+            out,
+            "verificationTimestamp",
+            &self.verification_timestamp,
+            true,
+            Some(1),
+            Some(12),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
+}
 /// Authenticated Identities data. Contains the identity assertion from the authentication provider.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4554,6 +6436,20 @@ pub struct Iccv1tokensAuthenticatedIdentities {
     )]
     pub provider: Option<String>,
 }
+impl v::Validate for Iccv1tokensAuthenticatedIdentities {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "id",
+            &self.id,
+            true,
+            Some(1),
+            Some(50),
+            Some(&crate::generated::patterns::P1),
+        );
+    }
+}
 /// Authentication Context data. Describes the authentication action performed.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4564,6 +6460,9 @@ pub struct Iccv1tokensAuthenticationContext {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub action: Option<String>,
+}
+impl v::Validate for Iccv1tokensAuthenticationContext {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Consumer billing information.  Required during card enrollment to identify the cardholder.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4624,6 +6523,80 @@ pub struct Iccv1tokensBillTo {
     )]
     pub phone_number: Option<String>,
 }
+impl v::Validate for Iccv1tokensBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            true,
+            Some(2),
+            Some(2),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "countryCallingCode",
+            &self.country_calling_code,
+            true,
+            Some(1),
+            Some(4),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "fullName",
+            &self.full_name,
+            false,
+            Some(0),
+            Some(100),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            Some(0),
+            Some(50),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            true,
+            Some(4),
+            Some(14),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 /// Buyer Information data. Contains consumer identification and preference details.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4647,6 +6620,20 @@ pub struct Iccv1tokensBuyerInformation {
     )]
     pub personal_identification: Option<Vec<Iccv1tokensBuyerInformationPersonalIdentification>>,
 }
+impl v::Validate for Iccv1tokensBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Iccv1tokensBuyerInformationPersonalIdentification {
@@ -4669,6 +6656,9 @@ pub struct Iccv1tokensBuyerInformationPersonalIdentification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Iccv1tokensBuyerInformationPersonalIdentification {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4706,6 +6696,33 @@ pub struct Iccv1tokensConsentData {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Iccv1tokensConsentData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acceptedTime",
+            &self.accepted_time,
+            true,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "effectiveUntil",
+            &self.effective_until,
+            true,
+            Some(0),
+            Some(12),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::present(path, out, "id", &self.id);
+        v::present(path, out, "source", &self.source);
+        v::present(path, out, "type", &self.r#type);
+    }
+}
 /// Consumer Identity data. Identifies the consumer using an email address or phone number.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4738,6 +6755,31 @@ pub struct Iccv1tokensConsumerIdentity {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub identity_value: Option<String>,
+}
+impl v::Validate for Iccv1tokensConsumerIdentity {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "identityProviderUrl",
+            &self.identity_provider_url,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::present(path, out, "identityType", &self.identity_type);
+        v::string(
+            path,
+            out,
+            "identityValue",
+            &self.identity_value,
+            true,
+            Some(1),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
 }
 /// Device and Application instance data. Identifies the device and application from which the consumer is making the payment request.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4788,6 +6830,71 @@ pub struct Iccv1tokensDeviceInformation {
     )]
     pub user_agent: Option<String>,
 }
+impl v::Validate for Iccv1tokensDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "applicationName",
+            &self.application_name,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "clientDeviceId",
+            &self.client_device_id,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            Some(2),
+            Some(2),
+            Some(&crate::generated::patterns::P1),
+        );
+        v::nested(path, out, "deviceData", &self.device_data, true);
+        v::string(
+            path,
+            out,
+            "fingerprintSessionId",
+            &self.fingerprint_session_id,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P25),
+        );
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            Some(0),
+            Some(2048),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 /// Device data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4817,6 +6924,50 @@ pub struct Iccv1tokensDeviceInformationDeviceData {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Iccv1tokensDeviceInformationDeviceData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "brand",
+            &self.brand,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "manufacturer",
+            &self.manufacturer,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "model",
+            &self.model,
+            false,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+        v::string(
+            path,
+            out,
+            "type",
+            &self.r#type,
+            true,
+            Some(0),
+            Some(255),
+            Some(&crate::generated::patterns::P0),
+        );
+    }
+}
 /// Enrollment Reference Data. Links the enrollment to an existing token reference.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4836,6 +6987,16 @@ pub struct Iccv1tokensEnrollmentReferenceData {
     )]
     pub enrollment_reference_type: Option<String>,
 }
+impl v::Validate for Iccv1tokensEnrollmentReferenceData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(
+            path,
+            out,
+            "enrollmentReferenceType",
+            &self.enrollment_reference_type,
+        );
+    }
+}
 /// Payment Information data. References the tokenized payment card to use for this transaction. At least one of customer, paymentInstrument, or instrumentIdentifier must be provided. The instrumentIdentifier is the most commonly used reference. If you have a TMS instrument identifier, provide it in instrumentIdentifier.id.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4853,6 +7014,25 @@ pub struct Iccv1tokensPaymentInformation {
     #[serde(rename = "paymentInstrument", skip_serializing_if = "Option::is_none")]
     pub payment_instrument: Option<Iccv1tokensPaymentInformationPaymentInstrument>,
 }
+impl v::Validate for Iccv1tokensPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            true,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+    }
+}
 /// Customer data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4863,6 +7043,11 @@ pub struct Iccv1tokensPaymentInformationCustomer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Iccv1tokensPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 /// Instrument Identifier data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -4875,6 +7060,11 @@ pub struct Iccv1tokensPaymentInformationInstrumentIdentifier {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Iccv1tokensPaymentInformationInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, true, Some(12), Some(32), None);
+    }
+}
 /// Payment Instrument data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -4885,6 +7075,11 @@ pub struct Iccv1tokensPaymentInformationPaymentInstrument {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Iccv1tokensPaymentInformationPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 /// Response for GET /icc/v1/agents/{agentId}/keys - agent info at top level with keys array
 #[doc(alias = "listAgentKeysResponse200")]
@@ -5268,6 +7463,24 @@ pub struct MerchantRequest {
     #[serde(rename = "webIntegrations", skip_serializing_if = "Option::is_none")]
     pub web_integrations: Option<Iccv1merchantsWebIntegrations>,
 }
+impl v::Validate for MerchantRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "apiIntegrations", &self.api_integrations, false);
+        v::nested(path, out, "encryptionKey", &self.encryption_key, false);
+        v::present(path, out, "indicator", &self.indicator);
+        v::present(path, out, "merchantName", &self.merchant_name);
+        v::present(path, out, "merchantUrl", &self.merchant_url);
+        v::list(
+            path,
+            out,
+            "protocolInteractions",
+            &self.protocol_interactions,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "webIntegrations", &self.web_integrations, false);
+    }
+}
 /// All fields are optional; only provided fields are updated.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5319,6 +7532,20 @@ pub struct MerchantUpdate {
     #[serde(rename = "webIntegrations", skip_serializing_if = "Option::is_none")]
     pub web_integrations: Option<MerchantUpdateWebIntegrations>,
 }
+impl v::Validate for MerchantUpdate {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "apiIntegrations", &self.api_integrations, false);
+        v::list(
+            path,
+            out,
+            "protocolInteractions",
+            &self.protocol_interactions,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "webIntegrations", &self.web_integrations, false);
+    }
+}
 /// REST/GraphQL API integration configuration for programmatic agent interactions.
 #[doc(alias = "merchantUpdateApiIntegrations")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5340,6 +7567,12 @@ pub struct MerchantUpdateApiIntegrations {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub url: Option<String>,
+}
+impl v::Validate for MerchantUpdateApiIntegrations {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "integrationSpec", &self.integration_spec);
+        v::present(path, out, "url", &self.url);
+    }
 }
 /// Web-based checkout integration configuration for browser or app-based agent interactions.
 #[doc(alias = "merchantUpdateWebIntegrations")]
@@ -5363,6 +7596,12 @@ pub struct MerchantUpdateWebIntegrations {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for MerchantUpdateWebIntegrations {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "integrationSpec", &self.integration_spec);
+        v::present(path, out, "url", &self.url);
+    }
+}
 /// Request object for provisioning an MPP payment token.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -5377,6 +7616,21 @@ pub struct MppCredentialsRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub instrument_id: Option<String>,
+}
+impl v::Validate for MppCredentialsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "challenge", &self.challenge, true);
+        v::string(
+            path,
+            out,
+            "instrumentId",
+            &self.instrument_id,
+            true,
+            Some(1),
+            None,
+            None,
+        );
+    }
 }
 /// MPP payment credentials response. The 'token' field Contains the RSA-OAEP encrypted network token ciphertext. All other fields are display-only metadata.
 #[doc(alias = "mppCredentialsResponse200")]
@@ -5704,6 +7958,11 @@ pub struct ProductFeedRequest {
     )]
     pub timestamp: Option<String>,
 }
+impl v::Validate for ProductFeedRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(path, out, "products", &self.products, true, (Some(1), None));
+    }
+}
 /// UCP checkout session state. Total amounts are expressed in cents (not micros).
 #[doc(alias = "ucpCheckoutSessionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5878,6 +8137,9 @@ pub struct UcpCompleteCheckoutRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub risk_signals: Option<::serde_json::Value>,
 }
+impl v::Validate for UcpCompleteCheckoutRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Optional. Buyer identity information.
 #[doc(alias = "ucpCreateCheckoutSessionBuyer")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5895,6 +8157,9 @@ pub struct UcpCreateCheckoutSessionBuyer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub full_name: Option<String>,
+}
+impl v::Validate for UcpCreateCheckoutSessionBuyer {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// UCP checkout session creation payload.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5922,6 +8187,18 @@ pub struct UcpCreateCheckoutSessionRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub payment: Option<Iccv1checkoutsessionsPayment>,
 }
+impl v::Validate for UcpCreateCheckoutSessionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "line_items",
+            &self.line_items,
+            true,
+            (None, None),
+        );
+    }
+}
 /// Updated buyer identity information.
 #[doc(alias = "ucpUpdateCheckoutSessionBuyer")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5939,6 +8216,9 @@ pub struct UcpUpdateCheckoutSessionBuyer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub full_name: Option<String>,
+}
+impl v::Validate for UcpUpdateCheckoutSessionBuyer {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// UCP session update payload. All fields are optional — only included fields are applied.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -5972,6 +8252,18 @@ pub struct UcpUpdateCheckoutSessionRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub payment: Option<Iccv1UpdateCheckoutsessionsPayment>,
 }
+impl v::Validate for UcpUpdateCheckoutSessionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "line_items",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+    }
+}
 /// All fields are optional. publicKey and algorithm must be provided together when either is updated.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6003,6 +8295,9 @@ pub struct UpdateAgentKeyRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub public_key: Option<String>,
+}
+impl v::Validate for UpdateAgentKeyRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Response object for a single agent public key, including agent context.
 #[doc(alias = "updateAgentKeyResponse200")]
@@ -6200,6 +8495,9 @@ pub struct UpdateMerchantKeyRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub key_name: Option<String>,
+}
+impl v::Validate for UpdateMerchantKeyRequest {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Response object for a single merchant encryption key, including merchant context.
 #[doc(alias = "updateMerchantKeyResponse200")]

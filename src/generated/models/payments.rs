@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct AuthReversalRequest {
@@ -37,6 +39,66 @@ pub struct AuthReversalRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub reversal_information: Option<Ptsv2paymentsidreversalsReversalInformation>,
+}
+impl v::Validate for AuthReversalRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "reversalInformation",
+            &self.reversal_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -104,6 +166,116 @@ pub struct CapturePaymentRequest {
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2paymentsTravelInformation>,
 }
+impl v::Validate for CapturePaymentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDefinedSecureInformation",
+            &self.merchant_defined_secure_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "promotionInformation",
+            &self.promotion_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CommonAncillaryInformationServiceItem {
@@ -121,6 +293,30 @@ pub struct CommonAncillaryInformationServiceItem {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub sub_category_code: Option<String>,
+}
+impl v::Validate for CommonAncillaryInformationServiceItem {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "subCategoryCode",
+            &self.sub_category_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -169,6 +365,87 @@ pub struct CreateBillingAgreement {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2billingagreementsProcessingInformation>,
+}
+impl v::Validate for CreateBillingAgreement {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -245,6 +522,137 @@ pub struct CreateCreditRequest {
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2paymentsTravelInformation>,
 }
+impl v::Validate for CreateCreditRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDefinedSecureInformation",
+            &self.merchant_defined_secure_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "promotionInformation",
+            &self.promotion_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recipientInformation",
+            &self.recipient_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "senderInformation",
+            &self.sender_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateOrderRequest {
@@ -280,6 +688,52 @@ pub struct CreateOrderRequest {
     pub sender_information: Option<Ptsv2intentsSenderInformation>,
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2intentsTravelInformation>,
+}
+impl v::Validate for CreateOrderRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -409,6 +863,210 @@ pub struct CreatePaymentRequest {
     )]
     pub watchlist_screening_information: Option<Ptsv2paymentsWatchlistScreeningInformation>,
 }
+impl v::Validate for CreatePaymentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "acquirerInformation",
+            &self.acquirer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "healthCareInformation",
+            &self.health_care_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "hostedPaymentInformation",
+            &self.hosted_payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::nested(path, out, "invoiceDetails", &self.invoice_details, false);
+        v::nested(
+            path,
+            out,
+            "issuerInformation",
+            &self.issuer_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDefinedSecureInformation",
+            &self.merchant_defined_secure_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "orderHistory",
+            &self.order_history,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "promotionInformation",
+            &self.promotion_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recipientInformation",
+            &self.recipient_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "recurringPaymentInformation",
+            &self.recurring_payment_information,
+            false,
+        );
+        v::nested(path, out, "riskInformation", &self.risk_information, false);
+        v::nested(
+            path,
+            out,
+            "senderInformation",
+            &self.sender_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "unscheduledPaymentInformation",
+            &self.unscheduled_payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "watchlistScreeningInformation",
+            &self.watchlist_screening_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateSessionReq {
@@ -454,6 +1112,83 @@ pub struct CreateSessionReq {
     #[serde(rename = "userInterface", skip_serializing_if = "Option::is_none")]
     pub user_interface: Option<Ptsv2paymentreferencesUserInterface>,
 }
+impl v::Validate for CreateSessionReq {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "orderHistory",
+            &self.order_history,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+        v::nested(path, out, "userInterface", &self.user_interface, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateSessionRequest {
@@ -498,6 +1233,83 @@ pub struct CreateSessionRequest {
     pub travel_information: Option<Ptsv2paymentreferencesTravelInformation>,
     #[serde(rename = "userInterface", skip_serializing_if = "Option::is_none")]
     pub user_interface: Option<Ptsv2paymentreferencesUserInterface>,
+}
+impl v::Validate for CreateSessionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "orderHistory",
+            &self.order_history,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+        v::nested(path, out, "userInterface", &self.user_interface, false);
+    }
 }
 #[doc(alias = "createSessionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -653,6 +1465,50 @@ pub struct EnhancedAncillaryInformationServiceItem {
     )]
     pub sub_category_code: Option<String>,
 }
+impl v::Validate for EnhancedAncillaryInformationServiceItem {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "feeAmount",
+            &self.fee_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "feeCode",
+            &self.fee_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "subCategoryCode",
+            &self.sub_category_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct IncrementAuthRequest {
@@ -676,6 +1532,45 @@ pub struct IncrementAuthRequest {
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2paymentsidTravelInformation>,
 }
+impl v::Validate for IncrementAuthRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct IntimateBillingAgreement {
@@ -698,6 +1593,45 @@ pub struct IntimateBillingAgreement {
     pub order_information: Option<Ptsv2billingagreementsOrderInformation>,
     #[serde(rename = "paymentInformation", skip_serializing_if = "Option::is_none")]
     pub payment_information: Option<Ptsv2billingagreementsPaymentInformation>,
+}
+impl v::Validate for IntimateBillingAgreement {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "intimateBillingAgreementResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -785,6 +1719,59 @@ pub struct MitReversalRequest {
     )]
     pub reversal_information: Option<Ptsv2paymentsidreversalsReversalInformation>,
 }
+impl v::Validate for MitReversalRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "reversalInformation",
+            &self.reversal_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct MitVoidRequest {
@@ -807,6 +1794,38 @@ pub struct MitVoidRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2voidsProcessingInformation>,
+}
+impl v::Validate for MitVoidRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -856,6 +1875,87 @@ pub struct ModifyBillingAgreement {
     )]
     pub processing_information: Option<Ptsv2billingagreementsidProcessingInformation>,
 }
+impl v::Validate for ModifyBillingAgreement {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "consumerAuthenticationInformation",
+            &self.consumer_authentication_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "installmentInformation",
+            &self.installment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct OrderPaymentRequest {
@@ -875,6 +1975,31 @@ pub struct OrderPaymentRequest {
     )]
     pub processing_information: Option<Ptsv2paymentreferencesidintentsProcessingInformation>,
 }
+impl v::Validate for OrderPaymentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PaymentTokenRequest {
@@ -885,6 +2010,17 @@ pub struct PaymentTokenRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2paymenttokensProcessingInformation>,
+}
+impl v::Validate for PaymentTokenRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "paymentsStrongAuthIssuerInformation")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1121,6 +2257,91 @@ pub struct ProcessingInfoAuthorizationOptions {
     )]
     pub verbal_auth_transaction_id: Option<String>,
 }
+impl v::Validate for ProcessingInfoAuthorizationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authIndicator",
+            &self.auth_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authType",
+            &self.auth_type,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extendAuthIndicator",
+            &self.extend_auth_indicator,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::nested(path, out, "initiator", &self.initiator, false);
+        v::string(
+            path,
+            out,
+            "panReturnIndicator",
+            &self.pan_return_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "serviceType",
+            &self.service_type,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionMode",
+            &self.transaction_mode,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "verbalAuthCode",
+            &self.verbal_auth_code,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "verbalAuthTransactionId",
+            &self.verbal_auth_transaction_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct ProcessingInfoAuthorizationOptionsInitiator {
@@ -1150,6 +2371,17 @@ pub struct ProcessingInfoAuthorizationOptionsInitiator {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for ProcessingInfoAuthorizationOptionsInitiator {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "merchantInitiatedTransaction",
+            &self.merchant_initiated_transaction,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1181,6 +2413,50 @@ pub struct ProcessingInfoAuthorizationOptionsInitiatorMerchantInitiatedTransacti
         deserialize_with = "crate::types::lenient::string"
     )]
     pub reason: Option<String>,
+}
+impl v::Validate for ProcessingInfoAuthorizationOptionsInitiatorMerchantInitiatedTransaction {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "agreementId",
+            &self.agreement_id,
+            false,
+            None,
+            Some(140),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalAuthorizedAmount",
+            &self.original_authorized_amount,
+            false,
+            None,
+            Some(61),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "previousTransactionId",
+            &self.previous_transaction_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reason",
+            &self.reason,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
 }
 #[doc(alias = "processorInformationSellerProtection")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2788,6 +4064,20 @@ pub struct PtsV2PaymentsOrderPost201ResponseOrderInformationShippingDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub shipping_method: Option<String>,
+}
+impl v::Validate for PtsV2PaymentsOrderPost201ResponseOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6155,6 +7445,12 @@ pub struct Ptsv2billingagreementsAggregatorInformation {
     #[serde(rename = "subMerchant", skip_serializing_if = "Option::is_none")]
     pub sub_merchant: Option<Ptsv2paymentsAggregatorInformationSubMerchant>,
 }
+impl v::Validate for Ptsv2billingagreementsAggregatorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "name", &self.name, false, None, Some(37), None);
+        v::nested(path, out, "subMerchant", &self.sub_merchant, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsAgreementInformation {
@@ -6205,6 +7501,52 @@ pub struct Ptsv2billingagreementsAgreementInformation {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsAgreementInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateSigned",
+            &self.date_signed,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "endDate",
+            &self.end_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequency",
+            &self.frequency,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "startDate",
+            &self.start_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(25), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsBuyerInformation {
@@ -6234,6 +7576,50 @@ pub struct Ptsv2billingagreementsBuyerInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub merchant_customer_id: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gender",
+            &self.gender,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6295,6 +7681,42 @@ pub struct Ptsv2billingagreementsClientReferenceInformation {
     )]
     pub transaction_id: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(51), None);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "pausedRequestId",
+            &self.paused_request_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionId",
+            &self.transaction_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsConsumerAuthenticationInformation {
@@ -6325,6 +7747,31 @@ pub struct Ptsv2billingagreementsConsumerAuthenticationInformation {
     )]
     pub xid: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsConsumerAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationTransactionContextId",
+            &self.authentication_transaction_context_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "cavv", &self.cavv, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "transactionToken",
+            &self.transaction_token,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsDeviceInformation {
@@ -6349,6 +7796,40 @@ pub struct Ptsv2billingagreementsDeviceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub user_agent_browser_value: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "httpAcceptBrowserValue",
+            &self.http_accept_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6415,6 +7896,89 @@ pub struct Ptsv2billingagreementsInstallmentInformation {
     )]
     pub sequence: Option<i64>,
 }
+impl v::Validate for Ptsv2billingagreementsInstallmentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "alertPreference",
+            &self.alert_preference,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstInstallmentDate",
+            &self.first_installment_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastInstallmentDate",
+            &self.last_installment_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "maxAmount",
+            &self.max_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "minAmount",
+            &self.min_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentType",
+            &self.payment_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "preferredDay",
+            &self.preferred_day,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "sequence",
+            &self.sequence,
+            false,
+            None,
+            Some(999999999999i64),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsMerchantInformation {
@@ -6463,6 +8027,66 @@ pub struct Ptsv2billingagreementsMerchantInformation {
     )]
     pub transaction_local_date_time: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cancelUrl",
+            &self.cancel_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(9999i64),
+        );
+        v::string(
+            path,
+            out,
+            "failureUrl",
+            &self.failure_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "successUrl",
+            &self.success_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionLocalDateTime",
+            &self.transaction_local_date_time,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsMerchantInformationMerchantDescriptor {
@@ -6492,6 +8116,40 @@ pub struct Ptsv2billingagreementsMerchantInformationMerchantDescriptor {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "contact",
+            &self.contact,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsOrderInformation {
@@ -6501,6 +8159,12 @@ pub struct Ptsv2billingagreementsOrderInformation {
     pub bill_to: Option<Ptsv2billingagreementsOrderInformationBillTo>,
     #[serde(rename = "invoiceDetails", skip_serializing_if = "Option::is_none")]
     pub invoice_details: Option<Ptsv2billingagreementsOrderInformationInvoiceDetails>,
+}
+impl v::Validate for Ptsv2billingagreementsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6525,6 +8189,40 @@ pub struct Ptsv2billingagreementsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_max_amount: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalMaxAmount",
+            &self.total_max_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6632,6 +8330,160 @@ pub struct Ptsv2billingagreementsOrderInformationBillTo {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "buildingNumber",
+            &self.building_number,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsOrderInformationInvoiceDetails {
@@ -6642,6 +8494,9 @@ pub struct Ptsv2billingagreementsOrderInformationInvoiceDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub product_description: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsOrderInformationInvoiceDetails {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6654,6 +8509,13 @@ pub struct Ptsv2billingagreementsPaymentInformation {
     pub payment_type: Option<Ptsv2billingagreementsPaymentInformationPaymentType>,
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Ptsv2billingagreementsPaymentInformationTokenizedCard>,
+}
+impl v::Validate for Ptsv2billingagreementsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6682,6 +8544,33 @@ pub struct Ptsv2billingagreementsPaymentInformationBank {
     )]
     pub swift_code: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::nested(path, out, "accountAlias", &self.account_alias, false);
+        v::string(path, out, "iban", &self.iban, false, None, Some(34), None);
+        v::string(
+            path,
+            out,
+            "scheme",
+            &self.scheme,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "swiftCode",
+            &self.swift_code,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsPaymentInformationBankAccount {
@@ -6699,6 +8588,20 @@ impl ::std::fmt::Debug for Ptsv2billingagreementsPaymentInformationBankAccount {
             .finish()
     }
 }
+impl v::Validate for Ptsv2billingagreementsPaymentInformationBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsPaymentInformationBankAccountAlias {
@@ -6714,6 +8617,11 @@ pub struct Ptsv2billingagreementsPaymentInformationBankAccountAlias {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsPaymentInformationBankAccountAlias {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6766,6 +8674,50 @@ impl ::std::fmt::Debug for Ptsv2billingagreementsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Ptsv2billingagreementsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsPaymentInformationPaymentType {
@@ -6778,6 +8730,9 @@ pub struct Ptsv2billingagreementsPaymentInformationPaymentType {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsPaymentInformationPaymentTypeMethod {
@@ -6787,6 +8742,9 @@ pub struct Ptsv2billingagreementsPaymentInformationPaymentTypeMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6846,6 +8804,60 @@ impl ::std::fmt::Debug for Ptsv2billingagreementsPaymentInformationTokenizedCard
             .finish()
     }
 }
+impl v::Validate for Ptsv2billingagreementsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cryptogram",
+            &self.cryptogram,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsProcessingInformation {
@@ -6866,6 +8878,30 @@ pub struct Ptsv2billingagreementsProcessingInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub payment_completion_timeout: Option<String>,
+}
+impl v::Validate for Ptsv2billingagreementsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commerceIndicator",
+            &self.commerce_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentCompletionTimeout",
+            &self.payment_completion_timeout,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -6902,6 +8938,42 @@ pub struct Ptsv2billingagreementsidAgreementInformation {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsidAgreementInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateRevoked",
+            &self.date_revoked,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "eSignIndicator",
+            &self.e_sign_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequency",
+            &self.frequency,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(50), None);
+        v::string(path, out, "type", &self.r#type, false, None, Some(25), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsidBuyerInformation {
@@ -6925,6 +8997,40 @@ pub struct Ptsv2billingagreementsidBuyerInformation {
     )]
     pub language: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsidBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gender",
+            &self.gender,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2billingagreementsidProcessingInformation {
@@ -6946,6 +9052,30 @@ pub struct Ptsv2billingagreementsidProcessingInformation {
     )]
     pub payment_completion_timeout: Option<String>,
 }
+impl v::Validate for Ptsv2billingagreementsidProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commerceIndicator",
+            &self.commerce_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentCompletionTimeout",
+            &self.payment_completion_timeout,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsInstallmentInformation {
@@ -6956,6 +9086,20 @@ pub struct Ptsv2creditsInstallmentInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub plan_type: Option<String>,
+}
+impl v::Validate for Ptsv2creditsInstallmentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "planType",
+            &self.plan_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7089,6 +9233,173 @@ pub struct Ptsv2creditsProcessingInformation {
     )]
     pub wallet_type: Option<String>,
 }
+impl v::Validate for Ptsv2creditsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "bankTransferOptions",
+            &self.bank_transfer_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "commerceIndicator",
+            &self.commerce_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "electronicBenefitsTransfer",
+            &self.electronic_benefits_transfer,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "industryDataType",
+            &self.industry_data_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "japanPaymentOptions",
+            &self.japan_payment_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "linkId",
+            &self.link_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::nested(path, out, "loanOptions", &self.loan_options, false);
+        v::string(
+            path,
+            out,
+            "merchantVerificationValue",
+            &self.merchant_verification_value,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationalNetDomesticData",
+            &self.national_net_domestic_data,
+            false,
+            None,
+            Some(123),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "networkRoutingOrder",
+            &self.network_routing_order,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "processorId",
+            &self.processor_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseLevel",
+            &self.purchase_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::nested(path, out, "refundOptions", &self.refund_options, false);
+        v::string(
+            path,
+            out,
+            "reportGroup",
+            &self.report_group,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionTypeIndicator",
+            &self.transaction_type_indicator,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "walletType",
+            &self.wallet_type,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsProcessingInformationBankTransferOptions {
@@ -7142,6 +9453,80 @@ pub struct Ptsv2creditsProcessingInformationBankTransferOptions {
     )]
     pub terminal_state: Option<String>,
 }
+impl v::Validate for Ptsv2creditsProcessingInformationBankTransferOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "customerMemo",
+            &self.customer_memo,
+            false,
+            None,
+            Some(80),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "effectiveDate",
+            &self.effective_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "partialPaymentId",
+            &self.partial_payment_id,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secCode",
+            &self.sec_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "settlementMethod",
+            &self.settlement_method,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalCity",
+            &self.terminal_city,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalState",
+            &self.terminal_state,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsProcessingInformationElectronicBenefitsTransfer {
@@ -7151,6 +9536,20 @@ pub struct Ptsv2creditsProcessingInformationElectronicBenefitsTransfer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub category: Option<String>,
+}
+impl v::Validate for Ptsv2creditsProcessingInformationElectronicBenefitsTransfer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "category",
+            &self.category,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7169,6 +9568,20 @@ pub struct Ptsv2creditsProcessingInformationJapanPaymentOptions {
     )]
     pub payment_method: Option<String>,
 }
+impl v::Validate for Ptsv2creditsProcessingInformationJapanPaymentOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentMethod",
+            &self.payment_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsProcessingInformationPurchaseOptions {
@@ -7179,6 +9592,9 @@ pub struct Ptsv2creditsProcessingInformationPurchaseOptions {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub is_electronic_benefits_transfer: Option<bool>,
+}
+impl v::Validate for Ptsv2creditsProcessingInformationPurchaseOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7197,6 +9613,20 @@ pub struct Ptsv2creditsProcessingInformationRefundOptions {
     )]
     pub reconciliation_id_alternate: Option<String>,
 }
+impl v::Validate for Ptsv2creditsProcessingInformationRefundOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "reconciliationIdAlternate",
+            &self.reconciliation_id_alternate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsRecipientInformation {
@@ -7214,6 +9644,30 @@ pub struct Ptsv2creditsRecipientInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub last_name: Option<String>,
+}
+impl v::Validate for Ptsv2creditsRecipientInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7261,6 +9715,71 @@ pub struct Ptsv2creditsSenderInformation {
     )]
     pub locality: Option<String>,
 }
+impl v::Validate for Ptsv2creditsSenderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryCode",
+            &self.country_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2creditsSenderInformationAccount {
@@ -7284,6 +9803,30 @@ impl ::std::fmt::Debug for Ptsv2creditsSenderInformationAccount {
             .field("funds_source", &self.funds_source)
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .finish()
+    }
+}
+impl v::Validate for Ptsv2creditsSenderInformationAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "fundsSource",
+            &self.funds_source,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
     }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -7332,6 +9875,11 @@ impl ::std::fmt::Debug for Ptsv2creditsTokenInformation {
             .finish()
     }
 }
+impl v::Validate for Ptsv2creditsTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsBuyerInformation {
@@ -7341,6 +9889,20 @@ pub struct Ptsv2intentsBuyerInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub language: Option<String>,
+}
+impl v::Validate for Ptsv2intentsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7352,6 +9914,20 @@ pub struct Ptsv2intentsClientReferenceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub reconciliation_id: Option<String>,
+}
+impl v::Validate for Ptsv2intentsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7376,6 +9952,9 @@ pub struct Ptsv2intentsEventInformation {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2intentsEventInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsMerchantInformation {
@@ -7395,6 +9974,37 @@ pub struct Ptsv2intentsMerchantInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub success_url: Option<String>,
+}
+impl v::Validate for Ptsv2intentsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cancelUrl",
+            &self.cancel_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "successUrl",
+            &self.success_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7418,6 +10028,30 @@ pub struct Ptsv2intentsMerchantInformationMerchantDescriptor {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for Ptsv2intentsMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(254),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(254),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsOrderInformation {
@@ -7431,6 +10065,21 @@ pub struct Ptsv2intentsOrderInformation {
     pub line_items: Option<Vec<Ptsv2intentsOrderInformationLineItems>>,
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Ptsv2intentsOrderInformationShipTo>,
+}
+impl v::Validate for Ptsv2intentsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, Some(10)),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7490,6 +10139,90 @@ pub struct Ptsv2intentsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for Ptsv2intentsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dutyAmount",
+            &self.duty_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingAmount",
+            &self.shipping_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDiscountAmount",
+            &self.shipping_discount_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7560,6 +10293,110 @@ pub struct Ptsv2intentsOrderInformationBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2intentsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            Some(3),
+            Some(254),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsOrderInformationLineItems {
@@ -7625,6 +10462,79 @@ pub struct Ptsv2intentsOrderInformationLineItems {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub unit_price: Option<String>,
+}
+impl v::Validate for Ptsv2intentsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "typeOfSupply",
+            &self.type_of_supply,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7701,6 +10611,100 @@ pub struct Ptsv2intentsOrderInformationShipTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2intentsOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsPaymentInformation {
@@ -7721,6 +10725,18 @@ pub struct Ptsv2intentsPaymentInformation {
     )]
     pub tokenized_payment_method: Option<Ptsv2intentsPaymentInformationTokenizedPaymentMethod>,
 }
+impl v::Validate for Ptsv2intentsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "eWallet", &self.e_wallet, false);
+        v::nested(
+            path,
+            out,
+            "tokenizedPaymentMethod",
+            &self.tokenized_payment_method,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsPaymentInformationEWallet {
@@ -7731,6 +10747,20 @@ pub struct Ptsv2intentsPaymentInformationEWallet {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub account_id: Option<String>,
+}
+impl v::Validate for Ptsv2intentsPaymentInformationEWallet {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountId",
+            &self.account_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7744,6 +10774,9 @@ pub struct Ptsv2intentsPaymentInformationPaymentType {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Ptsv2intentsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsPaymentInformationPaymentTypeMethod {
@@ -7753,6 +10786,9 @@ pub struct Ptsv2intentsPaymentInformationPaymentTypeMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2intentsPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7784,6 +10820,40 @@ pub struct Ptsv2intentsPaymentInformationTokenizedPaymentMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub usage_type: Option<String>,
+}
+impl v::Validate for Ptsv2intentsPaymentInformationTokenizedPaymentMethod {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "usagePattern",
+            &self.usage_pattern,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "usageType",
+            &self.usage_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7887,6 +10957,27 @@ pub struct Ptsv2intentsProcessingInformation {
     )]
     pub user_passed_verification: Option<String>,
 }
+impl v::Validate for Ptsv2intentsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "authorizationOptions",
+            &self.authorization_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "processingInstruction",
+            &self.processing_instruction,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsProcessingInformationAuthorizationOptions {
@@ -7897,6 +10988,20 @@ pub struct Ptsv2intentsProcessingInformationAuthorizationOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub auth_type: Option<String>,
+}
+impl v::Validate for Ptsv2intentsProcessingInformationAuthorizationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authType",
+            &self.auth_type,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -7942,6 +11047,9 @@ pub struct Ptsv2intentsRecipientInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub risk_popularity_score: Option<String>,
+}
+impl v::Validate for Ptsv2intentsRecipientInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8004,6 +11112,9 @@ pub struct Ptsv2intentsSenderInformation {
     )]
     pub risk_popularity_score: Option<String>,
 }
+impl v::Validate for Ptsv2intentsSenderInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsSenderInformationAccount {
@@ -8020,6 +11131,9 @@ impl ::std::fmt::Debug for Ptsv2intentsSenderInformationAccount {
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .finish()
     }
+}
+impl v::Validate for Ptsv2intentsSenderInformationAccount {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8040,6 +11154,9 @@ pub struct Ptsv2intentsTravelInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub journey_type: Option<String>,
+}
+impl v::Validate for Ptsv2intentsTravelInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8086,11 +11203,25 @@ pub struct Ptsv2intentsTravelInformationAgency {
     )]
     pub start_date: Option<String>,
 }
+impl v::Validate for Ptsv2intentsTravelInformationAgency {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsidMerchantInformation {
     #[serde(rename = "merchantDescriptor", skip_serializing_if = "Option::is_none")]
     pub merchant_descriptor: Option<Ptsv2intentsidMerchantInformationMerchantDescriptor>,
+}
+impl v::Validate for Ptsv2intentsidMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8108,6 +11239,20 @@ pub struct Ptsv2intentsidMerchantInformationMerchantDescriptor {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Ptsv2intentsidMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(254),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsidOrderInformation {
@@ -8120,11 +11265,28 @@ pub struct Ptsv2intentsidOrderInformation {
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<Ptsv2intentsOrderInformationShipTo>,
 }
+impl v::Validate for Ptsv2intentsidOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, Some(10)),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2intentsidPaymentInformation {
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2intentsPaymentInformationPaymentType>,
+}
+impl v::Validate for Ptsv2intentsidPaymentInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8132,6 +11294,9 @@ pub struct Ptsv2intentsidProcessingInformation {
     /// Array of actions (one or more) to be included in the void to invoke bundled services along with void. Possible values: - \`AP\_UPDATE\_ORDER\`: Use this when Alternative Payment Update order service is requested. - \`AP\_EXTEND\_ORDER\`: Use this when Alternative Payment extend order service is requested.
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
+}
+impl v::Validate for Ptsv2intentsidProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8148,6 +11313,9 @@ pub struct Ptsv2paymentreferencesAgreementInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub indicator: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesAgreementInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8185,6 +11353,58 @@ pub struct Ptsv2paymentreferencesBuyerInformation {
     pub personal_identification:
         Option<Vec<Ptsv2paymentsidcapturesBuyerInformationPersonalIdentification>>,
 }
+impl v::Validate for Ptsv2paymentreferencesBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gender",
+            &self.gender,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "noteToSeller",
+            &self.note_to_seller,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesDeviceInformation {
@@ -8215,6 +11435,41 @@ pub struct Ptsv2paymentreferencesDeviceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub user_agent: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "deviceType",
+            &self.device_type,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8250,6 +11505,57 @@ pub struct Ptsv2paymentreferencesMerchantInformation {
     )]
     pub success_url: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cancelUrl",
+            &self.cancel_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "failureUrl",
+            &self.failure_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "noteToBuyer",
+            &self.note_to_buyer,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "successUrl",
+            &self.success_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesOrderInformation {
@@ -8265,6 +11571,22 @@ pub struct Ptsv2paymentreferencesOrderInformation {
     pub ship_to: Option<Ptsv2paymentreferencesOrderInformationShipTo>,
     #[serde(rename = "shippingDetails", skip_serializing_if = "Option::is_none")]
     pub shipping_details: Option<PtsV2PaymentsOrderPost201ResponseOrderInformationShippingDetails>,
+}
+impl v::Validate for Ptsv2paymentreferencesOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8367,6 +11689,150 @@ pub struct Ptsv2paymentreferencesOrderInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dutyAmount",
+            &self.duty_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRate",
+            &self.exchange_rate,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRateTimeStamp",
+            &self.exchange_rate_time_stamp,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "giftwrapAmount",
+            &self.giftwrap_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "handlingAmount",
+            &self.handling_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceAmount",
+            &self.invoice_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "settlementCurrency",
+            &self.settlement_currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingAmount",
+            &self.shipping_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDiscountAmount",
+            &self.shipping_discount_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesOrderInformationBillTo {
@@ -8376,6 +11842,11 @@ pub struct Ptsv2paymentreferencesOrderInformationBillTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "name", &self.name, false, None, Some(87), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8394,6 +11865,9 @@ pub struct Ptsv2paymentreferencesOrderInformationInvoiceDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub product_description: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesOrderInformationInvoiceDetails {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// List of the line items from the order, which are included in an invoice.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -8475,6 +11949,109 @@ pub struct Ptsv2paymentreferencesOrderInformationLineItems {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub unit_price: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountRate",
+            &self.discount_rate,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8596,6 +12173,172 @@ pub struct Ptsv2paymentreferencesOrderInformationShipTo {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "buildingNumber",
+            &self.building_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "email", &self.email, false, None, Some(60), None);
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "immutable",
+            &self.immutable,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "notApplicable",
+            &self.not_applicable,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(path, out, "title", &self.title, false, None, Some(60), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesPaymentInformation {
@@ -8610,6 +12353,14 @@ pub struct Ptsv2paymentreferencesPaymentInformation {
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2paymentsPaymentInformationPaymentType>,
 }
+impl v::Validate for Ptsv2paymentreferencesPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "eWallet", &self.e_wallet, false);
+        v::nested(path, out, "options", &self.options, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesPaymentInformationBank {
@@ -8622,6 +12373,11 @@ pub struct Ptsv2paymentreferencesPaymentInformationBank {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub swift_code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8645,6 +12401,21 @@ impl ::std::fmt::Debug for Ptsv2paymentreferencesPaymentInformationBankAccount {
             .field("iban", &self.iban)
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentreferencesPaymentInformationBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "iban", &self.iban, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
     }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -8706,6 +12477,60 @@ impl ::std::fmt::Debug for Ptsv2paymentreferencesPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Ptsv2paymentreferencesPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "useAs",
+            &self.use_as,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesPaymentInformationEWallet {
@@ -8717,6 +12542,20 @@ pub struct Ptsv2paymentreferencesPaymentInformationEWallet {
     )]
     pub funding_source: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesPaymentInformationEWallet {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "fundingSource",
+            &self.funding_source,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesPaymentInformationOptions {
@@ -8726,6 +12565,11 @@ pub struct Ptsv2paymentreferencesPaymentInformationOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesPaymentInformationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8748,11 +12592,40 @@ pub struct Ptsv2paymentreferencesProcessingInformation {
     )]
     pub session_type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentFlowMode",
+            &self.payment_flow_mode,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sessionType",
+            &self.session_type,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesTravelInformation {
     #[serde(rename = "autoRental", skip_serializing_if = "Option::is_none")]
     pub auto_rental: Option<Ptsv2paymentreferencesTravelInformationAutoRental>,
+}
+impl v::Validate for Ptsv2paymentreferencesTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "autoRental", &self.auto_rental, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8797,6 +12670,62 @@ pub struct Ptsv2paymentreferencesTravelInformationAutoRental {
     )]
     pub return_date_time: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesTravelInformationAutoRental {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "affiliateName",
+            &self.affiliate_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "companyName",
+            &self.company_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerName",
+            &self.customer_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::nested(path, out, "rentalAddress", &self.rental_address, false);
+        v::string(
+            path,
+            out,
+            "rentalDateTime",
+            &self.rental_date_time,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+        v::nested(path, out, "returnAddress", &self.return_address, false);
+        v::string(
+            path,
+            out,
+            "returnDateTime",
+            &self.return_date_time,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesUserInterface {
@@ -8815,6 +12744,22 @@ pub struct Ptsv2paymentreferencesUserInterface {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub theme: Option<String>,
+}
+impl v::Validate for Ptsv2paymentreferencesUserInterface {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "borderRadius",
+            &self.border_radius,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::nested(path, out, "color", &self.color, false);
+        v::string(path, out, "theme", &self.theme, false, None, Some(19), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8877,11 +12822,92 @@ pub struct Ptsv2paymentreferencesUserInterfaceColor {
     )]
     pub text: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesUserInterfaceColor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "border",
+            &self.border,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "borderSelected",
+            &self.border_selected,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "button",
+            &self.button,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "buttonText",
+            &self.button_text,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkbox",
+            &self.checkbox,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkboxCheckMark",
+            &self.checkbox_check_mark,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "header",
+            &self.header,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(path, out, "link", &self.link, false, None, Some(10), None);
+        v::string(path, out, "text", &self.text, false, None, Some(10), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesidintentsOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Ptsv2paymentsOrderInformationAmountDetailsOrder>,
+}
+impl v::Validate for Ptsv2paymentreferencesidintentsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8890,6 +12916,11 @@ pub struct Ptsv2paymentreferencesidintentsPaymentInformation {
     pub e_wallet: Option<Ptsv2paymentreferencesidintentsPaymentInformationEWallet>,
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2paymentsidreversalsPaymentInformationPaymentType>,
+}
+impl v::Validate for Ptsv2paymentreferencesidintentsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "eWallet", &self.e_wallet, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8902,12 +12933,29 @@ pub struct Ptsv2paymentreferencesidintentsPaymentInformationEWallet {
     )]
     pub account_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentreferencesidintentsPaymentInformationEWallet {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountId",
+            &self.account_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentreferencesidintentsProcessingInformation {
     /// Array of actions (one or more) to be included in the order to invoke bundled services along with order. Possible values: - \`AP\_ORDER\`: Use this when Alternative Payment Order service is requested.
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
+}
+impl v::Validate for Ptsv2paymentreferencesidintentsProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -8955,6 +13003,60 @@ impl ::std::fmt::Debug for Ptsv2paymentsAcquirerInformation {
             .field("merchant_id", &self.merchant_id)
             .field("password", &self.password.as_ref().map(|_| "[REDACTED]"))
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentsAcquirerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acquirerBin",
+            &self.acquirer_bin,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "acquirerMerchantId",
+            &self.acquirer_merchant_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantId",
+            &self.merchant_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "password",
+            &self.password,
+            false,
+            None,
+            Some(8),
+            None,
+        );
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -9014,6 +13116,64 @@ pub struct Ptsv2paymentsAggregatorInformation {
     pub street_address: Option<String>,
     #[serde(rename = "subMerchant", skip_serializing_if = "Option::is_none")]
     pub sub_merchant: Option<Ptsv2paymentsAggregatorInformationSubMerchant>,
+}
+impl v::Validate for Ptsv2paymentsAggregatorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "aggregatorId",
+            &self.aggregator_id,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(path, out, "city", &self.city, false, None, Some(100), None);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(37), None);
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "serviceProvidername",
+            &self.service_providername,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "state", &self.state, false, None, Some(10), None);
+        v::string(
+            path,
+            out,
+            "streetAddress",
+            &self.street_address,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::nested(path, out, "subMerchant", &self.sub_merchant, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9095,6 +13255,93 @@ pub struct Ptsv2paymentsAggregatorInformationSubMerchant {
     )]
     pub region: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsAggregatorInformationSubMerchant {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(38),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cardAcceptorId",
+            &self.card_acceptor_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "email", &self.email, false, None, Some(40), None);
+        v::string(path, out, "id", &self.id, false, None, Some(20), None);
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(37), None);
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "region",
+            &self.region,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsAgreementInformation {
@@ -9111,6 +13358,11 @@ pub struct Ptsv2paymentsAgreementInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsAgreementInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(128), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9142,6 +13394,50 @@ pub struct Ptsv2paymentsBuyer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub phone_number: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsBuyer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9222,6 +13518,109 @@ pub struct Ptsv2paymentsBuyerInformation {
     )]
     pub wallet_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "companyTaxId",
+            &self.company_tax_id,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gender",
+            &self.gender,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hashedPassword",
+            &self.hashed_password,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::nested(path, out, "loyalty", &self.loyalty, false);
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "noteToSeller",
+            &self.note_to_seller,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "walletId",
+            &self.wallet_id,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsBuyerInformationLoyalty {
@@ -9248,6 +13647,30 @@ impl ::std::fmt::Debug for Ptsv2paymentsBuyerInformationLoyalty {
             )
             .field("level", &self.level)
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentsBuyerInformationLoyalty {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountNumber",
+            &self.account_number,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "level",
+            &self.level,
+            false,
+            None,
+            Some(100),
+            None,
+        );
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -9310,6 +13733,42 @@ pub struct Ptsv2paymentsClientReferenceInformation {
     )]
     pub transaction_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "pausedRequestId",
+            &self.paused_request_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionId",
+            &self.transaction_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsClientReferenceInformationPartner {
@@ -9341,6 +13800,50 @@ pub struct Ptsv2paymentsClientReferenceInformationPartner {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub third_party_certification_number: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalTransactionId",
+            &self.original_transaction_id,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "thirdPartyCertificationNumber",
+            &self.third_party_certification_number,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9769,6 +14272,470 @@ pub struct Ptsv2paymentsConsumerAuthenticationInformation {
     )]
     pub xid: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsConsumerAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acsReferenceNumber",
+            &self.acs_reference_number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "acsTransactionId",
+            &self.acs_transaction_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "acsWindowSize",
+            &self.acs_window_size,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationData",
+            &self.alternate_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateAuthenticationDate",
+            &self.alternate_authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationBrand",
+            &self.authentication_brand,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationDate",
+            &self.authentication_date,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationTransactionId",
+            &self.authentication_transaction_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "authenticationType",
+            &self.authentication_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "cavv", &self.cavv, false, None, Some(40), None);
+        v::string(
+            path,
+            out,
+            "cavvAlgorithm",
+            &self.cavv_algorithm,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "challengeCancelCode",
+            &self.challenge_cancel_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "challengeStatus",
+            &self.challenge_status,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerCardAlias",
+            &self.customer_card_alias,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationIndicator",
+            &self.decoupled_authentication_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "decoupledAuthenticationMaxTime",
+            &self.decoupled_authentication_max_time,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deviceChannel",
+            &self.device_channel,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "directoryServerTransactionId",
+            &self.directory_server_transaction_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dsReferenceNumber",
+            &self.ds_reference_number,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "eciRaw",
+            &self.eci_raw,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "effectiveAuthenticationType",
+            &self.effective_authentication_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "marketingSource",
+            &self.marketing_source,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(path, out, "mcc", &self.mcc, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "merchantFraudRate",
+            &self.merchant_fraud_rate,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "networkScore",
+            &self.network_score,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "npaCode",
+            &self.npa_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "overrideCountryCode",
+            &self.override_country_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paSpecificationVersion",
+            &self.pa_specification_version,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paresStatus",
+            &self.pares_status,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationData",
+            &self.prior_authentication_data,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationMethod",
+            &self.prior_authentication_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationReferenceId",
+            &self.prior_authentication_reference_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "priorAuthenticationTime",
+            &self.prior_authentication_time,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceId",
+            &self.reference_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorId",
+            &self.requestor_id,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorInitiatedAuthenticationIndicator",
+            &self.requestor_initiated_authentication_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorName",
+            &self.requestor_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "returnUrl",
+            &self.return_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sdkMaxTimeout",
+            &self.sdk_max_timeout,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secureCorporatePaymentIndicator",
+            &self.secure_corporate_payment_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "signedParesStatusReason",
+            &self.signed_pares_status_reason,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "strongAuthentication",
+            &self.strong_authentication,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "transactionFlowIndicator",
+            &self.transaction_flow_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ucafAuthenticationData",
+            &self.ucaf_authentication_data,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ucafCollectionIndicator",
+            &self.ucaf_collection_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "veresEnrolled",
+            &self.veres_enrolled,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "whiteListStatus",
+            &self.white_list_status,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(path, out, "xid", &self.xid, false, None, Some(40), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsConsumerAuthenticationInformationStrongAuthentication {
@@ -9825,6 +14792,87 @@ pub struct Ptsv2paymentsConsumerAuthenticationInformationStrongAuthentication {
     )]
     pub trusted_merchant_exemption_indicator: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsConsumerAuthenticationInformationStrongAuthentication {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationIndicator",
+            &self.authentication_indicator,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "delegatedAuthenticationExemptionIndicator",
+            &self.delegated_authentication_exemption_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "issuerInformation",
+            &self.issuer_information,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "lowValueExemptionIndicator",
+            &self.low_value_exemption_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "outageExemptionIndicator",
+            &self.outage_exemption_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "riskAnalysisExemptionIndicator",
+            &self.risk_analysis_exemption_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secureCorporatePaymentIndicator",
+            &self.secure_corporate_payment_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "trustedMerchantExemptionIndicator",
+            &self.trusted_merchant_exemption_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsConsumerAuthenticationInformationStrongAuthenticationIssuerInformation {
@@ -9835,6 +14883,22 @@ pub struct Ptsv2paymentsConsumerAuthenticationInformationStrongAuthenticationIss
         deserialize_with = "crate::types::lenient::string"
     )]
     pub exemption_data_raw: Option<String>,
+}
+impl v::Validate
+    for Ptsv2paymentsConsumerAuthenticationInformationStrongAuthenticationIssuerInformation
+{
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "exemptionDataRaw",
+            &self.exemption_data_raw,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -9980,6 +15044,141 @@ pub struct Ptsv2paymentsDeviceInformation {
     )]
     pub user_agent_browser_value: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "deviceType",
+            &self.device_type,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptBrowserValue",
+            &self.http_accept_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpAcceptContent",
+            &self.http_accept_content,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserColorDepth",
+            &self.http_browser_color_depth,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserLanguage",
+            &self.http_browser_language,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenHeight",
+            &self.http_browser_screen_height,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenWidth",
+            &self.http_browser_screen_width,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserTimeDifference",
+            &self.http_browser_time_difference,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "metadata",
+            &self.metadata,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::list(path, out, "rawData", &self.raw_data, false, (None, None));
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsHostedPaymentInformation {
@@ -10001,6 +15200,31 @@ pub struct Ptsv2paymentsHostedPaymentInformation {
     #[serde(rename = "userAgent", skip_serializing_if = "Option::is_none")]
     pub user_agent: Option<Ptsv2paymentsHostedPaymentInformationUserAgent>,
 }
+impl v::Validate for Ptsv2paymentsHostedPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "userAgent", &self.user_agent, false);
+    }
+}
 /// The images to be used as background on Klarna's payment page (the image best matching the resolution will be used). This is a pass-through field. Check Klarna's documentation for more information about the correct format. This value can also be set in the merchant configuration.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10017,6 +15241,11 @@ pub struct Ptsv2paymentsHostedPaymentInformationUserAgent {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub width: Option<i64>,
+}
+impl v::Validate for Ptsv2paymentsHostedPaymentInformationUserAgent {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "url", &self.url, false, None, Some(255), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10144,6 +15373,148 @@ pub struct Ptsv2paymentsInstallmentInformation {
     )]
     pub validation_indicator: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsInstallmentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "annualInterestRate",
+            &self.annual_interest_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "eligibilityInquiry",
+            &self.eligibility_inquiry,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstInstallmentAmount",
+            &self.first_installment_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstInstallmentDate",
+            &self.first_installment_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequency",
+            &self.frequency,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gracePeriodDurationType",
+            &self.grace_period_duration_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "interestIndicator",
+            &self.interest_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceData",
+            &self.invoice_data,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentType",
+            &self.payment_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "planType",
+            &self.plan_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "sequence",
+            &self.sequence,
+            false,
+            None,
+            Some(999999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "totalCount",
+            &self.total_count,
+            false,
+            None,
+            Some(999i64),
+        );
+    }
+}
 /// invoice Details
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10156,6 +15527,20 @@ pub struct Ptsv2paymentsInvoiceDetails {
     )]
     pub barcode_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsInvoiceDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "barcodeNumber",
+            &self.barcode_number,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsIssuerInformation {
@@ -10166,6 +15551,20 @@ pub struct Ptsv2paymentsIssuerInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub discretionary_data: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsIssuerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "discretionaryData",
+            &self.discretionary_data,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 /// The object containing the secure data that the merchant defines.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -10195,6 +15594,50 @@ pub struct Ptsv2paymentsMerchantDefinedSecureInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub secure4: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsMerchantDefinedSecureInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "secure1",
+            &self.secure1,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secure2",
+            &self.secure2,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secure3",
+            &self.secure3,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secure4",
+            &self.secure4,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10314,6 +15757,173 @@ pub struct Ptsv2paymentsMerchantInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cancelUrl",
+            &self.cancel_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cardAcceptorReferenceNumber",
+            &self.card_acceptor_reference_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(9999i64),
+        );
+        v::number(
+            path,
+            out,
+            "categoryCodeDomestic",
+            &self.category_code_domestic,
+            false,
+            None,
+            Some(9999i64),
+        );
+        v::string(
+            path,
+            out,
+            "domainName",
+            &self.domain_name,
+            false,
+            None,
+            Some(127),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "failureUrl",
+            &self.failure_url,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "merchantName",
+            &self.merchant_name,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "noteToBuyer",
+            &self.note_to_buyer,
+            false,
+            None,
+            Some(165),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "partnerIdCode",
+            &self.partner_id_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "returnUrl",
+            &self.return_url,
+            false,
+            Some(7),
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "salesOrganizationId",
+            &self.sales_organization_id,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "serviceFeeDescriptor",
+            &self.service_fee_descriptor,
+            false,
+        );
+        v::nested(path, out, "serviceLocation", &self.service_location, false);
+        v::string(
+            path,
+            out,
+            "successUrl",
+            &self.success_url,
+            false,
+            None,
+            Some(2048),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxId",
+            &self.tax_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionLocalDateTime",
+            &self.transaction_local_date_time,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsMerchantInformationMerchantDescriptor {
@@ -10409,6 +16019,112 @@ pub struct Ptsv2paymentsMerchantInformationMerchantDescriptor {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateName",
+            &self.alternate_name,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "contact",
+            &self.contact,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryOfOrigin",
+            &self.country_of_origin,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerServicePhoneNumber",
+            &self.customer_service_phone_number,
+            false,
+            None,
+            Some(27),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "phone", &self.phone, false, None, Some(13), None);
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storeId",
+            &self.store_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storeName",
+            &self.store_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "url", &self.url, false, None, Some(255), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsMerchantInformationServiceFeeDescriptor {
@@ -10430,6 +16146,22 @@ pub struct Ptsv2paymentsMerchantInformationServiceFeeDescriptor {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub state: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsMerchantInformationServiceFeeDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "contact",
+            &self.contact,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(22), None);
+        v::string(path, out, "state", &self.state, false, None, Some(20), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10462,6 +16194,50 @@ pub struct Ptsv2paymentsMerchantInformationServiceLocation {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsMerchantInformationServiceLocation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "countryCode",
+            &self.country_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countrySubdivisionCode",
+            &self.country_subdivision_code,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderHistory {
@@ -10488,6 +16264,22 @@ pub struct Ptsv2paymentsOrderHistory {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub status: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::nested(path, out, "buyer", &self.buyer, false);
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10565,6 +16357,55 @@ pub struct Ptsv2paymentsOrderInformation {
     pub total_offers_count: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub vouchers: Option<Vec<Ptsv2paymentsOrderInformationVouchers>>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "digitalCurrency", &self.digital_currency, false);
+        v::string(
+            path,
+            out,
+            "extensionDays",
+            &self.extension_days,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::nested(path, out, "invoiceDetails", &self.invoice_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "preOrderDate",
+            &self.pre_order_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+        v::string(
+            path,
+            out,
+            "totalOffersCount",
+            &self.total_offers_count,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::list(path, out, "vouchers", &self.vouchers, false, (None, None));
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10767,6 +16608,296 @@ pub struct Ptsv2paymentsOrderInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "amexAdditionalAmounts",
+            &self.amex_additional_amounts,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "anticipatedAmount",
+            &self.anticipated_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cashbackAmount",
+            &self.cashback_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "currencyConversion",
+            &self.currency_conversion,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dutyAmount",
+            &self.duty_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRate",
+            &self.exchange_rate,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRateTimeStamp",
+            &self.exchange_rate_time_stamp,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "foreignAmount",
+            &self.foreign_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "foreignCurrency",
+            &self.foreign_currency,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "freightAmount",
+            &self.freight_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "giftWrapAmount",
+            &self.gift_wrap_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gratuityAmount",
+            &self.gratuity_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceAmount",
+            &self.invoice_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationalTaxIncluded",
+            &self.national_tax_included,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(path, out, "oct-surcharge", &self.oct_surcharge, false);
+        v::nested(path, out, "order", &self.order, false);
+        v::string(
+            path,
+            out,
+            "originalAmount",
+            &self.original_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalCurrency",
+            &self.original_currency,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "refundBalance",
+            &self.refund_balance,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "serviceFeeAmount",
+            &self.service_fee_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "settlementAmount",
+            &self.settlement_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "settlementCurrency",
+            &self.settlement_currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "subTotalAmount",
+            &self.sub_total_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::nested(path, out, "surcharge", &self.surcharge, false);
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedAfterDiscount",
+            &self.tax_applied_after_discount,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedLevel",
+            &self.tax_applied_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "taxDetails",
+            &self.tax_details,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "taxTypeCode",
+            &self.tax_type_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationAmountDetailsAmexAdditionalAmounts {
@@ -10782,6 +16913,21 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsAmexAdditionalAmounts {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsAmexAdditionalAmounts {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(3), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10805,6 +16951,31 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsCurrencyConversion {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub reconciliation_id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsCurrencyConversion {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(26), None);
+        v::string(
+            path,
+            out,
+            "indicator",
+            &self.indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10872,6 +17043,100 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsOrder {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsOrder {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "giftWrapAmount",
+            &self.gift_wrap_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "handlingAmount",
+            &self.handling_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingAmount",
+            &self.shipping_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDiscountAmount",
+            &self.shipping_discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "subTotalAmount",
+            &self.sub_total_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationAmountDetailsSurcharge {
@@ -10887,6 +17152,20 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsSurcharge {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub description: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsSurcharge {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -10935,6 +17214,42 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsTaxDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsTaxDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "exemptionCode",
+            &self.exemption_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(path, out, "rate", &self.rate, false, None, Some(6), None);
+        v::string(
+            path,
+            out,
+            "taxId",
+            &self.tax_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11093,6 +17408,212 @@ pub struct Ptsv2paymentsOrderInformationBillTo {
     )]
     pub verification_status: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address3",
+            &self.address3,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address4",
+            &self.address4,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternateEmail",
+            &self.alternate_email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "alternatePhoneNumber",
+            &self.alternate_phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "buildingNumber",
+            &self.building_number,
+            false,
+            None,
+            Some(256),
+            None,
+        );
+        v::nested(path, out, "company", &self.company, false);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "emailDomain",
+            &self.email_domain,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nameSuffix",
+            &self.name_suffix,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(path, out, "title", &self.title, false, None, Some(60), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationBillToCompany {
@@ -11141,6 +17662,71 @@ pub struct Ptsv2paymentsOrderInformationBillToCompany {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationBillToCompany {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(60), None);
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 /// Digital currency information for the order.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11165,6 +17751,31 @@ pub struct Ptsv2paymentsOrderInformationDigitalCurrency {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationDigitalCurrency {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "conversionAffiliate",
+            &self.conversion_affiliate,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "rampProviderCountry",
+            &self.ramp_provider_country,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(10), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11294,6 +17905,127 @@ pub struct Ptsv2paymentsOrderInformationInvoiceDetails {
     )]
     pub vat_invoice_reference_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationInvoiceDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "costCenter",
+            &self.cost_center,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceDate",
+            &self.invoice_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "issuerMessage",
+            &self.issuer_message,
+            false,
+            None,
+            Some(41),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseContactName",
+            &self.purchase_contact_name,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseOrderDate",
+            &self.purchase_order_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseOrderNumber",
+            &self.purchase_order_number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataCode",
+            &self.reference_data_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataNumber",
+            &self.reference_data_number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "salesSlipNumber",
+            &self.sales_slip_number,
+            false,
+            None,
+            Some(99999i64),
+        );
+        v::list(
+            path,
+            out,
+            "transactionAdviceAddendum",
+            &self.transaction_advice_addendum,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "vatInvoiceReferenceNumber",
+            &self.vat_invoice_reference_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationInvoiceDetailsTransactionAdviceAddendum {
@@ -11303,6 +18035,11 @@ pub struct Ptsv2paymentsOrderInformationInvoiceDetailsTransactionAdviceAddendum 
         deserialize_with = "crate::types::lenient::string"
     )]
     pub data: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationInvoiceDetailsTransactionAdviceAddendum {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "data", &self.data, false, None, Some(40), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11535,6 +18272,268 @@ pub struct Ptsv2paymentsOrderInformationLineItems {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub weight_unit: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountRate",
+            &self.discount_rate,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceNumber",
+            &self.invoice_number,
+            false,
+            None,
+            Some(23),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "measurement",
+            &self.measurement,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "passenger", &self.passenger, false);
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataCode",
+            &self.reference_data_code,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataNumber",
+            &self.reference_data_number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDestinationTypes",
+            &self.shipping_destination_types,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedAfterDiscount",
+            &self.tax_applied_after_discount,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "taxDetails",
+            &self.tax_details,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxStatusIndicator",
+            &self.tax_status_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxTypeCode",
+            &self.tax_type_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "typeOfSupply",
+            &self.type_of_supply,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitOfMeasure",
+            &self.unit_of_measure,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitTaxAmount",
+            &self.unit_tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weight",
+            &self.weight,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weightIdentifier",
+            &self.weight_identifier,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weightUnit",
+            &self.weight_unit,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11775,6 +18774,278 @@ pub struct Ptsv2paymentsOrderInformationLineItemsExtended {
     )]
     pub weight_unit: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationLineItemsExtended {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountRate",
+            &self.discount_rate,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceNumber",
+            &self.invoice_number,
+            false,
+            None,
+            Some(23),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "measurement",
+            &self.measurement,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "passenger", &self.passenger, false);
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productType",
+            &self.product_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataCode",
+            &self.reference_data_code,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceDataNumber",
+            &self.reference_data_number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingDestinationTypes",
+            &self.shipping_destination_types,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedAfterDiscount",
+            &self.tax_applied_after_discount,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "taxDetails",
+            &self.tax_details,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxStatusIndicator",
+            &self.tax_status_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxTypeCode",
+            &self.tax_type_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "typeOfSupply",
+            &self.type_of_supply,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitOfMeasure",
+            &self.unit_of_measure,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitTaxAmount",
+            &self.unit_tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weight",
+            &self.weight,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weightIdentifier",
+            &self.weight_identifier,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weightUnit",
+            &self.weight_unit,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationShipTo {
@@ -11909,6 +19180,191 @@ pub struct Ptsv2paymentsOrderInformationShipTo {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "buildingNumber",
+            &self.building_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "carrierName",
+            &self.carrier_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destinationTypes",
+            &self.destination_types,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "method",
+            &self.method,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(path, out, "title", &self.title, false, None, Some(60), None);
+    }
+}
 /// Contains shipping information not related to address.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -11942,6 +19398,40 @@ pub struct Ptsv2paymentsOrderInformationShippingDetails {
     )]
     pub shipping_method: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shipFromPostalCode",
+            &self.ship_from_postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingCarrier",
+            &self.shipping_carrier,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsOrderInformationVouchers {
@@ -11951,6 +19441,11 @@ pub struct Ptsv2paymentsOrderInformationVouchers {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsOrderInformationVouchers {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(255), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12012,6 +19507,70 @@ pub struct Ptsv2paymentsPaymentInformation {
         skip_serializing_if = "Option::is_none"
     )]
     pub tokenized_payment_method: Option<Ptsv2paymentsPaymentInformationTokenizedPaymentMethod>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "directDebit", &self.direct_debit, false);
+        v::nested(path, out, "eWallet", &self.e_wallet, false);
+        v::nested(path, out, "fluidData", &self.fluid_data, false);
+        v::string(
+            path,
+            out,
+            "initiationChannel",
+            &self.initiation_channel,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(path, out, "legacyToken", &self.legacy_token, false);
+        v::string(
+            path,
+            out,
+            "merchantLimitedAcceptanceIndicator",
+            &self.merchant_limited_acceptance_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(path, out, "options", &self.options, false);
+        v::nested(
+            path,
+            out,
+            "paymentAccountReference",
+            &self.payment_account_reference,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+        v::nested(path, out, "sepa", &self.sepa, false);
+        v::nested(path, out, "shippingAddress", &self.shipping_address, false);
+        v::nested(path, out, "thirdPartyToken", &self.third_party_token, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+        v::nested(
+            path,
+            out,
+            "tokenizedPaymentMethod",
+            &self.tokenized_payment_method,
+            false,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12155,11 +19714,170 @@ impl ::std::fmt::Debug for Ptsv2paymentsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountEncoderId",
+            &self.account_encoder_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "issueNumber",
+            &self.issue_number,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSubtype",
+            &self.product_subtype,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCodeIndicator",
+            &self.security_code_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sourceAccountType",
+            &self.source_account_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sourceAccountTypeDetails",
+            &self.source_account_type_details,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startMonth",
+            &self.start_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startYear",
+            &self.start_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "typeSelectionIndicator",
+            &self.type_selection_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "useAs",
+            &self.use_as,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationDirectDebit {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mandate: Option<Ptsv2paymentsPaymentInformationDirectDebitMandate>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationDirectDebit {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "mandate", &self.mandate, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12171,6 +19889,20 @@ pub struct Ptsv2paymentsPaymentInformationDirectDebitMandate {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub clearing_date: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationDirectDebitMandate {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "clearingDate",
+            &self.clearing_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12189,6 +19921,30 @@ pub struct Ptsv2paymentsPaymentInformationEWallet {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub funding_source: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationEWallet {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountId",
+            &self.account_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "fundingSource",
+            &self.funding_source,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12219,6 +19975,40 @@ pub struct Ptsv2paymentsPaymentInformationFluidData {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationFluidData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "descriptor",
+            &self.descriptor,
+            false,
+            None,
+            Some(128),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encoding",
+            &self.encoding,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(4000),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationLegacyToken {
@@ -12228,6 +20018,11 @@ pub struct Ptsv2paymentsPaymentInformationLegacyToken {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationLegacyToken {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12239,6 +20034,11 @@ pub struct Ptsv2paymentsPaymentInformationOptions {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(60), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationPaymentAccountReference {
@@ -12248,6 +20048,11 @@ pub struct Ptsv2paymentsPaymentInformationPaymentAccountReference {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationPaymentAccountReference {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(29), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12268,6 +20073,9 @@ pub struct Ptsv2paymentsPaymentInformationPaymentType {
     )]
     pub sub_type_name: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationPaymentTypeMethod {
@@ -12284,11 +20092,19 @@ pub struct Ptsv2paymentsPaymentInformationPaymentTypeMethod {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationSepa {
     #[serde(rename = "directDebit", skip_serializing_if = "Option::is_none")]
     pub direct_debit: Option<Ptsv2paymentsPaymentInformationSepaDirectDebit>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationSepa {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "directDebit", &self.direct_debit, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12319,6 +20135,41 @@ pub struct Ptsv2paymentsPaymentInformationSepaDirectDebit {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationSepaDirectDebit {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "reference",
+            &self.reference,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "signatureDate",
+            &self.signature_date,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "type",
+            &self.r#type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(path, out, "url", &self.url, false, None, Some(255), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationShippingAddress {
@@ -12328,6 +20179,11 @@ pub struct Ptsv2paymentsPaymentInformationShippingAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationShippingAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12339,6 +20195,11 @@ pub struct Ptsv2paymentsPaymentInformationThirdPartyToken {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPaymentInformationThirdPartyToken {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(16), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationTokenizedPaymentMethod {
@@ -12348,6 +20209,11 @@ pub struct Ptsv2paymentsPaymentInformationTokenizedPaymentMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPaymentInformationTokenizedPaymentMethod {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12563,6 +20429,248 @@ pub struct Ptsv2paymentsPointOfSaleInformation {
     )]
     pub track_data: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsPointOfSaleInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amexCapnData",
+            &self.amex_capn_data,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "catLevel",
+            &self.cat_level,
+            false,
+            Some(1i64),
+            Some(11i64),
+        );
+        v::string(
+            path,
+            out,
+            "deviceId",
+            &self.device_id,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::nested(path, out, "emv", &self.emv, false);
+        v::string(
+            path,
+            out,
+            "emvApplicationIdentifierAndDedicatedFileName",
+            &self.emv_application_identifier_and_dedicated_file_name,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encryptedKeyId",
+            &self.encrypted_key_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encryptedKeySerialNumber",
+            &self.encrypted_key_serial_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encryptedPin",
+            &self.encrypted_pin,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "entryMode",
+            &self.entry_mode,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "isDedicatedHardwareTerminal",
+            &self.is_dedicated_hardware_terminal,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "laneNumber",
+            &self.lane_number,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "operatingEnvironment",
+            &self.operating_environment,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "partnerSdkVersion",
+            &self.partner_sdk_version,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "pinBlockEncodingFormat",
+            &self.pin_block_encoding_format,
+            false,
+            None,
+            Some(9i64),
+        );
+        v::string(
+            path,
+            out,
+            "serviceCode",
+            &self.service_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storeAndForwardIndicator",
+            &self.store_and_forward_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "terminalCapability",
+            &self.terminal_capability,
+            false,
+            Some(1i64),
+            Some(5i64),
+        );
+        v::string(
+            path,
+            out,
+            "terminalCardCaptureCapability",
+            &self.terminal_card_capture_capability,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalCategory",
+            &self.terminal_category,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalCompliance",
+            &self.terminal_compliance,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalId",
+            &self.terminal_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalMake",
+            &self.terminal_make,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalModel",
+            &self.terminal_model,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalOutputCapability",
+            &self.terminal_output_capability,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalSerialNumber",
+            &self.terminal_serial_number,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPointOfSaleInformationEmv {
@@ -12606,6 +20714,21 @@ pub struct Ptsv2paymentsPointOfSaleInformationEmv {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub tags: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPointOfSaleInformationEmv {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cardSequenceNumber",
+            &self.card_sequence_number,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "tags", &self.tags, false, None, Some(1998), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -12923,6 +21046,347 @@ pub struct Ptsv2paymentsProcessingInformation {
     )]
     pub wallet_type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amexIndirectModelType",
+            &self.amex_indirect_model_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "authorizationOptions",
+            &self.authorization_options,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "bankTransferOptions",
+            &self.bank_transfer_options,
+            false,
+        );
+        v::nested(path, out, "captureOptions", &self.capture_options, false);
+        v::nested(
+            path,
+            out,
+            "cardVerification",
+            &self.card_verification,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "commerceIndicator",
+            &self.commerce_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "commerceIndicatorLabel",
+            &self.commerce_indicator_label,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "electronicBenefitsTransfer",
+            &self.electronic_benefits_transfer,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "enablerId",
+            &self.enabler_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extendedCreditTotalCount",
+            &self.extended_credit_total_count,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "industryDataType",
+            &self.industry_data_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "inquiryType",
+            &self.inquiry_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "intentsId",
+            &self.intents_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "japanPaymentOptions",
+            &self.japan_payment_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "languageCode",
+            &self.language_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "linkId",
+            &self.link_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::nested(path, out, "loanOptions", &self.loan_options, false);
+        v::string(
+            path,
+            out,
+            "merchantVerificationValue",
+            &self.merchant_verification_value,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "mobileRemotePaymentType",
+            &self.mobile_remote_payment_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationalNetDomesticData",
+            &self.national_net_domestic_data,
+            false,
+            None,
+            Some(123),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "networkPartnerId",
+            &self.network_partner_id,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "networkRoutingOrder",
+            &self.network_routing_order,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalPaymentId",
+            &self.original_payment_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentType",
+            &self.payment_type,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "preAuthResponseCode",
+            &self.pre_auth_response_code,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "preAuthStatus",
+            &self.pre_auth_status,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "processingInstruction",
+            &self.processing_instruction,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "processorId",
+            &self.processor_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseLevel",
+            &self.purchase_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(path, out, "purchaseOptions", &self.purchase_options, false);
+        v::string(
+            path,
+            out,
+            "purposeOfPayment",
+            &self.purpose_of_payment,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reportGroup",
+            &self.report_group,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "transactionTimeout",
+            &self.transaction_timeout,
+            false,
+            None,
+            Some(99999i64),
+        );
+        v::string(
+            path,
+            out,
+            "transactionTypeIndicator",
+            &self.transaction_type_indicator,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "walletType",
+            &self.wallet_type,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessingInformationBankTransferOptions {
@@ -13004,6 +21468,120 @@ pub struct Ptsv2paymentsProcessingInformationBankTransferOptions {
     )]
     pub terminal_state: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformationBankTransferOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "customerMemo",
+            &self.customer_memo,
+            false,
+            None,
+            Some(80),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerPresent",
+            &self.customer_present,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "declineAvsFlags",
+            &self.decline_avs_flags,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "effectiveDate",
+            &self.effective_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "fraudScreeningLevel",
+            &self.fraud_screening_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "partialPaymentId",
+            &self.partial_payment_id,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentCategoryCode",
+            &self.payment_category_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secCode",
+            &self.sec_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "settlementMethod",
+            &self.settlement_method,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalCity",
+            &self.terminal_city,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalState",
+            &self.terminal_state,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessingInformationCaptureOptions {
@@ -13056,6 +21634,78 @@ pub struct Ptsv2paymentsProcessingInformationCaptureOptions {
     )]
     pub total_capture_count: Option<i64>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformationCaptureOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::number(
+            path,
+            out,
+            "captureSequenceNumber",
+            &self.capture_sequence_number,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+        v::string(
+            path,
+            out,
+            "dateToCapture",
+            &self.date_to_capture,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "isFinal",
+            &self.is_final,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "notes",
+            &self.notes,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationIdAlternate",
+            &self.reconciliation_id_alternate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "totalCaptureCount",
+            &self.total_capture_count,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+    }
+}
 /// Contains card verification control flags for transaction-level verification settings.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13075,6 +21725,30 @@ pub struct Ptsv2paymentsProcessingInformationCardVerification {
     )]
     pub check_avs: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformationCardVerification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "checkANI",
+            &self.check_ani,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkAVS",
+            &self.check_avs,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessingInformationElectronicBenefitsTransfer {
@@ -13091,6 +21765,30 @@ pub struct Ptsv2paymentsProcessingInformationElectronicBenefitsTransfer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub voucher_serial_number: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsProcessingInformationElectronicBenefitsTransfer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "category",
+            &self.category,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "voucherSerialNumber",
+            &self.voucher_serial_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13161,6 +21859,91 @@ pub struct Ptsv2paymentsProcessingInformationJapanPaymentOptions {
     )]
     pub terminal_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformationJapanPaymentOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(path, out, "bonuses", &self.bonuses, false, (None, None));
+        v::string(
+            path,
+            out,
+            "businessName",
+            &self.business_name,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "businessNameAlphaNumeric",
+            &self.business_name_alpha_numeric,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "businessNameKatakana",
+            &self.business_name_katakana,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstBillingMonth",
+            &self.first_billing_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "jis2TrackData",
+            &self.jis2_track_data,
+            false,
+            None,
+            Some(69),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentMethod",
+            &self.payment_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "preapprovalType",
+            &self.preapproval_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "terminalId",
+            &self.terminal_id,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessingInformationLoanOptions {
@@ -13177,6 +21960,21 @@ pub struct Ptsv2paymentsProcessingInformationLoanOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsProcessingInformationLoanOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "assetType",
+            &self.asset_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(20), None);
+    }
 }
 /// Contains program-specific indicators for transaction processing.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -13196,6 +21994,9 @@ pub struct Ptsv2paymentsProcessingInformationProgramIndicators {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub quick_payment: Option<bool>,
+}
+impl v::Validate for Ptsv2paymentsProcessingInformationProgramIndicators {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13235,6 +22036,41 @@ pub struct Ptsv2paymentsProcessingInformationPurchaseOptions {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessingInformationPurchaseOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "benefitAmount",
+            &self.benefit_amount,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "benefitType",
+            &self.benefit_type,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "eligibilityIndicator",
+            &self.eligibility_indicator,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(20), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessingInformationRecurringOptions {
@@ -13252,6 +22088,9 @@ pub struct Ptsv2paymentsProcessingInformationRecurringOptions {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub loan_payment: Option<bool>,
+}
+impl v::Validate for Ptsv2paymentsProcessingInformationRecurringOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Processor Information
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -13309,6 +22148,79 @@ pub struct Ptsv2paymentsProcessorInformation {
     )]
     pub supplementary_transaction_data: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authApprovalToken",
+            &self.auth_approval_token,
+            false,
+            None,
+            Some(8192),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "authorizationOptions",
+            &self.authorization_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "cedpVerifiedIndicator",
+            &self.cedp_verified_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "feeProgramIndicator",
+            &self.fee_program_indicator,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::nested(path, out, "network", &self.network, false);
+        v::string(
+            path,
+            out,
+            "preApprovalToken",
+            &self.pre_approval_token,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "responseSourceCode",
+            &self.response_source_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(path, out, "reversal", &self.reversal, false);
+        v::string(
+            path,
+            out,
+            "supplementaryTransactionData",
+            &self.supplementary_transaction_data,
+            false,
+            None,
+            Some(10240),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessorInformationAuthorizationOptions {
@@ -13319,6 +22231,20 @@ pub struct Ptsv2paymentsProcessorInformationAuthorizationOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub pan_return_indicator: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsProcessorInformationAuthorizationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "panReturnIndicator",
+            &self.pan_return_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13333,6 +22259,21 @@ pub struct Ptsv2paymentsProcessorInformationReversal {
     )]
     pub pre_approval_token: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsProcessorInformationReversal {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "network", &self.network, false);
+        v::string(
+            path,
+            out,
+            "preApprovalToken",
+            &self.pre_approval_token,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsProcessorInformationReversalNetwork {
@@ -13343,6 +22284,20 @@ pub struct Ptsv2paymentsProcessorInformationReversalNetwork {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub economically_related_txn_id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsProcessorInformationReversalNetwork {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "economicallyRelatedTxnId",
+            &self.economically_related_txn_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13360,6 +22315,21 @@ pub struct Ptsv2paymentsPromotionInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsPromotionInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalCode",
+            &self.additional_code,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(12), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13499,6 +22469,200 @@ pub struct Ptsv2paymentsRecipientInformation {
     )]
     pub tax_id_number: Option<f64>,
 }
+impl v::Validate for Ptsv2paymentsRecipientInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountId",
+            &self.account_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "accountType",
+            &self.account_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "aliasName",
+            &self.alias_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "beneficiaryAddress",
+            &self.beneficiary_address,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "beneficiaryId",
+            &self.beneficiary_id,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "beneficiaryName",
+            &self.beneficiary_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryOfBirth",
+            &self.country_of_birth,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationality",
+            &self.nationality,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "occupation",
+            &self.occupation,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 /// This object is only needed when you are requesting both payment and DM services at same time.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13537,6 +22701,42 @@ pub struct Ptsv2paymentsRiskInformation {
     /// Store information for transactions
     #[serde(skip_serializing_if = "Option::is_none")]
     pub store: Option<Ptsv2paymentsRiskInformationStore>,
+}
+impl v::Validate for Ptsv2paymentsRiskInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authenticationType",
+            &self.authentication_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "auxiliaryData",
+            &self.auxiliary_data,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "buyerHistory", &self.buyer_history, false);
+        v::string(
+            path,
+            out,
+            "eventType",
+            &self.event_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "externalScore", &self.external_score, false);
+        v::nested(path, out, "profile", &self.profile, false);
+        v::nested(path, out, "store", &self.store, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13601,6 +22801,12 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistory {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub transaction_count_year: Option<i64>,
+}
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "accountHistory", &self.account_history, false);
+        v::nested(path, out, "customerAccount", &self.customer_account, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13682,6 +22888,52 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccount {
     )]
     pub total_orders_count: Option<f64>,
 }
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "createDate",
+            &self.create_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastChangeDate",
+            &self.last_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastEmailChangeDate",
+            &self.last_email_change_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passwordChangeDate",
+            &self.password_change_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::nested(path, out, "previousLogin", &self.previous_login, false);
+        v::nested(path, out, "previousOrder", &self.previous_order, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLogin {
@@ -13715,6 +22967,42 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLogin 
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLogin {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "date", &self.date, false, None, Some(8), None);
+        v::string(
+            path,
+            out,
+            "deviceId",
+            &self.device_id,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "deviceType",
+            &self.device_type,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "ipAddress", &self.ip_address, false);
+        v::string(
+            path,
+            out,
+            "type",
+            &self.r#type,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLoginIpAddress {
@@ -13732,6 +23020,30 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLoginI
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousLoginIpAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousOrder {
@@ -13741,6 +23053,11 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousOrder 
         deserialize_with = "crate::types::lenient::string"
     )]
     pub date: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistoryCustomerAccountPreviousOrder {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "date", &self.date, false, None, Some(8), None);
+    }
 }
 /// External or in-house rating system score information
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -13759,6 +23076,20 @@ pub struct Ptsv2paymentsRiskInformationExternalScore {
         deserialize_with = "crate::types::lenient::f64"
     )]
     pub value: Option<f64>,
+}
+impl v::Validate for Ptsv2paymentsRiskInformationExternalScore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "providerName",
+            &self.provider_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 /// Store information for transactions
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -13795,6 +23126,51 @@ pub struct Ptsv2paymentsRiskInformationStore {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsRiskInformationStore {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address",
+            &self.address,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -13883,6 +23259,121 @@ pub struct Ptsv2paymentsSenderInformation {
     )]
     pub tax_id_number: Option<f64>,
 }
+impl v::Validate for Ptsv2paymentsSenderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "aliasName",
+            &self.alias_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "countryCode",
+            &self.country_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceNumber",
+            &self.reference_number,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsSenderInformationAccount {
@@ -13913,6 +23404,31 @@ impl ::std::fmt::Debug for Ptsv2paymentsSenderInformationAccount {
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .field("type", &self.r#type)
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentsSenderInformationAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "fundsSource",
+            &self.funds_source,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(2), None);
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -13956,6 +23472,70 @@ pub struct Ptsv2paymentsShipTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -14028,6 +23608,28 @@ impl ::std::fmt::Debug for Ptsv2paymentsTokenInformation {
             .finish()
     }
 }
+impl v::Validate for Ptsv2paymentsTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+        v::nested(
+            path,
+            out,
+            "tokenAuthenticationInformation",
+            &self.token_authentication_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTokenInformationPaymentInstrument {
@@ -14038,6 +23640,9 @@ pub struct Ptsv2paymentsTokenInformationPaymentInstrument {
     )]
     pub default: Option<bool>,
 }
+impl v::Validate for Ptsv2paymentsTokenInformationPaymentInstrument {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTokenInformationShippingAddress {
@@ -14047,6 +23652,9 @@ pub struct Ptsv2paymentsTokenInformationShippingAddress {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub default: Option<bool>,
+}
+impl v::Validate for Ptsv2paymentsTokenInformationShippingAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Contains authentication information associated with the token, including details about authenticated identities.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -14060,6 +23668,18 @@ pub struct Ptsv2paymentsTokenInformationTokenAuthenticationInformation {
     pub authenticated_identities: Option<
         Vec<Ptsv2paymentsTokenInformationTokenAuthenticationInformationAuthenticatedIdentities>,
     >,
+}
+impl v::Validate for Ptsv2paymentsTokenInformationTokenAuthenticationInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "authenticatedIdentities",
+            &self.authenticated_identities,
+            false,
+            (None, None),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -14097,6 +23717,33 @@ pub struct Ptsv2paymentsTokenInformationTokenAuthenticationInformationAuthentica
     )]
     pub user_authentication_method: Option<String>,
 }
+impl v::Validate
+    for Ptsv2paymentsTokenInformationTokenAuthenticationInformationAuthenticatedIdentities
+{
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "data",
+            &self.data,
+            false,
+            None,
+            Some(22000),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "relyingPartyId",
+            &self.relying_party_id,
+            false,
+            None,
+            Some(2000),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformation {
@@ -14117,6 +23764,25 @@ pub struct Ptsv2paymentsTravelInformation {
     #[serde(rename = "vehicleData", skip_serializing_if = "Option::is_none")]
     pub vehicle_data: Option<Ptsv2paymentsTravelInformationVehicleData>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "agency", &self.agency, false);
+        v::nested(path, out, "autoRental", &self.auto_rental, false);
+        v::string(
+            path,
+            out,
+            "duration",
+            &self.duration,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(path, out, "lodging", &self.lodging, false);
+        v::nested(path, out, "transit", &self.transit, false);
+        v::nested(path, out, "vehicleData", &self.vehicle_data, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationAgency {
@@ -14132,6 +23798,12 @@ pub struct Ptsv2paymentsTravelInformationAgency {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationAgency {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(8), None);
+        v::string(path, out, "name", &self.name, false, None, Some(25), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -14430,6 +24102,403 @@ pub struct Ptsv2paymentsTravelInformationAutoRental {
     )]
     pub weekly_rental_rate: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationAutoRental {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "adjustedAmount",
+            &self.adjusted_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "adjustedAmountIndicator",
+            &self.adjusted_amount_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "affiliateName",
+            &self.affiliate_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "agreementNumber",
+            &self.agreement_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "companyId",
+            &self.company_id,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "companyName",
+            &self.company_name,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerName",
+            &self.customer_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerServicePhoneNumber",
+            &self.customer_service_phone_number,
+            false,
+            None,
+            Some(17),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dailyRentalRate",
+            &self.daily_rental_rate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "distanceTravelled",
+            &self.distance_travelled,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "distanceUnit",
+            &self.distance_unit,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "driverAge",
+            &self.driver_age,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extraCharge",
+            &self.extra_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extraMileageCharge",
+            &self.extra_mileage_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "fuelCharges",
+            &self.fuel_charges,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gpsCharge",
+            &self.gps_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lateFeeAmount",
+            &self.late_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "maxFreeDistance",
+            &self.max_free_distance,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "mileageCharge",
+            &self.mileage_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "numberOfAdditionalDrivers",
+            &self.number_of_additional_drivers,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "odometerReading",
+            &self.odometer_reading,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "oneWayDropOffAmount",
+            &self.one_way_drop_off_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "otherCharges",
+            &self.other_charges,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "parkingViolationCharge",
+            &self.parking_violation_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneCharge",
+            &self.phone_charge,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "programCode",
+            &self.program_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ratePerMile",
+            &self.rate_per_mile,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::nested(path, out, "rentalAddress", &self.rental_address, false);
+        v::string(
+            path,
+            out,
+            "rentalDateTime",
+            &self.rental_date_time,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+        v::nested(path, out, "returnAddress", &self.return_address, false);
+        v::string(
+            path,
+            out,
+            "returnDateTime",
+            &self.return_date_time,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "specialProgramCode",
+            &self.special_program_code,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(path, out, "taxDetails", &self.tax_details, false);
+        v::string(
+            path,
+            out,
+            "timePeriod",
+            &self.time_period,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "towingCharge",
+            &self.towing_charge,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vehicleClass",
+            &self.vehicle_class,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vehicleIdentificationNumber",
+            &self.vehicle_identification_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vehicleMake",
+            &self.vehicle_make,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vehicleModel",
+            &self.vehicle_model,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "weeklyRentalRate",
+            &self.weekly_rental_rate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationAutoRentalRentalAddress {
@@ -14484,6 +24553,72 @@ pub struct Ptsv2paymentsTravelInformationAutoRentalRentalAddress {
     )]
     pub state: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationAutoRentalRentalAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(path, out, "city", &self.city, false, None, Some(25), None);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "location",
+            &self.location,
+            false,
+            None,
+            Some(38),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locationId",
+            &self.location_id,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "state", &self.state, false, None, Some(3), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationAutoRentalReturnAddress {
@@ -14532,6 +24667,62 @@ pub struct Ptsv2paymentsTravelInformationAutoRentalReturnAddress {
     )]
     pub state: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationAutoRentalReturnAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "city", &self.city, false, None, Some(25), None);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "location",
+            &self.location,
+            false,
+            None,
+            Some(38),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locationId",
+            &self.location_id,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(path, out, "state", &self.state, false, None, Some(3), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationAutoRentalTaxDetails {
@@ -14575,6 +24766,51 @@ pub struct Ptsv2paymentsTravelInformationAutoRentalTaxDetails {
     )]
     pub tax_type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationAutoRentalTaxDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exemptionCode",
+            &self.exemption_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(path, out, "rate", &self.rate, false, None, Some(6), None);
+        v::string(
+            path,
+            out,
+            "taxSummary",
+            &self.tax_summary,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxType",
+            &self.tax_type,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationExtended {
@@ -14597,6 +24833,26 @@ pub struct Ptsv2paymentsTravelInformationExtended {
     #[serde(rename = "vehicleData", skip_serializing_if = "Option::is_none")]
     pub vehicle_data: Option<Ptsv2paymentsTravelInformationVehicleData>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationExtended {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "agency", &self.agency, false);
+        v::nested(path, out, "autoRental", &self.auto_rental, false);
+        v::string(
+            path,
+            out,
+            "duration",
+            &self.duration,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::list(path, out, "legs", &self.legs, false, (None, None));
+        v::nested(path, out, "lodging", &self.lodging, false);
+        v::nested(path, out, "transit", &self.transit, false);
+        v::nested(path, out, "vehicleData", &self.vehicle_data, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationLegs {
@@ -14613,6 +24869,21 @@ pub struct Ptsv2paymentsTravelInformationLegs {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationLegs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "flightNumber",
+            &self.flight_number,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(255), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -14935,6 +25206,420 @@ pub struct Ptsv2paymentsTravelInformationLodging {
     )]
     pub valet_parking_cost: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationLodging {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalDiscountAmount",
+            &self.additional_discount_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "adjustmentAmount",
+            &self.adjustment_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "audioVisualCost",
+            &self.audio_visual_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "banquestCost",
+            &self.banquest_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "businessCenterCost",
+            &self.business_center_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cashDisbursementCost",
+            &self.cash_disbursement_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkInDate",
+            &self.check_in_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkOutDate",
+            &self.check_out_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "conferenceRoomCost",
+            &self.conference_room_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "corporateClientCode",
+            &self.corporate_client_code,
+            false,
+            None,
+            Some(17),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerServicePhoneNumber",
+            &self.customer_service_phone_number,
+            false,
+            None,
+            Some(17),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "earlyCheckOutCost",
+            &self.early_check_out_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "foodAndBeverageCost",
+            &self.food_and_beverage_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "giftShopCost",
+            &self.gift_shop_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gratuityAmount",
+            &self.gratuity_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "guestName",
+            &self.guest_name,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "healthClubCost",
+            &self.health_club_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "internetAccessCost",
+            &self.internet_access_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "laundryCost",
+            &self.laundry_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "loungeBarCost",
+            &self.lounge_bar_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "miniBarCost",
+            &self.mini_bar_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "miscellaneousCost",
+            &self.miscellaneous_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "movieCost",
+            &self.movie_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "nonRoomCost",
+            &self.non_room_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nonRoomTaxAmount",
+            &self.non_room_tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "numberOfGuests",
+            &self.number_of_guests,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+        v::number(
+            path,
+            out,
+            "numberOfRooms",
+            &self.number_of_rooms,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+        v::string(
+            path,
+            out,
+            "phoneCost",
+            &self.phone_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "prepaidCost",
+            &self.prepaid_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "restaurantCost",
+            &self.restaurant_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::list(path, out, "room", &self.room, false, (None, None));
+        v::string(
+            path,
+            out,
+            "roomBedType",
+            &self.room_bed_type,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "roomLocation",
+            &self.room_location,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "roomRateType",
+            &self.room_rate_type,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "roomServiceCost",
+            &self.room_service_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "roomTaxAmount",
+            &self.room_tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "roomTaxType",
+            &self.room_tax_type,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "smokingPreference",
+            &self.smoking_preference,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "specialProgramCode",
+            &self.special_program_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalTaxAmount",
+            &self.total_tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transportationCost",
+            &self.transportation_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "valetParkingCost",
+            &self.valet_parking_cost,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationLodgingRoom {
@@ -14953,11 +25638,39 @@ pub struct Ptsv2paymentsTravelInformationLodgingRoom {
     )]
     pub number_of_nights: Option<i64>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationLodgingRoom {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dailyRate",
+            &self.daily_rate,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "numberOfNights",
+            &self.number_of_nights,
+            false,
+            Some(1i64),
+            Some(9999i64),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationTransit {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub airline: Option<Ptsv2paymentsTravelInformationTransitAirline>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationTransit {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "airline", &self.airline, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15267,6 +25980,379 @@ pub struct Ptsv2paymentsTravelInformationTransitAirline {
     )]
     pub transaction_type: Option<i64>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationTransitAirline {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalCharges",
+            &self.additional_charges,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "ancillaryInformation",
+            &self.ancillary_information,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "arrivalDate",
+            &self.arrival_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "boardingFeeAmount",
+            &self.boarding_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "bookingReferenceNumber",
+            &self.booking_reference_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "carrierName",
+            &self.carrier_name,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkDigit",
+            &self.check_digit,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "clearingCount",
+            &self.clearing_count,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "clearingSequence",
+            &self.clearing_sequence,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "creditReasonIndicator",
+            &self.credit_reason_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerCode",
+            &self.customer_code,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "documentNumber",
+            &self.document_number,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "documentType",
+            &self.document_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeTicketAmount",
+            &self.exchange_ticket_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeTicketFeeAmount",
+            &self.exchange_ticket_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extendedPaymentCode",
+            &self.extended_payment_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "flightType",
+            &self.flight_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequentFlyerNumber",
+            &self.frequent_flyer_number,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceNumber",
+            &self.invoice_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "isDomestic",
+            &self.is_domestic,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::list(path, out, "legs", &self.legs, false, (None, None));
+        v::string(
+            path,
+            out,
+            "originalTicketNumber",
+            &self.original_ticket_number,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerName",
+            &self.passenger_name,
+            false,
+            None,
+            Some(42),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerType",
+            &self.passenger_type,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "planNumber",
+            &self.plan_number,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "processIdentifier",
+            &self.process_identifier,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseType",
+            &self.purchase_type,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reservationSystemCode",
+            &self.reservation_system_code,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reservationType",
+            &self.reservation_type,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "restrictedTicketDesciption",
+            &self.restricted_ticket_desciption,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "thirdPartyStatus",
+            &self.third_party_status,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ticketChangeIndicator",
+            &self.ticket_change_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ticketIssueDate",
+            &self.ticket_issue_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::nested(path, out, "ticketIssuer", &self.ticket_issuer, false);
+        v::string(
+            path,
+            out,
+            "ticketNumber",
+            &self.ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalClearingAmount",
+            &self.total_clearing_amount,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalFeeAmount",
+            &self.total_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalInsuranceAmount",
+            &self.total_insurance_amount,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationTransitAirlineAncillaryInformation {
@@ -15300,6 +26386,51 @@ pub struct Ptsv2paymentsTravelInformationTransitAirlineAncillaryInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub ticket_number: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationTransitAirlineAncillaryInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "connectedTicketNumber",
+            &self.connected_ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "creditReasonIndicator",
+            &self.credit_reason_indicator,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerName",
+            &self.passenger_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::list(path, out, "service", &self.service, false, (None, None));
+        v::string(
+            path,
+            out,
+            "ticketNumber",
+            &self.ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15341,6 +26472,61 @@ pub struct Ptsv2paymentsTravelInformationTransitAirlineEnhancedAncillaryInformat
         deserialize_with = "crate::types::lenient::string"
     )]
     pub ticket_number: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationTransitAirlineEnhancedAncillaryInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "connectedTicketNumber",
+            &self.connected_ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "creditReasonIndicator",
+            &self.credit_reason_indicator,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "feeDescription",
+            &self.fee_description,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerName",
+            &self.passenger_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::list(path, out, "service", &self.service, false, (None, None));
+        v::string(
+            path,
+            out,
+            "ticketNumber",
+            &self.ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15485,6 +26671,161 @@ pub struct Ptsv2paymentsTravelInformationTransitAirlineLegs {
     )]
     pub total_fare_amount: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationTransitAirlineLegs {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "arrivalTimeMeridian",
+            &self.arrival_time_meridian,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "carrierCode",
+            &self.carrier_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(path, out, "class", &self.class, false, None, Some(3), None);
+        v::string(
+            path,
+            out,
+            "conjunctionTicket",
+            &self.conjunction_ticket,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "couponNumber",
+            &self.coupon_number,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "departTaxAmount",
+            &self.depart_tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "departureTimeMeridian",
+            &self.departure_time_meridian,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "destinationAirportCode",
+            &self.destination_airport_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "endorsementsRestrictions",
+            &self.endorsements_restrictions,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeTicketNumber",
+            &self.exchange_ticket_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "fareBasis",
+            &self.fare_basis,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "feeAmount",
+            &self.fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "flightNumber",
+            &self.flight_number,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originatingAirportCode",
+            &self.originating_airport_code,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalFareAmount",
+            &self.total_fare_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationTransitAirlineTicketIssuer {
@@ -15533,6 +26874,62 @@ pub struct Ptsv2paymentsTravelInformationTransitAirlineTicketIssuer {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsTravelInformationTransitAirlineTicketIssuer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address",
+            &self.address,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(18),
+            None,
+        );
+        v::string(path, out, "code", &self.code, false, None, Some(4), None);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(18),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(18),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(20), None);
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsTravelInformationVehicleData {
@@ -15550,6 +26947,30 @@ pub struct Ptsv2paymentsTravelInformationVehicleData {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub connector_type: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsTravelInformationVehicleData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "chargingReasonCode",
+            &self.charging_reason_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "connectorType",
+            &self.connector_type,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15591,6 +27012,22 @@ pub struct Ptsv2paymentsidClientReferenceInformation {
     )]
     pub transaction_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "transactionId",
+            &self.transaction_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidClientReferenceInformationPartner {
@@ -15616,6 +27053,40 @@ pub struct Ptsv2paymentsidClientReferenceInformationPartner {
     )]
     pub solution_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalTransactionId",
+            &self.original_transaction_id,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidMerchantInformation {
@@ -15627,11 +27098,30 @@ pub struct Ptsv2paymentsidMerchantInformation {
     )]
     pub transaction_local_date_time: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "transactionLocalDateTime",
+            &self.transaction_local_date_time,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Ptsv2paymentsidOrderInformationAmountDetails>,
+}
+impl v::Validate for Ptsv2paymentsidOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15650,6 +27140,30 @@ pub struct Ptsv2paymentsidOrderInformationAmountDetails {
     )]
     pub currency: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalAmount",
+            &self.additional_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidProcessingInformation {
@@ -15661,11 +27175,19 @@ pub struct Ptsv2paymentsidProcessingInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub network: Option<Ptsv2paymentsProcessorInformationReversalNetwork>,
 }
+impl v::Validate for Ptsv2paymentsidProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "network", &self.network, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidProcessingInformationAuthorizationOptions {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub initiator: Option<Ptsv2paymentsidProcessingInformationAuthorizationOptionsInitiator>,
+}
+impl v::Validate for Ptsv2paymentsidProcessingInformationAuthorizationOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15678,6 +27200,9 @@ pub struct Ptsv2paymentsidProcessingInformationAuthorizationOptionsInitiator {
     )]
     pub stored_credential_used: Option<bool>,
 }
+impl v::Validate for Ptsv2paymentsidProcessingInformationAuthorizationOptionsInitiator {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidTravelInformation {
@@ -15687,6 +27212,20 @@ pub struct Ptsv2paymentsidTravelInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub duration: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "duration",
+            &self.duration,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15706,6 +27245,22 @@ pub struct Ptsv2paymentsidcapturesAggregatorInformation {
     pub name: Option<String>,
     #[serde(rename = "subMerchant", skip_serializing_if = "Option::is_none")]
     pub sub_merchant: Option<Ptsv2paymentsidcapturesAggregatorInformationSubMerchant>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesAggregatorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "aggregatorId",
+            &self.aggregator_id,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(37), None);
+        v::nested(path, out, "subMerchant", &self.sub_merchant, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15774,6 +27329,73 @@ pub struct Ptsv2paymentsidcapturesAggregatorInformationSubMerchant {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesAggregatorInformationSubMerchant {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(38),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "email", &self.email, false, None, Some(40), None);
+        v::string(path, out, "id", &self.id, false, None, Some(20), None);
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(37), None);
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesBuyerInformation {
@@ -15817,6 +27439,68 @@ pub struct Ptsv2paymentsidcapturesBuyerInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "dateOfBirth",
+            &self.date_of_birth,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gender",
+            &self.gender,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "language",
+            &self.language,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantCustomerId",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesBuyerInformationPersonalIdentification {
@@ -15826,6 +27510,11 @@ pub struct Ptsv2paymentsidcapturesBuyerInformationPersonalIdentification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesBuyerInformationPersonalIdentification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(26), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -15851,6 +27540,40 @@ pub struct Ptsv2paymentsidcapturesDeviceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub user_agent: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "hostName",
+            &self.host_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "userAgent",
+            &self.user_agent,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16024,6 +27747,240 @@ pub struct Ptsv2paymentsidcapturesInstallmentInformation {
     )]
     pub total_count: Option<i64>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesInstallmentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalCosts",
+            &self.additional_costs,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "additionalCostsPercentage",
+            &self.additional_costs_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "amountFunded",
+            &self.amount_funded,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "amountRequestedPercentage",
+            &self.amount_requested_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "annualFinancingCost",
+            &self.annual_financing_cost,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "annualInterestRate",
+            &self.annual_interest_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expenses",
+            &self.expenses,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expensesPercentage",
+            &self.expenses_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(path, out, "fees", &self.fees, false, None, Some(12), None);
+        v::string(
+            path,
+            out,
+            "feesPercentage",
+            &self.fees_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstInstallmentAmount",
+            &self.first_installment_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstInstallmentDate",
+            &self.first_installment_date,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequency",
+            &self.frequency,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insurance",
+            &self.insurance,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insurancePercentage",
+            &self.insurance_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceData",
+            &self.invoice_data,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "monthlyInterestRate",
+            &self.monthly_interest_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentType",
+            &self.payment_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "planType",
+            &self.plan_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "sequence",
+            &self.sequence,
+            false,
+            None,
+            Some(999999999999i64),
+        );
+        v::string(path, out, "taxes", &self.taxes, false, None, Some(12), None);
+        v::string(
+            path,
+            out,
+            "taxesPercentage",
+            &self.taxes_percentage,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "totalCount",
+            &self.total_count,
+            false,
+            None,
+            Some(999i64),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesMerchantInformation {
@@ -16063,6 +28020,63 @@ pub struct Ptsv2paymentsidcapturesMerchantInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cardAcceptorReferenceNumber",
+            &self.card_acceptor_reference_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(9999i64),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "serviceFeeDescriptor",
+            &self.service_fee_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "taxId",
+            &self.tax_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesOrderInformation {
@@ -16079,6 +28093,23 @@ pub struct Ptsv2paymentsidcapturesOrderInformation {
     /// Contains shipping details information for Klarna Advantage Plus Capture transactions.
     #[serde(rename = "shippingDetails", skip_serializing_if = "Option::is_none")]
     pub shipping_details: Option<Ptsv2paymentsidcapturesOrderInformationShippingDetails>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "invoiceDetails", &self.invoice_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16217,6 +28248,206 @@ pub struct Ptsv2paymentsidcapturesOrderInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "amexAdditionalAmounts",
+            &self.amex_additional_amounts,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "cashbackAmount",
+            &self.cashback_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "dutyAmount",
+            &self.duty_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRate",
+            &self.exchange_rate,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeRateTimeStamp",
+            &self.exchange_rate_time_stamp,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "foreignAmount",
+            &self.foreign_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "foreignCurrency",
+            &self.foreign_currency,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "freightAmount",
+            &self.freight_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "gratuityAmount",
+            &self.gratuity_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationalTaxIncluded",
+            &self.national_tax_included,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalCurrency",
+            &self.original_currency,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "serviceFeeAmount",
+            &self.service_fee_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedAfterDiscount",
+            &self.tax_applied_after_discount,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedLevel",
+            &self.tax_applied_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "taxDetails",
+            &self.tax_details,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "taxTypeCode",
+            &self.tax_type_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesOrderInformationBillTo {
@@ -16313,6 +28544,142 @@ pub struct Ptsv2paymentsidcapturesOrderInformationBillTo {
     )]
     pub title: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformationBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::nested(path, out, "company", &self.company, false);
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "district",
+            &self.district,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "middleName",
+            &self.middle_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(path, out, "title", &self.title, false, None, Some(60), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesOrderInformationInvoiceDetails {
@@ -16364,6 +28731,68 @@ pub struct Ptsv2paymentsidcapturesOrderInformationInvoiceDetails {
     )]
     pub vat_invoice_reference_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformationInvoiceDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseContactName",
+            &self.purchase_contact_name,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseOrderDate",
+            &self.purchase_order_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseOrderNumber",
+            &self.purchase_order_number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "transactionAdviceAddendum",
+            &self.transaction_advice_addendum,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "vatInvoiceReferenceNumber",
+            &self.vat_invoice_reference_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesOrderInformationShipTo {
@@ -16399,6 +28828,60 @@ pub struct Ptsv2paymentsidcapturesOrderInformationShipTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformationShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "county",
+            &self.county,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
 }
 /// Contains shipping details information for Klarna Advantage Plus Capture transactions.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -16447,6 +28930,70 @@ pub struct Ptsv2paymentsidcapturesOrderInformationShippingDetails {
     )]
     pub tracking_url: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "estimatedDeliveryDate",
+            &self.estimated_delivery_date,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P43),
+        );
+        v::string(
+            path,
+            out,
+            "shipFromPostalCode",
+            &self.ship_from_postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingCarrier",
+            &self.shipping_carrier,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "shippingMethod",
+            &self.shipping_method,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "trackingNumber",
+            &self.tracking_number,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "trackingUrl",
+            &self.tracking_url,
+            false,
+            None,
+            Some(1024),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesPaymentInformation {
@@ -16456,6 +29003,12 @@ pub struct Ptsv2paymentsidcapturesPaymentInformation {
     pub customer: Option<Ptsv2paymentsPaymentInformationCustomer>,
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2paymentsidcapturesPaymentInformationPaymentType>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16475,11 +29028,38 @@ pub struct Ptsv2paymentsidcapturesPaymentInformationCard {
     )]
     pub source_account_type_details: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "sourceAccountType",
+            &self.source_account_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sourceAccountTypeDetails",
+            &self.source_account_type_details,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesPaymentInformationPaymentType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub method: Option<Ptsv2paymentsidcapturesPaymentInformationPaymentTypeMethod>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16490,6 +29070,9 @@ pub struct Ptsv2paymentsidcapturesPaymentInformationPaymentTypeMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16579,6 +29162,107 @@ pub struct Ptsv2paymentsidcapturesProcessingInformation {
     )]
     pub visa_checkout_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "authorizationOptions",
+            &self.authorization_options,
+            false,
+        );
+        v::nested(path, out, "captureOptions", &self.capture_options, false);
+        v::string(
+            path,
+            out,
+            "digitalServiceIndicator",
+            &self.digital_service_indicator,
+            false,
+            None,
+            Some(104),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "industryDataType",
+            &self.industry_data_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "japanPaymentOptions",
+            &self.japan_payment_options,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "linkId",
+            &self.link_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::nested(path, out, "loanOptions", &self.loan_options, false);
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseLevel",
+            &self.purchase_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reportGroup",
+            &self.report_group,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesProcessingInformationAuthorizationOptions {
@@ -16603,6 +29287,40 @@ pub struct Ptsv2paymentsidcapturesProcessingInformationAuthorizationOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub verbal_auth_transaction_id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesProcessingInformationAuthorizationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "authType",
+            &self.auth_type,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "verbalAuthCode",
+            &self.verbal_auth_code,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "verbalAuthTransactionId",
+            &self.verbal_auth_transaction_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16641,6 +29359,58 @@ pub struct Ptsv2paymentsidcapturesProcessingInformationCaptureOptions {
         deserialize_with = "crate::types::lenient::i64"
     )]
     pub total_capture_count: Option<i64>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesProcessingInformationCaptureOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::number(
+            path,
+            out,
+            "captureSequenceNumber",
+            &self.capture_sequence_number,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+        v::string(
+            path,
+            out,
+            "isFinal",
+            &self.is_final,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "notes",
+            &self.notes,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationIdAlternate",
+            &self.reconciliation_id_alternate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "totalCaptureCount",
+            &self.total_capture_count,
+            false,
+            Some(1i64),
+            Some(99i64),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16700,6 +29470,80 @@ pub struct Ptsv2paymentsidcapturesProcessingInformationJapanPaymentOptions {
     )]
     pub second_bonus_month: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidcapturesProcessingInformationJapanPaymentOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "bonusAmount",
+            &self.bonus_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "bonusMonth",
+            &self.bonus_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "bonuses",
+            &self.bonuses,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstBillingMonth",
+            &self.first_billing_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentMethod",
+            &self.payment_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secondBonusAmount",
+            &self.second_bonus_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "secondBonusMonth",
+            &self.second_bonus_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidcapturesProcessorInformation {
@@ -16726,6 +29570,41 @@ pub struct Ptsv2paymentsidcapturesProcessorInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub supplementary_transaction_data: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidcapturesProcessorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cedpVerifiedIndicator",
+            &self.cedp_verified_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::nested(path, out, "network", &self.network, false);
+        v::string(
+            path,
+            out,
+            "responseSourceCode",
+            &self.response_source_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "supplementaryTransactionData",
+            &self.supplementary_transaction_data,
+            false,
+            None,
+            Some(10240),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16794,6 +29673,42 @@ pub struct Ptsv2paymentsidrefundsClientReferenceInformation {
     )]
     pub transaction_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "pausedRequestId",
+            &self.paused_request_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionId",
+            &self.transaction_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsMerchantInformation {
@@ -16828,6 +29743,56 @@ pub struct Ptsv2paymentsidrefundsMerchantInformation {
     )]
     pub vat_registration_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "cardAcceptorReferenceNumber",
+            &self.card_acceptor_reference_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "categoryCode",
+            &self.category_code,
+            false,
+            None,
+            Some(9999i64),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "taxId",
+            &self.tax_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "vatRegistrationNumber",
+            &self.vat_registration_number,
+            false,
+            None,
+            Some(21),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsOrderInformation {
@@ -16846,6 +29811,24 @@ pub struct Ptsv2paymentsidrefundsOrderInformation {
     pub ship_to: Option<Ptsv2paymentsidcapturesOrderInformationShipTo>,
     #[serde(rename = "shippingDetails", skip_serializing_if = "Option::is_none")]
     pub shipping_details: Option<Ptsv2paymentsidrefundsOrderInformationShippingDetails>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "digitalCurrency", &self.digital_currency, false);
+        v::nested(path, out, "invoiceDetails", &self.invoice_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+        v::nested(path, out, "shippingDetails", &self.shipping_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -16985,6 +29968,187 @@ pub struct Ptsv2paymentsidrefundsOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "commodityCode",
+            &self.commodity_code,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountAmount",
+            &self.discount_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "discountRate",
+            &self.discount_rate,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceNumber",
+            &self.invoice_number,
+            false,
+            None,
+            Some(23),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productCode",
+            &self.product_code,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productName",
+            &self.product_name,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "productSku",
+            &self.product_sku,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "taxAmount",
+            &self.tax_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxAppliedAfterDiscount",
+            &self.tax_applied_after_discount,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "taxDetails",
+            &self.tax_details,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "taxRate",
+            &self.tax_rate,
+            false,
+            None,
+            Some(7),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxStatusIndicator",
+            &self.tax_status_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "taxTypeCode",
+            &self.tax_type_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "typeOfSupply",
+            &self.type_of_supply,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitOfMeasure",
+            &self.unit_of_measure,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsOrderInformationShippingDetails {
@@ -16995,6 +30159,20 @@ pub struct Ptsv2paymentsidrefundsOrderInformationShippingDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub ship_from_postal_code: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsOrderInformationShippingDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shipFromPostalCode",
+            &self.ship_from_postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17039,6 +30217,50 @@ pub struct Ptsv2paymentsidrefundsPaymentInformation {
     #[serde(rename = "tokenizedCard", skip_serializing_if = "Option::is_none")]
     pub tokenized_card: Option<Ptsv2paymentsPaymentInformationTokenizedCard>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "bank", &self.bank, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(path, out, "eWallet", &self.e_wallet, false);
+        v::nested(path, out, "fluidData", &self.fluid_data, false);
+        v::string(
+            path,
+            out,
+            "initiationChannel",
+            &self.initiation_channel,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(path, out, "legacyToken", &self.legacy_token, false);
+        v::nested(
+            path,
+            out,
+            "paymentAccountReference",
+            &self.payment_account_reference,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+        v::nested(path, out, "shippingAddress", &self.shipping_address, false);
+        v::nested(path, out, "thirdPartyToken", &self.third_party_token, false);
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsPaymentInformationBank {
@@ -17076,6 +30298,22 @@ impl ::std::fmt::Debug for Ptsv2paymentsidrefundsPaymentInformationBank {
             )
             .field("swift_code", &self.swift_code)
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::string(path, out, "iban", &self.iban, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "routingNumber",
+            &self.routing_number,
+            false,
+            None,
+            Some(9),
+            None,
+        );
     }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -17127,6 +30365,51 @@ impl ::std::fmt::Debug for Ptsv2paymentsidrefundsPaymentInformationBankAccount {
             .field("number", &self.number.as_ref().map(|_| "[REDACTED]"))
             .field("type", &self.r#type)
             .finish()
+    }
+}
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformationBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "checkImageReferenceNumber",
+            &self.check_image_reference_number,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkNumber",
+            &self.check_number,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encoderId",
+            &self.encoder_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
     }
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -17239,6 +30522,120 @@ impl ::std::fmt::Debug for Ptsv2paymentsidrefundsPaymentInformationCard {
             .finish()
     }
 }
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountEncoderId",
+            &self.account_encoder_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "issueNumber",
+            &self.issue_number,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sourceAccountType",
+            &self.source_account_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "sourceAccountTypeDetails",
+            &self.source_account_type_details,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startMonth",
+            &self.start_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startYear",
+            &self.start_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "useAs",
+            &self.use_as,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsPaymentInformationEWallet {
@@ -17249,6 +30646,20 @@ pub struct Ptsv2paymentsidrefundsPaymentInformationEWallet {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub funding_source: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformationEWallet {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "fundingSource",
+            &self.funding_source,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17269,6 +30680,9 @@ pub struct Ptsv2paymentsidrefundsPaymentInformationPaymentType {
     )]
     pub sub_type_name: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsPointOfSaleInformation {
@@ -17281,6 +30695,21 @@ pub struct Ptsv2paymentsidrefundsPointOfSaleInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub terminal_category: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsPointOfSaleInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "emv", &self.emv, false);
+        v::string(
+            path,
+            out,
+            "terminalCategory",
+            &self.terminal_category,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17297,6 +30726,11 @@ pub struct Ptsv2paymentsidrefundsPointOfSaleInformationEmv {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub tags: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsPointOfSaleInformationEmv {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "tags", &self.tags, false, None, Some(1998), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17379,6 +30813,101 @@ pub struct Ptsv2paymentsidrefundsProcessingInformation {
     )]
     pub visa_checkout_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "industryDataType",
+            &self.industry_data_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "linkId",
+            &self.link_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantVerificationValue",
+            &self.merchant_verification_value,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseLevel",
+            &self.purchase_level,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::nested(path, out, "refundOptions", &self.refund_options, false);
+        v::string(
+            path,
+            out,
+            "reportGroup",
+            &self.report_group,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionTypeIndicator",
+            &self.transaction_type_indicator,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsProcessingInformationRecurringOptions {
@@ -17389,6 +30918,9 @@ pub struct Ptsv2paymentsidrefundsProcessingInformationRecurringOptions {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub loan_payment: Option<bool>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsProcessingInformationRecurringOptions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17406,6 +30938,20 @@ pub struct Ptsv2paymentsidrefundsProcessingInformationRefundOptions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub reconciliation_id_alternate: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsProcessingInformationRefundOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "reconciliationIdAlternate",
+            &self.reconciliation_id_alternate,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17427,11 +30973,35 @@ pub struct Ptsv2paymentsidrefundsTravelInformation {
     #[serde(rename = "vehicleData", skip_serializing_if = "Option::is_none")]
     pub vehicle_data: Option<Ptsv2paymentsTravelInformationVehicleData>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsTravelInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "agency", &self.agency, false);
+        v::nested(path, out, "autoRental", &self.auto_rental, false);
+        v::string(
+            path,
+            out,
+            "duration",
+            &self.duration,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::nested(path, out, "lodging", &self.lodging, false);
+        v::nested(path, out, "transit", &self.transit, false);
+        v::nested(path, out, "vehicleData", &self.vehicle_data, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidrefundsTravelInformationTransit {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub airline: Option<Ptsv2paymentsidrefundsTravelInformationTransitAirline>,
+}
+impl v::Validate for Ptsv2paymentsidrefundsTravelInformationTransit {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "airline", &self.airline, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17741,6 +31311,379 @@ pub struct Ptsv2paymentsidrefundsTravelInformationTransitAirline {
     )]
     pub transaction_type: Option<i64>,
 }
+impl v::Validate for Ptsv2paymentsidrefundsTravelInformationTransitAirline {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "additionalCharges",
+            &self.additional_charges,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "ancillaryInformation",
+            &self.ancillary_information,
+            false,
+        );
+        v::string(
+            path,
+            out,
+            "arrivalDate",
+            &self.arrival_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "boardingFeeAmount",
+            &self.boarding_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "bookingReferenceNumber",
+            &self.booking_reference_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "carrierName",
+            &self.carrier_name,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkDigit",
+            &self.check_digit,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "clearingCount",
+            &self.clearing_count,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "clearingSequence",
+            &self.clearing_sequence,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "creditReasonIndicator",
+            &self.credit_reason_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "customerCode",
+            &self.customer_code,
+            false,
+            None,
+            Some(40),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "documentNumber",
+            &self.document_number,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "documentType",
+            &self.document_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeTicketAmount",
+            &self.exchange_ticket_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "exchangeTicketFeeAmount",
+            &self.exchange_ticket_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "extendedPaymentCode",
+            &self.extended_payment_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "flightType",
+            &self.flight_type,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "frequentFlyerNumber",
+            &self.frequent_flyer_number,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "insuranceAmount",
+            &self.insurance_amount,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "invoiceNumber",
+            &self.invoice_number,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "isDomestic",
+            &self.is_domestic,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::list(path, out, "legs", &self.legs, false, (None, None));
+        v::string(
+            path,
+            out,
+            "originalTicketNumber",
+            &self.original_ticket_number,
+            false,
+            None,
+            Some(14),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerName",
+            &self.passenger_name,
+            false,
+            None,
+            Some(42),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "passengerType",
+            &self.passenger_type,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "planNumber",
+            &self.plan_number,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "processIdentifier",
+            &self.process_identifier,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "purchaseType",
+            &self.purchase_type,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reservationSystemCode",
+            &self.reservation_system_code,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reservationType",
+            &self.reservation_type,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "restrictedTicketDesciption",
+            &self.restricted_ticket_desciption,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "thirdPartyStatus",
+            &self.third_party_status,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ticketChangeIndicator",
+            &self.ticket_change_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "ticketIssueDate",
+            &self.ticket_issue_date,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::nested(path, out, "ticketIssuer", &self.ticket_issuer, false);
+        v::string(
+            path,
+            out,
+            "ticketNumber",
+            &self.ticket_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalClearingAmount",
+            &self.total_clearing_amount,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalFeeAmount",
+            &self.total_fee_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalInsuranceAmount",
+            &self.total_insurance_amount,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsClientReferenceInformation {
@@ -17801,6 +31744,42 @@ pub struct Ptsv2paymentsidreversalsClientReferenceInformation {
     )]
     pub transaction_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::nested(path, out, "partner", &self.partner, false);
+        v::string(
+            path,
+            out,
+            "pausedRequestId",
+            &self.paused_request_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionId",
+            &self.transaction_id,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsClientReferenceInformationPartner {
@@ -17826,6 +31805,40 @@ pub struct Ptsv2paymentsidreversalsClientReferenceInformationPartner {
     )]
     pub third_party_certification_number: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "thirdPartyCertificationNumber",
+            &self.third_party_certification_number,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsDeviceInformation {
@@ -17837,6 +31850,20 @@ pub struct Ptsv2paymentsidreversalsDeviceInformation {
     )]
     pub device_type: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "deviceType",
+            &self.device_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsOrderInformation {
@@ -17844,6 +31871,19 @@ pub struct Ptsv2paymentsidreversalsOrderInformation {
     pub amount_details: Option<Ptsv2paymentsidreversalsOrderInformationAmountDetails>,
     #[serde(rename = "lineItems", skip_serializing_if = "Option::is_none")]
     pub line_items: Option<Vec<Ptsv2paymentsidreversalsOrderInformationLineItems>>,
+}
+impl v::Validate for Ptsv2paymentsidreversalsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+        v::list(
+            path,
+            out,
+            "lineItems",
+            &self.line_items,
+            false,
+            (None, None),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17855,6 +31895,20 @@ pub struct Ptsv2paymentsidreversalsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub service_fee_amount: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidreversalsOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "serviceFeeAmount",
+            &self.service_fee_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17873,6 +31927,29 @@ pub struct Ptsv2paymentsidreversalsOrderInformationLineItems {
     )]
     pub unit_price: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsOrderInformationLineItems {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::number(
+            path,
+            out,
+            "quantity",
+            &self.quantity,
+            false,
+            Some(1i64),
+            Some(999999999i64),
+        );
+        v::string(
+            path,
+            out,
+            "unitPrice",
+            &self.unit_price,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsPaymentInformation {
@@ -17886,11 +31963,28 @@ pub struct Ptsv2paymentsidreversalsPaymentInformation {
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2paymentsidreversalsPaymentInformationPaymentType>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "merchantLimitedAcceptanceIndicator",
+            &self.merchant_limited_acceptance_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsPaymentInformationPaymentType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub method: Option<Ptsv2paymentsidreversalsPaymentInformationPaymentTypeMethod>,
+}
+impl v::Validate for Ptsv2paymentsidreversalsPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17901,6 +31995,9 @@ pub struct Ptsv2paymentsidreversalsPaymentInformationPaymentTypeMethod {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidreversalsPaymentInformationPaymentTypeMethod {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17953,6 +32050,71 @@ pub struct Ptsv2paymentsidreversalsProcessingInformation {
     )]
     pub visa_checkout_id: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::string(
+            path,
+            out,
+            "linkId",
+            &self.link_id,
+            false,
+            None,
+            Some(26),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "paymentSolution",
+            &self.payment_solution,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "reportGroup",
+            &self.report_group,
+            false,
+            None,
+            Some(25),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionTypeIndicator",
+            &self.transaction_type_indicator,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "visaCheckoutId",
+            &self.visa_checkout_id,
+            false,
+            None,
+            Some(48),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidreversalsReversalInformation {
@@ -17965,6 +32127,11 @@ pub struct Ptsv2paymentsidreversalsReversalInformation {
     )]
     pub reason: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidreversalsReversalInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidvoidsAgreementInformation {
@@ -17975,6 +32142,20 @@ pub struct Ptsv2paymentsidvoidsAgreementInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub agreement_id: Option<String>,
+}
+impl v::Validate for Ptsv2paymentsidvoidsAgreementInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "agreementId",
+            &self.agreement_id,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17987,11 +32168,30 @@ pub struct Ptsv2paymentsidvoidsMerchantInformation {
     )]
     pub transaction_local_date_time: Option<String>,
 }
+impl v::Validate for Ptsv2paymentsidvoidsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "transactionLocalDateTime",
+            &self.transaction_local_date_time,
+            false,
+            None,
+            Some(16),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidvoidsOrderInformation {
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Ptsv2paymentsidreversalsReversalInformationAmountDetails>,
+}
+impl v::Validate for Ptsv2paymentsidvoidsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "amountDetails", &self.amount_details, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -17999,12 +32199,18 @@ pub struct Ptsv2paymentsidvoidsPaymentInformation {
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2paymentsidrefundsPaymentInformationPaymentType>,
 }
+impl v::Validate for Ptsv2paymentsidvoidsPaymentInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsidvoidsProcessingInformation {
     /// Array of actions (one or more) to be included in the void to invoke bundled services along with void. Possible values: - \`AP\_CANCEL\`: Use this when Alternative Payment Void service is requested.
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
+}
+impl v::Validate for Ptsv2paymentsidvoidsProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18017,12 +32223,26 @@ pub struct Ptsv2paymenttokensPaymentInformation {
     )]
     pub tokenized_payment_method: Option<Ptsv2paymentsPaymentInformationTokenizedPaymentMethod>,
 }
+impl v::Validate for Ptsv2paymenttokensPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "tokenizedPaymentMethod",
+            &self.tokenized_payment_method,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymenttokensProcessingInformation {
     /// Array of actions (one or more) to be included in the payment to invoke bundled services. Possible values are one or more of follows:
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
+}
+impl v::Validate for Ptsv2paymenttokensProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18034,6 +32254,9 @@ pub struct Ptsv2refreshpaymentstatusidAgreementInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub agreement_id: Option<String>,
+}
+impl v::Validate for Ptsv2refreshpaymentstatusidAgreementInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18052,6 +32275,21 @@ pub struct Ptsv2refreshpaymentstatusidClientReferenceInformation {
     )]
     pub reconciliation_id: Option<String>,
 }
+impl v::Validate for Ptsv2refreshpaymentstatusidClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+        v::string(
+            path,
+            out,
+            "reconciliationId",
+            &self.reconciliation_id,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2refreshpaymentstatusidPaymentInformation {
@@ -18059,6 +32297,9 @@ pub struct Ptsv2refreshpaymentstatusidPaymentInformation {
     pub customer: Option<Ptsv2refreshpaymentstatusidPaymentInformationCustomer>,
     #[serde(rename = "paymentType", skip_serializing_if = "Option::is_none")]
     pub payment_type: Option<Ptsv2refreshpaymentstatusidPaymentInformationPaymentType>,
+}
+impl v::Validate for Ptsv2refreshpaymentstatusidPaymentInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18072,6 +32313,9 @@ pub struct Ptsv2refreshpaymentstatusidPaymentInformationPaymentType {
     )]
     pub name: Option<String>,
 }
+impl v::Validate for Ptsv2refreshpaymentstatusidPaymentInformationPaymentType {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2refreshpaymentstatusidProcessingInformation {
@@ -18079,11 +32323,19 @@ pub struct Ptsv2refreshpaymentstatusidProcessingInformation {
     #[serde(rename = "actionList", skip_serializing_if = "Option::is_none")]
     pub action_list: Option<Vec<String>>,
 }
+impl v::Validate for Ptsv2refreshpaymentstatusidProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2reversalsProcessorInformation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub network: Option<Ptsv2paymentsProcessorInformationReversalNetwork>,
+}
+impl v::Validate for Ptsv2reversalsProcessorInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "network", &self.network, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18095,6 +32347,20 @@ pub struct Ptsv2voidsProcessingInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub payment_id: Option<String>,
+}
+impl v::Validate for Ptsv2voidsProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentId",
+            &self.payment_id,
+            false,
+            None,
+            Some(28),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18116,6 +32382,17 @@ pub struct RefreshPaymentStatusRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2refreshpaymentstatusidProcessingInformation>,
+}
+impl v::Validate for RefreshPaymentStatusRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "refreshPaymentStatusResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -18552,6 +32829,102 @@ pub struct RefundCaptureRequest {
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2paymentsidrefundsTravelInformation>,
 }
+impl v::Validate for RefundCaptureRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "promotionInformation",
+            &self.promotion_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct RefundPaymentRequest {
@@ -18606,6 +32979,102 @@ pub struct RefundPaymentRequest {
     pub promotion_information: Option<Ptsv2paymentsPromotionInformation>,
     #[serde(rename = "travelInformation", skip_serializing_if = "Option::is_none")]
     pub travel_information: Option<Ptsv2paymentsidrefundsTravelInformation>,
+}
+impl v::Validate for RefundPaymentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "aggregatorInformation",
+            &self.aggregator_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentInformation",
+            &self.payment_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processorInformation",
+            &self.processor_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "promotionInformation",
+            &self.promotion_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "travelInformation",
+            &self.travel_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "retrieveOrDeletePaymentTokenResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -18753,6 +33222,31 @@ pub struct UpdateOrderRequest {
     )]
     pub processing_information: Option<Ptsv2intentsidProcessingInformation>,
 }
+impl v::Validate for UpdateOrderRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+    }
+}
 #[doc(alias = "updateSessionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18836,6 +33330,45 @@ pub struct VoidCaptureRequest {
     )]
     pub processing_information: Option<Ptsv2paymentsidvoidsProcessingInformation>,
 }
+impl v::Validate for VoidCaptureRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct VoidCreditRequest {
@@ -18868,6 +33401,45 @@ pub struct VoidCreditRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2paymentsidvoidsProcessingInformation>,
+}
+impl v::Validate for VoidCreditRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -18902,6 +33474,45 @@ pub struct VoidPaymentRequest {
     )]
     pub processing_information: Option<Ptsv2paymentsidvoidsProcessingInformation>,
 }
+impl v::Validate for VoidPaymentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct VoidRefundRequest {
@@ -18934,4 +33545,43 @@ pub struct VoidRefundRequest {
         skip_serializing_if = "Option::is_none"
     )]
     pub processing_information: Option<Ptsv2paymentsidvoidsProcessingInformation>,
+}
+impl v::Validate for VoidRefundRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "agreementInformation",
+            &self.agreement_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+    }
 }

@@ -32,6 +32,22 @@ pub struct Config {
     /// Operation id -> how to read a page of its response.
     #[serde(default)]
     pub pagination: BTreeMap<String, PageSpec>,
+    /// Spec pattern -> how to check it, for patterns the `regex` crate
+    /// cannot compile as written.
+    #[serde(default)]
+    pub patterns: BTreeMap<String, PatternOverride>,
+}
+
+/// A regex and/or reject list, or `skip` alone.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PatternOverride {
+    /// A regex to use instead.
+    pub regex: Option<String>,
+    /// Regexes the value must not match (for negative lookaheads).
+    pub reject: Option<Vec<String>>,
+    /// Why the pattern is not checked.
+    pub skip: Option<String>,
 }
 
 /// Response fields (JSON names) that describe one page of a list.

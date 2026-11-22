@@ -60,6 +60,9 @@ impl Operation for CreateReport {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, _body: &Bytes) -> Result<Self::Output> {
         Ok(())
     }
@@ -113,6 +116,9 @@ impl Operation for CreateReportSubscription {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, _body: &Bytes) -> Result<Self::Output> {
         Ok(())
     }
@@ -165,6 +171,9 @@ impl Operation for CreateStandardOrClassicSubscription {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, _body: &Bytes) -> Result<Self::Output> {
         Ok(())

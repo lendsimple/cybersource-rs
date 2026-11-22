@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[cfg(any(feature = "recurring-billing", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -80,6 +82,121 @@ pub struct DefaultPaymentInstrumentBillTo {
     pub postal_code: Option<String>,
 }
 #[cfg(any(feature = "recurring-billing", feature = "tms"))]
+impl v::Validate for DefaultPaymentInstrumentBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
+#[cfg(any(feature = "recurring-billing", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentBuyerInformationIssuedBy {
@@ -90,6 +207,21 @@ pub struct DefaultPaymentInstrumentBuyerInformationIssuedBy {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub administrative_area: Option<String>,
+}
+#[cfg(any(feature = "recurring-billing", feature = "tms"))]
+impl v::Validate for DefaultPaymentInstrumentBuyerInformationIssuedBy {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+    }
 }
 #[cfg(any(feature = "recurring-billing", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -109,6 +241,13 @@ pub struct DefaultPaymentInstrumentBuyerInformationPersonalIdentification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+#[cfg(any(feature = "recurring-billing", feature = "tms"))]
+impl v::Validate for DefaultPaymentInstrumentBuyerInformationPersonalIdentification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(26), None);
+        v::nested(path, out, "issuedBy", &self.issued_by, false);
+    }
 }
 #[doc(alias = "exportComplianceWatchList")]
 #[cfg(any(feature = "payments", feature = "risk"))]
@@ -161,6 +300,12 @@ pub struct GetAllSubscriptionsResponsePaymentInformationCustomer {
     )]
     pub id: Option<String>,
 }
+#[cfg(any(feature = "bin-lookup", feature = "recurring-billing"))]
+impl v::Validate for GetAllSubscriptionsResponsePaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
+}
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -183,6 +328,12 @@ pub struct PtsV2IncrementalAuthorizationPatch201ResponseClientReferenceInformati
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "tax"))]
+impl v::Validate for PtsV2IncrementalAuthorizationPatch201ResponseClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(59), None);
+    }
 }
 #[cfg(any(
     feature = "payments",
@@ -360,6 +511,12 @@ pub struct PtsV2PaymentsPost201ResponsePaymentInformationInstrumentIdentifier {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub state: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "payouts"))]
+impl v::Validate for PtsV2PaymentsPost201ResponsePaymentInformationInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(12), Some(32), None);
+    }
 }
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1030,6 +1187,12 @@ pub struct Ptsv2paymentsBuyerInformationPersonalIdentification {
     pub verification_results: Option<String>,
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsBuyerInformationPersonalIdentification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(26), None);
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsDeviceInformationRawData {
@@ -1046,6 +1209,21 @@ pub struct Ptsv2paymentsDeviceInformationRawData {
     )]
     pub provider: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsDeviceInformationRawData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "provider",
+            &self.provider,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1053,6 +1231,19 @@ pub struct Ptsv2paymentsHealthCareInformation {
     /// array for Healthcare fields
     #[serde(rename = "amountDetails", skip_serializing_if = "Option::is_none")]
     pub amount_details: Option<Vec<Ptsv2paymentsHealthCareInformationAmountDetails>>,
+}
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsHealthCareInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "amountDetails",
+            &self.amount_details,
+            false,
+            (None, None),
+        );
+    }
 }
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1071,6 +1262,31 @@ pub struct Ptsv2paymentsHealthCareInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub amount_type: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsHealthCareInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "amountType",
+            &self.amount_type,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+    }
 }
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1098,6 +1314,22 @@ impl ::std::fmt::Debug for Ptsv2paymentsMerchantDefinedInformation {
             .finish()
     }
 }
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsMerchantDefinedInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "key", &self.key, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(800),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "payments", feature = "payouts"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1108,6 +1340,21 @@ pub struct Ptsv2paymentsOrderInformationAmountDetailsOctsurcharge {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub amount: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "payouts"))]
+impl v::Validate for Ptsv2paymentsOrderInformationAmountDetailsOctsurcharge {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 /// Contains travel-related passenger details used by DM service only.
 #[cfg(any(feature = "payments", feature = "risk"))]
@@ -1166,6 +1413,64 @@ pub struct Ptsv2paymentsOrderInformationPassenger {
     pub r#type: Option<String>,
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsOrderInformationPassenger {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(path, out, "id", &self.id, false, None, Some(40), None);
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "nationality",
+            &self.nationality,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "phone", &self.phone, false, None, Some(15), None);
+        v::string(
+            path,
+            out,
+            "status",
+            &self.status,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(32), None);
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationBank {
@@ -1214,6 +1519,25 @@ impl ::std::fmt::Debug for Ptsv2paymentsPaymentInformationBank {
             )
             .field("swift_code", &self.swift_code)
             .finish()
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationBank {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "account", &self.account, false);
+        v::nested(path, out, "accountAlias", &self.account_alias, false);
+        v::string(path, out, "code", &self.code, false, None, Some(50), None);
+        v::string(path, out, "iban", &self.iban, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "routingNumber",
+            &self.routing_number,
+            false,
+            None,
+            Some(9),
+            None,
+        );
     }
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
@@ -1277,6 +1601,53 @@ impl ::std::fmt::Debug for Ptsv2paymentsPaymentInformationBankAccount {
     }
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "checkImageReferenceNumber",
+            &self.check_image_reference_number,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "checkNumber",
+            &self.check_number,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "encoderId",
+            &self.encoder_id,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(path, out, "iban", &self.iban, false, None, Some(50), None);
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(30),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsPaymentInformationBankAccountAlias {
@@ -1292,6 +1663,12 @@ pub struct Ptsv2paymentsPaymentInformationBankAccountAlias {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationBankAccountAlias {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, None, Some(255), None);
+    }
 }
 #[cfg(any(feature = "payments", feature = "payouts", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1311,6 +1688,12 @@ pub struct Ptsv2paymentsPaymentInformationCustomer {
     )]
     pub id: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "payouts", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
+}
 #[cfg(any(feature = "bin-lookup", feature = "payments"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1322,6 +1705,12 @@ pub struct Ptsv2paymentsPaymentInformationInstrumentIdentifier {
     )]
     pub id: Option<String>,
 }
+#[cfg(any(feature = "bin-lookup", feature = "payments"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(12), Some(32), None);
+    }
+}
 #[cfg(any(feature = "bin-lookup", feature = "payments", feature = "payouts"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1332,6 +1721,12 @@ pub struct Ptsv2paymentsPaymentInformationPaymentInstrument {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+#[cfg(any(feature = "bin-lookup", feature = "payments", feature = "payouts"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+    }
 }
 #[cfg(any(feature = "payments", feature = "payouts"))]
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1444,6 +1839,121 @@ impl ::std::fmt::Debug for Ptsv2paymentsPaymentInformationTokenizedCard {
             .finish()
     }
 }
+#[cfg(any(feature = "payments", feature = "payouts"))]
+impl v::Validate for Ptsv2paymentsPaymentInformationTokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "assuranceLevel",
+            &self.assurance_level,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "assuranceMethod",
+            &self.assurance_method,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cryptogram",
+            &self.cryptogram,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "requestorId",
+            &self.requestor_id,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCodeIndicator",
+            &self.security_code_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "storageMethod",
+            &self.storage_method,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1460,6 +1970,22 @@ pub struct Ptsv2paymentsProcessingInformationJapanPaymentOptionsBonuses {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub month: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsProcessingInformationJapanPaymentOptionsBonuses {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(path, out, "month", &self.month, false, None, Some(2), None);
+    }
 }
 /// This object contains recurring payment information.
 #[cfg(any(feature = "payments", feature = "risk"))]
@@ -1541,6 +2067,82 @@ pub struct Ptsv2paymentsRecurringPaymentInformation {
     )]
     pub validation_indicator: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsRecurringPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amountType",
+            &self.amount_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "endDate",
+            &self.end_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "maximumAmount",
+            &self.maximum_amount,
+            false,
+            None,
+            Some(12),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "occurrence",
+            &self.occurrence,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "originalPurchaseDate",
+            &self.original_purchase_date,
+            false,
+            None,
+            Some(17),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "referenceNumber",
+            &self.reference_number,
+            false,
+            None,
+            Some(35),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+        v::string(
+            path,
+            out,
+            "validationIndicator",
+            &self.validation_indicator,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 /// Contains auxiliary key-value pairs.
 #[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1569,6 +2171,22 @@ impl ::std::fmt::Debug for Ptsv2paymentsRiskInformationAuxiliaryData {
     }
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsRiskInformationAuxiliaryData {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "key", &self.key, false, None, Some(255), None);
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsRiskInformationBuyerHistoryAccountHistory {
@@ -1587,6 +2205,21 @@ pub struct Ptsv2paymentsRiskInformationBuyerHistoryAccountHistory {
     )]
     pub shipping_address_usage_date: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsRiskInformationBuyerHistoryAccountHistory {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "shippingAddressUsageDate",
+            &self.shipping_address_usage_date,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 /// Identifies a risk profile.
 #[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1598,6 +2231,12 @@ pub struct Ptsv2paymentsRiskInformationProfile {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsRiskInformationProfile {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "name", &self.name, false, None, Some(30), None);
+    }
 }
 #[cfg(any(feature = "payments", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1618,6 +2257,10 @@ pub struct Ptsv2paymentsTokenInformationTokenProvisioningInformation {
     )]
     pub multi_factor_authenticated: Option<bool>,
 }
+#[cfg(any(feature = "payments", feature = "tms"))]
+impl v::Validate for Ptsv2paymentsTokenInformationTokenProvisioningInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1628,6 +2271,12 @@ pub struct Ptsv2paymentsUnscheduledPaymentInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsUnscheduledPaymentInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "type", &self.r#type, false, None, Some(1), None);
+    }
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1654,6 +2303,23 @@ pub struct Ptsv2paymentsWatchlistScreeningInformation {
     pub weights: Option<Ptsv2paymentsWatchlistScreeningInformationWeights>,
 }
 #[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsWatchlistScreeningInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::strings(
+            path,
+            out,
+            "sanctionLists",
+            &self.sanction_lists,
+            false,
+            (None, None),
+            None,
+            Some(255),
+            None,
+        );
+        v::nested(path, out, "weights", &self.weights, false);
+    }
+}
+#[cfg(any(feature = "payments", feature = "risk"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Ptsv2paymentsWatchlistScreeningInformationWeights {
@@ -1676,6 +2342,32 @@ pub struct Ptsv2paymentsWatchlistScreeningInformationWeights {
     )]
     pub name: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "risk"))]
+impl v::Validate for Ptsv2paymentsWatchlistScreeningInformationWeights {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address",
+            &self.address,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(6),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(6), None);
+    }
+}
 #[cfg(any(feature = "payments", feature = "tax", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1694,6 +2386,31 @@ pub struct Ptsv2paymentsidreversalsReversalInformationAmountDetails {
     )]
     pub total_amount: Option<String>,
 }
+#[cfg(any(feature = "payments", feature = "tax", feature = "transactions"))]
+impl v::Validate for Ptsv2paymentsidreversalsReversalInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "totalAmount",
+            &self.total_amount,
+            false,
+            None,
+            Some(19),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "payouts", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1704,6 +2421,21 @@ pub struct Ptsv2payoutsOrderInformationAmountDetailsSurcharge {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub amount: Option<String>,
+}
+#[cfg(any(feature = "payouts", feature = "transactions"))]
+impl v::Validate for Ptsv2payoutsOrderInformationAmountDetailsSurcharge {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "amount",
+            &self.amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
 }
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1716,6 +2448,10 @@ pub struct Ptsv2refreshpaymentstatusidPaymentInformationCustomer {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub customer_id: Option<String>,
+}
+#[cfg(any(feature = "payments", feature = "transactions"))]
+impl v::Validate for Ptsv2refreshpaymentstatusidPaymentInformationCustomer {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[cfg(any(feature = "payments", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1786,6 +2522,21 @@ pub struct RiskV1DecisionsPost201ResponseOrderInformationAmountDetails {
     )]
     pub currency: Option<String>,
 }
+#[cfg(any(feature = "risk", feature = "tax"))]
+impl v::Validate for RiskV1DecisionsPost201ResponseOrderInformationAmountDetails {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "risk", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1797,6 +2548,21 @@ pub struct Riskv1authenticationresultsDeviceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub ip_address: Option<String>,
+}
+#[cfg(any(feature = "risk", feature = "transactions"))]
+impl v::Validate for Riskv1authenticationresultsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            None,
+        );
+    }
 }
 #[cfg(any(
     feature = "bin-lookup",
@@ -1822,6 +2588,36 @@ pub struct Riskv1decisionsClientReferenceInformationPartner {
     )]
     pub solution_id: Option<String>,
 }
+#[cfg(any(
+    feature = "bin-lookup",
+    feature = "currency-conversion",
+    feature = "risk",
+    feature = "tax"
+))]
+impl v::Validate for Riskv1decisionsClientReferenceInformationPartner {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "developerId",
+            &self.developer_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "solutionId",
+            &self.solution_id,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+    }
+}
 #[cfg(any(feature = "risk", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1833,6 +2629,21 @@ pub struct Riskv1decisionsProcessorInformationCardVerification {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub result_code: Option<String>,
+}
+#[cfg(any(feature = "risk", feature = "transactions"))]
+impl v::Validate for Riskv1decisionsProcessorInformationCardVerification {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "resultCode",
+            &self.result_code,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1873,6 +2684,52 @@ pub struct TmsBinLookupIssuerInformation {
     pub phone_number: Option<String>,
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupIssuerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "accountPrefix",
+            &self.account_prefix,
+            false,
+            None,
+            Some(8),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "binLength",
+            &self.bin_length,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "name", &self.name, false, None, Some(200), None);
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+    }
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsBinLookupPaymentAccountInformation {
@@ -1882,6 +2739,13 @@ pub struct TmsBinLookupPaymentAccountInformation {
     pub features: Option<TmsBinLookupPaymentAccountInformationFeatures>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub network: Option<TmsBinLookupPaymentAccountInformationNetwork>,
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupPaymentAccountInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "features", &self.features, false);
+    }
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1925,6 +2789,53 @@ pub struct TmsBinLookupPaymentAccountInformationCard {
     pub r#type: Option<String>,
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupPaymentAccountInformationCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "brandName",
+            &self.brand_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::list(path, out, "brands", &self.brands, false, (None, None));
+        v::string(
+            path,
+            out,
+            "credentialType",
+            &self.credential_type,
+            false,
+            None,
+            Some(5),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "maxLength",
+            &self.max_length,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(3), None);
+    }
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsBinLookupPaymentAccountInformationCardBrands {
@@ -1941,6 +2852,22 @@ pub struct TmsBinLookupPaymentAccountInformationCardBrands {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupPaymentAccountInformationCardBrands {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "brandName",
+            &self.brand_name,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(path, out, "type", &self.r#type, false, None, Some(3), None);
+    }
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2144,6 +3071,81 @@ pub struct TmsBinLookupPaymentAccountInformationFeatures {
     pub three_ds_support: Option<bool>,
 }
 #[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupPaymentAccountInformationFeatures {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "acceptanceLevel",
+            &self.acceptance_level,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "accountFundingSource",
+            &self.account_funding_source,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "accountFundingSourceSubType",
+            &self.account_funding_source_sub_type,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cardPlatform",
+            &self.card_platform,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "cardProduct",
+            &self.card_product,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "comboCard",
+            &self.combo_card,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "messageType",
+            &self.message_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsBinLookupPaymentAccountInformationNetwork {
@@ -2153,6 +3155,10 @@ pub struct TmsBinLookupPaymentAccountInformationNetwork {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+#[cfg(any(feature = "bin-lookup", feature = "tms"))]
+impl v::Validate for TmsBinLookupPaymentAccountInformationNetwork {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[cfg(any(feature = "bank-account-validation", feature = "transactions"))]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

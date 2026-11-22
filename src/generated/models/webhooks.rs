@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateWebhook {
@@ -56,6 +58,9 @@ pub struct CreateWebhook {
     )]
     pub webhook_url: Option<String>,
 }
+impl v::Validate for CreateWebhook {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[doc(alias = "createWebhookRequestProductItem")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -69,6 +74,9 @@ pub struct CreateWebhookRequestProductItem {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub product_id: Option<String>,
+}
+impl v::Validate for CreateWebhookRequestProductItem {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "createWebhookSubscriptionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -279,6 +287,9 @@ pub struct Kmsegressv2keysasymKeyInformation {
     )]
     pub tenant: Option<String>,
 }
+impl v::Validate for Kmsegressv2keysasymKeyInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Object for client references.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -289,6 +300,11 @@ pub struct Kmsegressv2keyssymClientReferenceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Kmsegressv2keyssymClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(50), None);
+    }
 }
 /// Egress Key Information Request
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -369,6 +385,9 @@ impl ::std::fmt::Debug for Kmsegressv2keyssymKeyInformation {
             .finish()
     }
 }
+impl v::Validate for Kmsegressv2keyssymKeyInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Notificationsubscriptionsv2webhooksProducts {
@@ -381,6 +400,9 @@ pub struct Notificationsubscriptionsv2webhooksProducts {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub product_id: Option<String>,
+}
+impl v::Validate for Notificationsubscriptionsv2webhooksProducts {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Retry policy for the individual webhooks that are a part of your subscription. If a message fails to deliver, it will execute through this retry policy.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -440,6 +462,9 @@ pub struct Notificationsubscriptionsv2webhooksRetryPolicy {
     )]
     pub repeat_sequence_wait_time: Option<i64>,
 }
+impl v::Validate for Notificationsubscriptionsv2webhooksRetryPolicy {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// The security option to authenticate with your API or client server.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -454,6 +479,9 @@ pub struct Notificationsubscriptionsv2webhooksSecurityPolicy {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub security_type: Option<String>,
+}
+impl v::Validate for Notificationsubscriptionsv2webhooksSecurityPolicy {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Optional configuration object for if your API or server requires oAuth for an incoming webhook.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -477,6 +505,9 @@ pub struct Notificationsubscriptionsv2webhooksSecurityPolicyConfig {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub o_auth_url: Option<String>,
+}
+impl v::Validate for Notificationsubscriptionsv2webhooksSecurityPolicyConfig {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Additional, free form configuration data.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -503,6 +534,9 @@ pub struct Notificationsubscriptionsv2webhooksSecurityPolicyConfigAdditionalConf
         deserialize_with = "crate::types::lenient::string"
     )]
     pub scope: Option<String>,
+}
+impl v::Validate for Notificationsubscriptionsv2webhooksSecurityPolicyConfigAdditionalConfig {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "productCatalogProduct")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -579,6 +613,17 @@ pub struct SaveAsymEgressKey {
     #[serde(rename = "keyInformation", skip_serializing_if = "Option::is_none")]
     pub key_information: Option<Kmsegressv2keysasymKeyInformation>,
 }
+impl v::Validate for SaveAsymEgressKey {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+    }
+}
 /// Egress Asymmetric Key Information Response.
 #[doc(alias = "saveAsymEgressKeyResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -617,6 +662,17 @@ pub struct SaveSymEgressKey {
     /// Egress Key Information Request
     #[serde(rename = "keyInformation", skip_serializing_if = "Option::is_none")]
     pub key_information: Option<Kmsegressv2keyssymKeyInformation>,
+}
+impl v::Validate for SaveSymEgressKey {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+    }
 }
 /// Egress Key Information Response
 #[doc(alias = "saveSymEgressKeyResponse")]
@@ -852,6 +908,9 @@ pub struct UpdateStatus {
     )]
     pub status: Option<String>,
 }
+impl v::Validate for UpdateStatus {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct UpdateWebhook {
@@ -900,6 +959,9 @@ pub struct UpdateWebhook {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub webhook_url: Option<String>,
+}
+impl v::Validate for UpdateWebhook {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "updateWebhookSubscriptionResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]

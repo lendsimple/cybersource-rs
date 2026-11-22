@@ -49,6 +49,69 @@ pub struct Field {
     pub ty: Ty,
     pub doc: Option<String>,
     pub sensitive: bool,
+    pub constraints: Constraints,
+}
+
+/// What the spec allows for a field's value. Length, pattern and range
+/// apply to the value itself or, for an array, to each item.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Constraints {
+    pub required: bool,
+    pub min_length: Option<u64>,
+    pub max_length: Option<u64>,
+    /// The spec's pattern, verbatim.
+    pub pattern: Option<String>,
+    pub minimum: Option<f64>,
+    pub maximum: Option<f64>,
+    pub min_items: Option<u64>,
+    pub max_items: Option<u64>,
+}
+
+impl Constraints {
+    fn read(prop: &Value, required: bool) -> Self {
+        let uint = |v: &Value, key| v.get(key).and_then(Value::as_u64);
+        let num = |v: &Value, key| v.get(key).and_then(Value::as_f64);
+        let is_array = prop.get("type").and_then(Value::as_str) == Some("array");
+        let value = if is_array {
+            prop.get("items").unwrap_or(&Value::Null)
+        } else {
+            prop
+        };
+        Constraints {
+            required,
+            min_length: uint(value, "minLength"),
+            max_length: uint(value, "maxLength"),
+            pattern: value
+                .get("pattern")
+                .and_then(Value::as_str)
+                .map(str::to_owned),
+            minimum: num(value, "minimum"),
+            maximum: num(value, "maximum"),
+            min_items: is_array.then(|| uint(prop, "minItems")).flatten(),
+            max_items: is_array.then(|| uint(prop, "maxItems")).flatten(),
+        }
+    }
+
+    /// The loosest constraints satisfying both: a model shared by several
+    /// operations must not reject what any of them allows.
+    fn loosest(&self, other: &Self) -> Self {
+        fn both<T: Copy>(a: Option<T>, b: Option<T>, pick: fn(T, T) -> T) -> Option<T> {
+            Some(pick(a?, b?))
+        }
+        Constraints {
+            required: self.required && other.required,
+            min_length: both(self.min_length, other.min_length, u64::min),
+            max_length: both(self.max_length, other.max_length, u64::max),
+            pattern: self
+                .pattern
+                .clone()
+                .filter(|_| self.pattern == other.pattern),
+            minimum: both(self.minimum, other.minimum, f64::min),
+            maximum: both(self.maximum, other.maximum, f64::max),
+            min_items: both(self.min_items, other.min_items, u64::min),
+            max_items: both(self.max_items, other.max_items, u64::max),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -268,6 +331,30 @@ fn errata(schema: &Value, value: &Value, path: &str, ex: &mut Example) {
 pub struct Ir {
     pub models: BTreeMap<String, Model>,
     pub operations: Vec<Operation>,
+}
+
+impl Ir {
+    /// Models reachable from a request body: the ones that get validated.
+    pub fn request_models(&self) -> BTreeSet<String> {
+        fn visit(ir: &Ir, ty: &Ty, seen: &mut BTreeSet<String>) {
+            match ty {
+                Ty::Vec(t) | Ty::Map(t) => visit(ir, t, seen),
+                Ty::Model(name) if seen.insert(name.clone()) => {
+                    for field in &ir.models[name].fields {
+                        visit(ir, &field.ty, seen);
+                    }
+                }
+                _ => {}
+            }
+        }
+        let mut seen = BTreeSet::new();
+        for op in &self.operations {
+            if let Some(body) = &op.body {
+                visit(self, body, &mut seen);
+            }
+        }
+        seen
+    }
 }
 
 /// Builds the IR, returning every problem found rather than the first.
@@ -680,6 +767,13 @@ impl Builder<'_> {
             .cloned()
             .unwrap_or(base);
 
+        let required: BTreeSet<&str> = schema
+            .get("required")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+            .collect();
         let mut fields: Vec<Field> = Vec::new();
         for (json_name, prop) in props {
             let child_ctx = format!("{name}{}", naming::type_name(json_name));
@@ -695,6 +789,7 @@ impl Builder<'_> {
                 json_name: json_name.clone(),
                 ty,
                 doc: describe(prop),
+                constraints: Constraints::read(prop, required.contains(json_name.as_str())),
             });
         }
         dedupe_field_names(&mut fields);
@@ -710,6 +805,9 @@ impl Builder<'_> {
         match self.ir.models.get_mut(&name) {
             Some(existing) if existing.fingerprint() == model.fingerprint() => {
                 existing.groups.insert(group.to_owned());
+                for (old, new) in existing.fields.iter_mut().zip(&model.fields) {
+                    old.constraints = old.constraints.loosest(&new.constraints);
+                }
             }
             Some(existing) => {
                 let msg = format!(
@@ -1188,5 +1286,113 @@ mod tests {
             .insert("POST /gone".into(), "reason".into());
         let errors = build(&spec(json!({})), &config).unwrap_err();
         assert!(errors[0].contains("`POST /gone`"), "{errors:?}");
+    }
+
+    fn body_op(id: &str, schema: Value) -> Value {
+        json!({
+            "tags": ["payments"], "operationId": id,
+            "parameters": [{"in": "body", "name": "body", "schema": schema}],
+            "responses": {"201": {}}
+        })
+    }
+
+    #[test]
+    fn constraints_are_read_from_properties_and_required() {
+        let schema = json!({
+            "type": "object", "title": "Order", "required": ["currency"],
+            "properties": {
+                "currency": {"type": "string", "minLength": 3, "maxLength": 3, "pattern": "^[A-Z]+$"},
+                "quantity": {"type": "integer", "minimum": 1, "maximum": 999},
+                "skus": {"type": "array", "maxItems": 30, "items": {"type": "string", "maxLength": 12}}
+            }
+        });
+        let ir = build(
+            &spec(json!({"/o": {"post": body_op("createOrder", schema)}})),
+            &config(),
+        )
+        .unwrap();
+        let field = |name: &str| {
+            ir.models["Order"]
+                .fields
+                .iter()
+                .find(|f| f.json_name == name)
+                .unwrap()
+                .constraints
+                .clone()
+        };
+        assert_eq!(
+            field("currency"),
+            Constraints {
+                required: true,
+                min_length: Some(3),
+                max_length: Some(3),
+                pattern: Some("^[A-Z]+$".into()),
+                ..Constraints::default()
+            }
+        );
+        assert_eq!(
+            field("quantity"),
+            Constraints {
+                minimum: Some(1.0),
+                maximum: Some(999.0),
+                ..Constraints::default()
+            }
+        );
+        assert_eq!(
+            field("skus"),
+            Constraints {
+                max_length: Some(12),
+                max_items: Some(30),
+                ..Constraints::default()
+            }
+        );
+    }
+
+    #[test]
+    fn shared_models_keep_the_loosest_constraints() {
+        let order = |max: u64, pattern: &str, required: bool| {
+            let mut schema = json!({
+                "type": "object", "title": "Order",
+                "properties": {"code": {"type": "string", "maxLength": max, "pattern": pattern}}
+            });
+            if required {
+                schema["required"] = json!(["code"]);
+            }
+            schema
+        };
+        let ir = build(
+            &spec(json!({
+                "/a": {"post": body_op("createA", order(20, "^[a-z]+$", true))},
+                "/b": {"post": body_op("createB", order(50, "^[0-9]+$", false))}
+            })),
+            &config(),
+        )
+        .unwrap();
+        let code = &ir.models["Order"].fields[0].constraints;
+        assert_eq!(code.max_length, Some(50));
+        assert_eq!(code.pattern, None, "different patterns cancel out");
+        assert!(
+            !code.required,
+            "required only where every schema requires it"
+        );
+    }
+
+    #[test]
+    fn request_models_are_those_reachable_from_a_body() {
+        let ir = build(
+            &spec(json!({"/pts/v2/payments": {"post": payment_op()}})),
+            &config(),
+        )
+        .unwrap();
+        let names: Vec<_> = ir.request_models().into_iter().collect();
+        assert_eq!(
+            names,
+            [
+                "CreatePaymentRequest",
+                "CreatePaymentRequestPaymentInformation",
+                "CreatePaymentRequestPaymentInformationCard",
+                "Ptsv2paymentsClientReferenceInformation",
+            ]
+        );
     }
 }

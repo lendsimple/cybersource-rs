@@ -6,13 +6,14 @@
 //! - `operations/<group>.rs`: one struct per operation implementing `Operation`.
 //! - `apis/<group>.rs`: the `client.<group>()` accessor and `Call` setters.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use heck::ToUpperCamelCase;
-use proc_macro2::{Ident, Span, TokenStream};
+use proc_macro2::{Ident, Literal, Span, TokenStream};
 use quote::{format_ident, quote};
 
 use super::ir::{Field, Ir, Mle, Model, Operation, Output, Param, ParamIn, Ty};
+use super::patterns::Patterns;
 
 /// Names generated models may not take: they would shadow prelude or
 /// helper names used by the generated code.
@@ -192,21 +193,17 @@ pub fn model(model: &Model, cfg: Option<TokenStream>) -> TokenStream {
     }
 }
 
-fn models(ir: &Ir, files: &mut Files) {
+fn models(ir: &Ir, checks: &Checks, files: &mut Files) {
     let mut by_file: BTreeMap<String, Vec<TokenStream>> = BTreeMap::new();
     for m in ir.models.values() {
-        if m.groups.len() == 1 {
-            let group = m.groups.iter().next().unwrap();
-            by_file
-                .entry(group.clone())
-                .or_default()
-                .push(model(m, None));
+        let (file, cfg) = if m.groups.len() == 1 {
+            (m.groups.iter().next().unwrap().clone(), None)
         } else {
-            by_file
-                .entry("shared".into())
-                .or_default()
-                .push(model(m, Some(cfg_any(&m.groups))));
-        }
+            ("shared".to_owned(), Some(cfg_any(&m.groups)))
+        };
+        let items = by_file.entry(file).or_default();
+        items.push(model(m, cfg.clone()));
+        items.extend(checks.impl_validate(m, cfg));
     }
     let mut mod_items = Vec::new();
     for (file, items) in &by_file {
@@ -221,6 +218,8 @@ fn models(ir: &Ir, files: &mut Files) {
             render(quote! {
                 #[allow(unused_imports)]
                 use super::*;
+                #[allow(unused_imports)]
+                use crate::validate as v;
                 #(#items)*
             }),
         );
@@ -232,6 +231,228 @@ fn models(ir: &Ir, files: &mut Files) {
             #(#mod_items)*
         }),
     );
+}
+
+// ---------------------------------------------------------------------------
+// Request validation
+// ---------------------------------------------------------------------------
+
+/// Which request models get a `Validate` impl, and what each field checks.
+pub struct Checks<'a> {
+    patterns: &'a Patterns,
+    /// Models reachable from a request body; each implements `Validate`.
+    request: BTreeSet<String>,
+    /// Request models with something to check somewhere inside them.
+    work: BTreeSet<String>,
+}
+
+impl<'a> Checks<'a> {
+    pub fn new(ir: &Ir, patterns: &'a Patterns) -> Self {
+        let mut checks = Checks {
+            patterns,
+            request: ir.request_models(),
+            work: BTreeSet::new(),
+        };
+        // Grow to a fixed point, so recursive schemas are handled.
+        loop {
+            let found: Vec<String> = checks
+                .request
+                .iter()
+                .filter(|name| !checks.work.contains(*name))
+                .filter(|name| {
+                    ir.models[*name]
+                        .fields
+                        .iter()
+                        .any(|f| checks.field(f).is_some())
+                })
+                .cloned()
+                .collect();
+            if found.is_empty() {
+                return checks;
+            }
+            checks.work.extend(found);
+        }
+    }
+
+    fn needs(&self, ty: &Ty) -> bool {
+        match ty {
+            Ty::Model(name) => self.work.contains(name),
+            Ty::Vec(t) | Ty::Map(t) => self.needs(t),
+            _ => false,
+        }
+    }
+
+    /// The statement checking one field, if it has anything to check.
+    fn field(&self, f: &Field) -> Option<TokenStream> {
+        let c = &f.constraints;
+        let name = &f.json_name;
+        let field = ident(&f.rust_name);
+        let required = c.required;
+        let pattern = c
+            .pattern
+            .as_ref()
+            .and_then(|p| self.patterns.get(p))
+            .map(|(i, _)| format_ident!("P{}", i));
+        let text = c.min_length.is_some() || c.max_length.is_some() || pattern.is_some();
+        let items = c.min_items.is_some() || c.max_items.is_some();
+        let (min, max) = (opt_usize(c.min_length), opt_usize(c.max_length));
+        let counts = {
+            let (lo, hi) = (opt_usize(c.min_items), opt_usize(c.max_items));
+            quote! { (#lo, #hi) }
+        };
+        let pattern = match pattern {
+            Some(p) => quote! { Some(&crate::generated::patterns::#p) },
+            None => quote! { None },
+        };
+        let present = required.then(|| quote! { v::present(path, out, #name, &self.#field); });
+        match &f.ty {
+            Ty::String if text => Some(quote! {
+                v::string(path, out, #name, &self.#field, #required, #min, #max, #pattern);
+            }),
+            Ty::I32 | Ty::I64 | Ty::F64 => {
+                let lo = bound(&f.ty, c.minimum, true);
+                let hi = bound(&f.ty, c.maximum, false);
+                if lo.is_none() && hi.is_none() {
+                    return present;
+                }
+                let (lo, hi) = (opt_tokens(lo), opt_tokens(hi));
+                Some(quote! { v::number(path, out, #name, &self.#field, #required, #lo, #hi); })
+            }
+            Ty::Vec(t) if **t == Ty::String && (text || items) => Some(quote! {
+                v::strings(path, out, #name, &self.#field, #required, #counts, #min, #max, #pattern);
+            }),
+            Ty::Vec(t) if items || self.needs(t) => Some(quote! {
+                v::list(path, out, #name, &self.#field, #required, #counts);
+            }),
+            ty if self.needs(ty) => Some(quote! {
+                v::nested(path, out, #name, &self.#field, #required);
+            }),
+            _ => present,
+        }
+    }
+
+    /// `impl Validate` for a request model; `None` for other models.
+    pub fn impl_validate(&self, model: &Model, cfg: Option<TokenStream>) -> Option<TokenStream> {
+        if !self.request.contains(&model.name) {
+            return None;
+        }
+        let name = ident(&model.name);
+        let checks: Vec<TokenStream> = model.fields.iter().filter_map(|f| self.field(f)).collect();
+        let params = if checks.is_empty() {
+            quote! { _path: &mut v::Path, _out: &mut Vec<v::Violation> }
+        } else {
+            quote! { path: &mut v::Path, out: &mut Vec<v::Violation> }
+        };
+        Some(quote! {
+            #cfg
+            impl v::Validate for #name {
+                fn validate_into(&self, #params) {
+                    #(#checks)*
+                }
+            }
+        })
+    }
+
+    /// The `Operation::validate` override, when the body has anything to check.
+    fn operation_validate(&self, op: &Operation) -> Option<TokenStream> {
+        op.body.as_ref().filter(|ty| self.needs(ty)).map(|_| {
+            quote! {
+                fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+                    crate::validate::Validate::validate(&self.body)
+                }
+            }
+        })
+    }
+}
+
+fn opt_usize(value: Option<u64>) -> TokenStream {
+    opt_tokens(value.map(|n| {
+        let n = Literal::usize_unsuffixed(n as usize);
+        quote! { #n }
+    }))
+}
+
+fn opt_tokens(value: Option<TokenStream>) -> TokenStream {
+    match value {
+        Some(v) => quote! { Some(#v) },
+        None => quote! { None },
+    }
+}
+
+/// A range bound as a literal of the field's type. Integer fields round a
+/// fractional bound inwards and drop one their type cannot reach.
+fn bound(ty: &Ty, value: Option<f64>, lower: bool) -> Option<TokenStream> {
+    let value = value?;
+    let int = if lower { value.ceil() } else { value.floor() };
+    let lit = match ty {
+        Ty::F64 => Literal::f64_suffixed(value),
+        Ty::I32 if int >= f64::from(i32::MIN) && int <= f64::from(i32::MAX) => {
+            Literal::i32_suffixed(int as i32)
+        }
+        Ty::I64 if int.abs() < 9.0e15 => Literal::i64_suffixed(int as i64),
+        _ => return None,
+    };
+    Some(quote! { #lit })
+}
+
+fn patterns_file(patterns: &Patterns) -> String {
+    let all = patterns
+        .rules
+        .values()
+        .map(|(i, _)| format_ident!("P{}", i));
+    let items = patterns.rules.iter().map(|(text, (i, rule))| {
+        let name = format_ident!("P{}", i);
+        let matcher = format_ident!("p{}", i);
+        let must = rule.regex.as_ref().map(|r| {
+            quote! { static MATCH: LazyLock<Regex> = LazyLock::new(|| Regex::new(#r).unwrap()); }
+        });
+        let rejects = &rule.reject;
+        let count = Literal::usize_unsuffixed(rejects.len());
+        let reject = (!rejects.is_empty()).then(|| {
+            quote! {
+                static REJECT: LazyLock<[Regex; #count]> =
+                    LazyLock::new(|| [#(Regex::new(#rejects).unwrap()),*]);
+            }
+        });
+        let test = match (&must, &reject) {
+            (Some(_), Some(_)) => {
+                quote! { MATCH.is_match(s) && !REJECT.iter().any(|r| r.is_match(s)) }
+            }
+            (Some(_), None) => quote! { MATCH.is_match(s) },
+            (None, _) => quote! { !REJECT.iter().any(|r| r.is_match(s)) },
+        };
+        quote! {
+            pub(crate) static #name: Pattern = Pattern { text: #text, matches: #matcher };
+            fn #matcher(s: &str) -> bool {
+                #must
+                #reject
+                #test
+            }
+        }
+    });
+    render(quote! {
+        //! The spec's request-body patterns, compiled on first use. Repairs
+        //! and skipped patterns are listed under `[patterns]` in
+        //! `spec/codegen.toml`.
+        #![allow(dead_code)]
+        use std::sync::LazyLock;
+        use regex::Regex;
+        use crate::validate::Pattern;
+        #(#items)*
+
+        /// Every pattern, so a test can compile them all.
+        pub(crate) static ALL: &[&Pattern] = &[#(&#all),*];
+
+        #[cfg(test)]
+        mod tests {
+            #[test]
+            fn every_pattern_compiles() {
+                for pattern in super::ALL {
+                    (pattern.matches)("");
+                }
+            }
+        }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -335,7 +556,7 @@ fn op_doc(op: &Operation) -> String {
     }
 }
 
-pub fn operation(op: &Operation) -> TokenStream {
+pub fn operation(op: &Operation, checks: &Checks) -> TokenStream {
     let name = ident(&op.struct_name);
     let doc = doc_line(&op_doc(op));
     let meta_name = format_ident!(
@@ -475,6 +696,7 @@ pub fn operation(op: &Operation) -> TokenStream {
     let body_fn = op.body.as_ref().map(|_| {
         quote! { fn body(&self) -> Result<Option<Bytes>> { json_body(&self.body) } }
     });
+    let validate_fn = checks.operation_validate(op);
     let accept_fn = op.accept.as_ref().map(|a| {
         quote! { fn accept(&self) -> Option<&'static str> { Some(#a) } }
     });
@@ -569,6 +791,7 @@ pub fn operation(op: &Operation) -> TokenStream {
             #query_fn
             #headers_fn
             #body_fn
+            #validate_fn
             #accept_fn
             fn decode(&self, #status_param: StatusCode, #body_param: &Bytes) -> Result<Self::Output> {
                 #decode
@@ -577,7 +800,7 @@ pub fn operation(op: &Operation) -> TokenStream {
     }
 }
 
-fn operations(ir: &Ir, files: &mut Files) {
+fn operations(ir: &Ir, checks: &Checks, files: &mut Files) {
     let mut by_group: BTreeMap<&str, Vec<&Operation>> = BTreeMap::new();
     for op in &ir.operations {
         by_group.entry(&op.group).or_default().push(op);
@@ -590,7 +813,7 @@ fn operations(ir: &Ir, files: &mut Files) {
             #cfg pub mod #module;
             #cfg pub use #module::*;
         });
-        let items = ops.iter().map(|op| operation(op));
+        let items = ops.iter().map(|op| operation(op, checks));
         files.insert(
             format!("operations/{}.rs", group.replace('-', "_")),
             render(quote! {
@@ -787,7 +1010,7 @@ pub fn validate(ir: &Ir) -> Vec<String> {
 }
 
 /// Generates every file.
-pub fn generate(ir: &Ir, sensitive: &super::config::Sensitive) -> Files {
+pub fn generate(ir: &Ir, sensitive: &super::config::Sensitive, patterns: &Patterns) -> Files {
     let mut files = Files::new();
     let always: Vec<&str> = sensitive.always.iter().map(String::as_str).collect();
     let parents: Vec<String> = sensitive
@@ -795,8 +1018,10 @@ pub fn generate(ir: &Ir, sensitive: &super::config::Sensitive) -> Files {
         .iter()
         .map(|t| t.to_ascii_lowercase())
         .collect();
-    models(ir, &mut files);
-    operations(ir, &mut files);
+    let checks = Checks::new(ir, patterns);
+    models(ir, &checks, &mut files);
+    operations(ir, &checks, &mut files);
+    files.insert("patterns.rs".into(), patterns_file(patterns));
     apis(ir, &mut files);
     files.insert(
         "mod.rs".into(),
@@ -813,6 +1038,7 @@ pub fn generate(ir: &Ir, sensitive: &super::config::Sensitive) -> Files {
             pub mod apis;
             pub mod models;
             pub mod operations;
+            mod patterns;
 
             /// JSON property names whose values are never logged or printed
             /// (from `spec/codegen.toml [sensitive]`).
@@ -909,8 +1135,10 @@ mod tests {
     }
 
     fn op(ir: &Ir, id: &str) -> String {
+        let patterns = Patterns::default();
         render(operation(
             ir.operations.iter().find(|o| o.id == id).unwrap(),
+            &Checks::new(ir, &patterns),
         ))
     }
 
@@ -973,5 +1201,46 @@ mod tests {
         m.name = "Option".into();
         ir.models.insert("Option".into(), m);
         assert!(validate(&ir)[0].contains("`Option`"));
+    }
+
+    #[test]
+    fn request_models_validate_their_constraints() {
+        let config = Config::parse(
+            r#"
+            [groups]
+            payments = ["payments"]
+            [patterns]
+            "(?!^0+$)^[0-9]+$" = { regex = '^[0-9]+$', reject = ['^0+$'] }
+            "#,
+        )
+        .unwrap();
+        let spec = json!({"swagger": "2.0", "paths": {"/orders": {"post": {
+            "tags": ["payments"], "operationId": "createOrder",
+            "parameters": [{"in": "body", "name": "body", "schema": {
+                "type": "object", "title": "Order", "required": ["currency"],
+                "properties": {
+                    "currency": {"type": "string", "maxLength": 3, "pattern": "^[A-Z]{3}$"},
+                    "quantity": {"type": "integer", "format": "int32", "minimum": 1, "maximum": 999.5},
+                    "skus": {"type": "array", "maxItems": 30, "items": {"type": "string", "pattern": "(?!^0+$)^[0-9]+$"}},
+                    "note": {"type": "string"},
+                    "shipTo": {"type": "object", "title": "ShipTo", "properties": {
+                        "postalCode": {"type": "string", "maxLength": 10}
+                    }},
+                    "meta": {"type": "object", "title": "Meta", "properties": {"tag": {"type": "string"}}}
+                }
+            }}],
+            "responses": {"201": {}}
+        }}}});
+        let ir = ir::build(&spec, &config).unwrap();
+        let patterns = crate::codegen::patterns::resolve(&ir, &config.patterns).unwrap();
+        let checks = Checks::new(&ir, &patterns);
+        let impls: Vec<String> = ["Order", "ShipTo", "Meta"]
+            .iter()
+            .map(|name| render(checks.impl_validate(&ir.models[*name], None).unwrap()))
+            .collect();
+        insta::assert_snapshot!("validate_impls", impls.join("\n"));
+        insta::assert_snapshot!("patterns_file", patterns_file(&patterns));
+        let op = render(operation(&ir.operations[0], &checks));
+        assert!(op.contains("fn validate(&self)"), "{op}");
     }
 }

@@ -124,6 +124,9 @@ impl Operation for GenerateUnifiedCheckoutCaptureContext {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn accept(&self) -> Option<&'static str> {
         Some("application/jwt")
     }
@@ -162,6 +165,9 @@ impl Operation for GenerateUnifiedCheckoutV1CaptureContext {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn accept(&self) -> Option<&'static str> {
         Some("application/jwt")

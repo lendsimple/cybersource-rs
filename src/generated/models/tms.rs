@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 /// Represents the Card Art Asset associated to the Network Token.
 #[doc(alias = "cardArtAssetResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -69,6 +71,20 @@ pub struct DefaultMerchantInformationMerchantDescriptor {
     )]
     pub alternate_name: Option<String>,
 }
+impl v::Validate for DefaultMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "alternateName",
+            &self.alternate_name,
+            false,
+            None,
+            Some(13),
+            None,
+        );
+    }
+}
 #[doc(alias = "defaultPaymentInstrument")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -134,6 +150,43 @@ pub struct DefaultPaymentInstrument {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for DefaultPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentBankAccount {
@@ -143,6 +196,11 @@ pub struct DefaultPaymentInstrumentBankAccount {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for DefaultPaymentInstrumentBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "type", &self.r#type, false, None, Some(18), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -173,6 +231,38 @@ pub struct DefaultPaymentInstrumentBuyerInformation {
     )]
     pub personal_identification:
         Option<Vec<DefaultPaymentInstrumentBuyerInformationPersonalIdentification>>,
+}
+impl v::Validate for DefaultPaymentInstrumentBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "companyTaxID",
+            &self.company_tax_id,
+            false,
+            None,
+            Some(9),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "currency",
+            &self.currency,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+        v::list(
+            path,
+            out,
+            "personalIdentification",
+            &self.personal_identification,
+            false,
+            (None, None),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -237,6 +327,77 @@ pub struct DefaultPaymentInstrumentCard {
     )]
     pub use_as: Option<String>,
 }
+impl v::Validate for DefaultPaymentInstrumentCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "hash",
+            &self.hash,
+            false,
+            Some(32),
+            Some(34),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "issueNumber",
+            &self.issue_number,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startMonth",
+            &self.start_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "startYear",
+            &self.start_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::nested(
+            path,
+            out,
+            "tokenizedInformation",
+            &self.tokenized_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentCardTokenizedInformation {
@@ -255,6 +416,30 @@ pub struct DefaultPaymentInstrumentCardTokenizedInformation {
     )]
     pub transaction_type: Option<String>,
 }
+impl v::Validate for DefaultPaymentInstrumentCardTokenizedInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "requestorID",
+            &self.requestor_id,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "transactionType",
+            &self.transaction_type,
+            false,
+            None,
+            Some(1),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentInstrumentIdentifier {
@@ -265,6 +450,11 @@ pub struct DefaultPaymentInstrumentInstrumentIdentifier {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for DefaultPaymentInstrumentInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(12), Some(32), None);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentLinks {
@@ -272,6 +462,9 @@ pub struct DefaultPaymentInstrumentLinks {
     pub customer: Option<Tmsv2tokenizeTokenInformationCustomerLinksSelf>,
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<DefaultPaymentInstrumentLinksSelf>,
+}
+impl v::Validate for DefaultPaymentInstrumentLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -283,6 +476,9 @@ pub struct DefaultPaymentInstrumentLinksSelf {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for DefaultPaymentInstrumentLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultPaymentInstrumentMetadata {
@@ -292,6 +488,9 @@ pub struct DefaultPaymentInstrumentMetadata {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub creator: Option<String>,
+}
+impl v::Validate for DefaultPaymentInstrumentMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "defaultShippingAddress")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -316,6 +515,12 @@ pub struct DefaultShippingAddress {
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<DefaultShippingAddressShipTo>,
 }
+impl v::Validate for DefaultShippingAddress {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultShippingAddressLinks {
@@ -323,6 +528,9 @@ pub struct DefaultShippingAddressLinks {
     pub customer: Option<DefaultShippingAddressLinksCustomer>,
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<DefaultShippingAddressLinksSelf>,
+}
+impl v::Validate for DefaultShippingAddressLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -334,6 +542,9 @@ pub struct DefaultShippingAddressLinksCustomer {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for DefaultShippingAddressLinksCustomer {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultShippingAddressLinksSelf {
@@ -344,6 +555,9 @@ pub struct DefaultShippingAddressLinksSelf {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for DefaultShippingAddressLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct DefaultShippingAddressMetadata {
@@ -353,6 +567,9 @@ pub struct DefaultShippingAddressMetadata {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub creator: Option<String>,
+}
+impl v::Validate for DefaultShippingAddressMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -428,6 +645,120 @@ pub struct DefaultShippingAddressShipTo {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub postal_code: Option<String>,
+}
+impl v::Validate for DefaultShippingAddressShipTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "company",
+            &self.company,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(320),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "phoneNumber",
+            &self.phone_number,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -797,6 +1128,43 @@ pub struct PatchCustomerPaymentInstrumentRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PatchCustomerPaymentInstrumentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PatchCustomerRequest {
@@ -843,6 +1211,41 @@ pub struct PatchCustomerRequest {
     #[serde(rename = "objectInformation", skip_serializing_if = "Option::is_none")]
     pub object_information: Option<Tmsv2tokenizeTokenInformationCustomerObjectInformation>,
 }
+impl v::Validate for PatchCustomerRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "objectInformation",
+            &self.object_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PatchCustomerShippingAddressRequest {
@@ -864,6 +1267,12 @@ pub struct PatchCustomerShippingAddressRequest {
     pub metadata: Option<DefaultShippingAddressMetadata>,
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<DefaultShippingAddressShipTo>,
+}
+impl v::Validate for PatchCustomerShippingAddressRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -933,6 +1342,30 @@ pub struct PatchInstrumentIdentifierRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PatchInstrumentIdentifierRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PatchPaymentInstrumentRequest {
@@ -996,6 +1429,43 @@ pub struct PatchPaymentInstrumentRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub r#type: Option<String>,
+}
+impl v::Validate for PatchPaymentInstrumentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1135,6 +1605,17 @@ pub struct PaymentInstrumentEmbedded {
     )]
     pub instrument_identifier: Option<TmsEmbeddedInstrumentIdentifier>,
 }
+impl v::Validate for PaymentInstrumentEmbedded {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PaymentInstrumentList {
@@ -1232,6 +1713,43 @@ pub struct PostCustomerPaymentInstrumentRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PostCustomerPaymentInstrumentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostCustomerRequest {
@@ -1278,6 +1796,41 @@ pub struct PostCustomerRequest {
     #[serde(rename = "objectInformation", skip_serializing_if = "Option::is_none")]
     pub object_information: Option<Tmsv2tokenizeTokenInformationCustomerObjectInformation>,
 }
+impl v::Validate for PostCustomerRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "objectInformation",
+            &self.object_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostCustomerShippingAddressRequest {
@@ -1299,6 +1852,12 @@ pub struct PostCustomerShippingAddressRequest {
     pub metadata: Option<DefaultShippingAddressMetadata>,
     #[serde(rename = "shipTo", skip_serializing_if = "Option::is_none")]
     pub ship_to: Option<DefaultShippingAddressShipTo>,
+}
+impl v::Validate for PostCustomerShippingAddressRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(path, out, "shipTo", &self.ship_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1368,6 +1927,30 @@ pub struct PostInstrumentIdentifierEnrollmentRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PostInstrumentIdentifierEnrollmentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostInstrumentIdentifierRequest {
@@ -1436,6 +2019,30 @@ pub struct PostInstrumentIdentifierRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PostInstrumentIdentifierRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 /// Represents the Issuer LifeCycle Event Simulation for a Tokenized Card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1450,6 +2057,11 @@ pub struct PostIssuerLifeCycleSimulationRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub state: Option<String>,
+}
+impl v::Validate for PostIssuerLifeCycleSimulationRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1491,6 +2103,42 @@ pub struct PostPaymentCredentialsRequest {
     )]
     pub transaction_type: Option<String>,
 }
+impl v::Validate for PostPaymentCredentialsRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "authenticatedIdentities",
+            &self.authenticated_identities,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            false,
+            None,
+            Some(36),
+            Some(&crate::generated::patterns::P11),
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostPaymentCredentialsV3Request {
@@ -1530,6 +2178,42 @@ pub struct PostPaymentCredentialsV3Request {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub transaction_type: Option<String>,
+}
+impl v::Validate for PostPaymentCredentialsV3Request {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "authenticatedIdentities",
+            &self.authenticated_identities,
+            false,
+            (None, None),
+        );
+        v::string(
+            path,
+            out,
+            "clientCorrelationId",
+            &self.client_correlation_id,
+            false,
+            None,
+            Some(36),
+            Some(&crate::generated::patterns::P11),
+        );
+        v::nested(
+            path,
+            out,
+            "deviceInformation",
+            &self.device_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "orderInformation",
+            &self.order_information,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1595,6 +2279,43 @@ pub struct PostPaymentInstrumentRequest {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for PostPaymentInstrumentRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostTokenizeRequest {
@@ -1605,6 +2326,17 @@ pub struct PostTokenizeRequest {
     pub processing_information: Option<Tmsv2tokenizeProcessingInformation>,
     #[serde(rename = "tokenInformation", skip_serializing_if = "Option::is_none")]
     pub token_information: Option<Tmsv2tokenizeTokenInformation>,
+}
+impl v::Validate for PostTokenizeRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "tokenInformation",
+            &self.token_information,
+            false,
+        );
+    }
 }
 #[doc(alias = "postTokenizeResponse")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1679,6 +2411,11 @@ pub struct PostTokenizedCardDeleteRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<Tmsv2tokenizedcardstokenizedCardIddeleteReason>,
 }
+impl v::Validate for PostTokenizedCardDeleteRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "reason", &self.reason, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PostTokenizedCardRequest {
@@ -1716,6 +2453,23 @@ pub struct PostTokenizedCardRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub source: Option<String>,
+}
+impl v::Validate for PostTokenizedCardRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::string(
+            path,
+            out,
+            "consumerId",
+            &self.consumer_id,
+            false,
+            None,
+            Some(36),
+            None,
+        );
+        v::present(path, out, "source", &self.source);
+    }
 }
 /// A paginated container of Shipping Addresses.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1829,6 +2583,11 @@ pub struct TmsAuthorizationOptions {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub initiator: Option<TmsAuthorizationOptionsInitiator>,
 }
+impl v::Validate for TmsAuthorizationOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "initiator", &self.initiator, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsAuthorizationOptionsInitiator {
@@ -1838,6 +2597,17 @@ pub struct TmsAuthorizationOptionsInitiator {
     )]
     pub merchant_initiated_transaction:
         Option<TmsAuthorizationOptionsInitiatorMerchantInitiatedTransaction>,
+}
+impl v::Validate for TmsAuthorizationOptionsInitiator {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "merchantInitiatedTransaction",
+            &self.merchant_initiated_transaction,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1857,6 +2627,30 @@ pub struct TmsAuthorizationOptionsInitiatorMerchantInitiatedTransaction {
     )]
     pub previous_transaction_id: Option<String>,
 }
+impl v::Validate for TmsAuthorizationOptionsInitiatorMerchantInitiatedTransaction {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "originalAuthorizedAmount",
+            &self.original_authorized_amount,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "previousTransactionId",
+            &self.previous_transaction_id,
+            false,
+            None,
+            Some(15),
+            None,
+        );
+    }
+}
 /// Bin Information of the PAN provided by BinLookUp Service. This is only retrieved when retrieveBinDetails=true is passed as a query parameter.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1868,6 +2662,24 @@ pub struct TmsBinLookup {
         skip_serializing_if = "Option::is_none"
     )]
     pub payment_account_information: Option<TmsBinLookupPaymentAccountInformation>,
+}
+impl v::Validate for TmsBinLookup {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "issuerInformation",
+            &self.issuer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "paymentAccountInformation",
+            &self.payment_account_information,
+            false,
+        );
+    }
 }
 /// Card art associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1907,6 +2719,9 @@ pub struct TmsCardArt {
     )]
     pub label_color: Option<String>,
 }
+impl v::Validate for TmsCardArt {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Brand logo card art asset associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1920,11 +2735,17 @@ pub struct TmsCardArtBrandLogoAsset {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for TmsCardArtBrandLogoAsset {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsCardArtBrandLogoAssetLinks {
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<TmsCardArtBrandLogoAssetLinksSelf>,
+}
+impl v::Validate for TmsCardArtBrandLogoAssetLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1935,6 +2756,9 @@ pub struct TmsCardArtBrandLogoAssetLinksSelf {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for TmsCardArtBrandLogoAssetLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Combined card art asset associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1949,11 +2773,17 @@ pub struct TmsCardArtCombinedAsset {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for TmsCardArtCombinedAsset {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsCardArtCombinedAssetLinks {
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<TmsCardArtCombinedAssetLinksSelf>,
+}
+impl v::Validate for TmsCardArtCombinedAssetLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1964,6 +2794,9 @@ pub struct TmsCardArtCombinedAssetLinksSelf {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for TmsCardArtCombinedAssetLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Icon card art asset associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -1978,11 +2811,17 @@ pub struct TmsCardArtIconAsset {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for TmsCardArtIconAsset {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsCardArtIconAssetLinks {
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<TmsCardArtIconAssetLinksSelf>,
+}
+impl v::Validate for TmsCardArtIconAssetLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -1993,6 +2832,9 @@ pub struct TmsCardArtIconAssetLinksSelf {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for TmsCardArtIconAssetLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Issuer logo card art asset associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2007,11 +2849,17 @@ pub struct TmsCardArtIssuerLogoAsset {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for TmsCardArtIssuerLogoAsset {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsCardArtIssuerLogoAssetLinks {
     #[serde(rename = "self", skip_serializing_if = "Option::is_none")]
     pub self_: Option<TmsCardArtIssuerLogoAssetLinksSelf>,
+}
+impl v::Validate for TmsCardArtIssuerLogoAssetLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2022,6 +2870,9 @@ pub struct TmsCardArtIssuerLogoAssetLinksSelf {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for TmsCardArtIssuerLogoAssetLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "tmsEmbeddedInstrumentIdentifier")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2092,6 +2943,30 @@ pub struct TmsEmbeddedInstrumentIdentifier {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierBankAccount {
@@ -2118,6 +2993,20 @@ impl ::std::fmt::Debug for TmsEmbeddedInstrumentIdentifierBankAccount {
                 &self.routing_number.as_ref().map(|_| "[REDACTED]"),
             )
             .finish()
+    }
+}
+impl v::Validate for TmsEmbeddedInstrumentIdentifierBankAccount {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            None,
+            Some(17),
+            None,
+        );
     }
 }
 /// This information is sent to the issuer as part of network token enrollment and is not stored under the Instrument Identifier.
@@ -2169,6 +3058,80 @@ pub struct TmsEmbeddedInstrumentIdentifierBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "address2",
+            &self.address2,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 /// The expirationMonth, expirationYear and securityCode is sent to the issuer as part of network token enrollment and is not stored under the Instrument Identifier.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2214,12 +3177,61 @@ impl ::std::fmt::Debug for TmsEmbeddedInstrumentIdentifierCard {
             .finish()
     }
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            Some(12),
+            Some(19),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "securityCode",
+            &self.security_code,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierEmbedded {
     /// Bin Information of the PAN provided by BinLookUp Service. This is only retrieved when retrieveBinDetails=true is passed as a query parameter.
     #[serde(rename = "binLookup", skip_serializing_if = "Option::is_none")]
     pub bin_lookup: Option<TmsBinLookup>,
+}
+impl v::Validate for TmsEmbeddedInstrumentIdentifierEmbedded {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "binLookup", &self.bin_lookup, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2232,6 +3244,20 @@ pub struct TmsEmbeddedInstrumentIdentifierIssuer {
     )]
     pub payment_account_reference: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierIssuer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "paymentAccountReference",
+            &self.payment_account_reference,
+            false,
+            None,
+            Some(32),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierLinks {
@@ -2241,6 +3267,9 @@ pub struct TmsEmbeddedInstrumentIdentifierLinks {
     pub self_: Option<TmsEmbeddedInstrumentIdentifierLinksSelf>,
     #[serde(rename = "tokenized-cards", skip_serializing_if = "Option::is_none")]
     pub tokenized_cards: Option<TmsEmbeddedInstrumentIdentifierLinksTokenizedcards>,
+}
+impl v::Validate for TmsEmbeddedInstrumentIdentifierLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2252,6 +3281,9 @@ pub struct TmsEmbeddedInstrumentIdentifierLinksPaymentInstruments {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierLinksPaymentInstruments {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierLinksSelf {
@@ -2261,6 +3293,9 @@ pub struct TmsEmbeddedInstrumentIdentifierLinksSelf {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for TmsEmbeddedInstrumentIdentifierLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2272,6 +3307,9 @@ pub struct TmsEmbeddedInstrumentIdentifierLinksTokenizedcards {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierLinksTokenizedcards {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierMetadata {
@@ -2282,6 +3320,9 @@ pub struct TmsEmbeddedInstrumentIdentifierMetadata {
     )]
     pub creator: Option<String>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsEmbeddedInstrumentIdentifierProcessingInformation {
@@ -2291,6 +3332,17 @@ pub struct TmsEmbeddedInstrumentIdentifierProcessingInformation {
     )]
     pub authorization_options: Option<TmsAuthorizationOptions>,
 }
+impl v::Validate for TmsEmbeddedInstrumentIdentifierProcessingInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "authorizationOptions",
+            &self.authorization_options,
+            false,
+        );
+    }
+}
 #[doc(alias = "tmsIssuerLifeCycleEventSimulationMetadata")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2298,11 +3350,17 @@ pub struct TmsIssuerLifeCycleEventSimulationMetadata {
     #[serde(rename = "cardArt", skip_serializing_if = "Option::is_none")]
     pub card_art: Option<TmsIssuerLifeCycleEventSimulationMetadataCardArt>,
 }
+impl v::Validate for TmsIssuerLifeCycleEventSimulationMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsIssuerLifeCycleEventSimulationMetadataCardArt {
     #[serde(rename = "combinedAsset", skip_serializing_if = "Option::is_none")]
     pub combined_asset: Option<TmsIssuerLifeCycleEventSimulationMetadataCardArtCombinedAsset>,
+}
+impl v::Validate for TmsIssuerLifeCycleEventSimulationMetadataCardArt {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2314,11 +3372,25 @@ pub struct TmsIssuerLifeCycleEventSimulationMetadataCardArtCombinedAsset {
     )]
     pub update: Option<String>,
 }
+impl v::Validate for TmsIssuerLifeCycleEventSimulationMetadataCardArtCombinedAsset {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsMerchantInformation {
     #[serde(rename = "merchantDescriptor", skip_serializing_if = "Option::is_none")]
     pub merchant_descriptor: Option<DefaultMerchantInformationMerchantDescriptor>,
+}
+impl v::Validate for TmsMerchantInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "merchantDescriptor",
+            &self.merchant_descriptor,
+            false,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2336,12 +3408,18 @@ pub struct TmsMerchantInformationMerchantDescriptor {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for TmsMerchantInformationMerchantDescriptor {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[doc(alias = "tmsMerchantInformation")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsPaymentCredentialsMerchantInformation {
     #[serde(rename = "merchantDescriptor", skip_serializing_if = "Option::is_none")]
     pub merchant_descriptor: Option<TmsMerchantInformationMerchantDescriptor>,
+}
+impl v::Validate for TmsPaymentCredentialsMerchantInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[doc(alias = "tmsPaymentInstrumentProcessingInfo")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2360,6 +3438,17 @@ pub struct TmsPaymentInstrumentProcessingInfo {
     )]
     pub bill_payment_program_enabled: Option<bool>,
 }
+impl v::Validate for TmsPaymentInstrumentProcessingInfo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "bankTransferOptions",
+            &self.bank_transfer_options,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsPaymentInstrumentProcessingInfoBankTransferOptions {
@@ -2371,12 +3460,38 @@ pub struct TmsPaymentInstrumentProcessingInfoBankTransferOptions {
     )]
     pub sec_code: Option<String>,
 }
+impl v::Validate for TmsPaymentInstrumentProcessingInfoBankTransferOptions {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "SECCode",
+            &self.sec_code,
+            false,
+            None,
+            Some(3),
+            None,
+        );
+    }
+}
 #[doc(alias = "tmsPointOfSaleInformation")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct TmsPointOfSaleInformation {
     #[serde(rename = "emvTags", skip_serializing_if = "Option::is_none")]
     pub emv_tags: Option<Vec<TmsPointOfSaleInformationEmvTags>>,
+}
+impl v::Validate for TmsPointOfSaleInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::list(
+            path,
+            out,
+            "emvTags",
+            &self.emv_tags,
+            true,
+            (Some(1), Some(50)),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2399,6 +3514,31 @@ pub struct TmsPointOfSaleInformationEmvTags {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for TmsPointOfSaleInformationEmvTags {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::present(path, out, "source", &self.source);
+        v::string(
+            path,
+            out,
+            "tag",
+            &self.tag,
+            true,
+            Some(1),
+            Some(10),
+            Some(&crate::generated::patterns::P38),
+        );
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            true,
+            Some(1),
+            Some(64),
+            None,
+        );
+    }
 }
 #[doc(alias = "tmsv2TokenizedCard")]
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2560,6 +3700,21 @@ impl ::std::fmt::Debug for Tmsv2TokenizedCard {
             .finish()
     }
 }
+impl v::Validate for Tmsv2TokenizedCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "card", &self.card, false);
+        v::string(
+            path,
+            out,
+            "requestorId",
+            &self.requestor_id,
+            false,
+            None,
+            Some(11),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2TokenizedCardCard {
@@ -2642,6 +3797,40 @@ impl ::std::fmt::Debug for Tmsv2TokenizedCardCard {
             .finish()
     }
 }
+impl v::Validate for Tmsv2TokenizedCardCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            Some(12),
+            Some(19),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2TokenizedCardCardTermsAndConditions {
@@ -2651,6 +3840,9 @@ pub struct Tmsv2TokenizedCardCardTermsAndConditions {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub url: Option<String>,
+}
+impl v::Validate for Tmsv2TokenizedCardCardTermsAndConditions {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2667,6 +3859,9 @@ pub struct Tmsv2TokenizedCardMetadata {
     /// Issuer associated with the tokenized card.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub issuer: Option<Tmsv2TokenizedCardMetadataIssuer>,
+}
+impl v::Validate for Tmsv2TokenizedCardMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Issuer associated with the tokenized card.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2724,6 +3919,9 @@ pub struct Tmsv2TokenizedCardMetadataIssuer {
     )]
     pub url: Option<String>,
 }
+impl v::Validate for Tmsv2TokenizedCardMetadataIssuer {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2TokenizedCardMetadataIssuerBankApplications {
@@ -2739,6 +3937,9 @@ pub struct Tmsv2TokenizedCardMetadataIssuerBankApplications {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub name: Option<String>,
+}
+impl v::Validate for Tmsv2TokenizedCardMetadataIssuerBankApplications {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Flags indicating what authentication, binding, and trusted-beneficiary enrollment capabilities the issuer supports. Supported only for VTS Tokens.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2794,6 +3995,9 @@ pub struct Tmsv2TokenizedCardMetadataIssuerCapabilities {
     )]
     pub trusted_beneficiary_enrollment_supported: Option<bool>,
 }
+impl v::Validate for Tmsv2TokenizedCardMetadataIssuerCapabilities {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Verification results returned by the issuer during the provisioning when Security Code or Billing Address data is provided on the request. Supported only for VTS tokens.
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2823,6 +4027,9 @@ impl ::std::fmt::Debug for Tmsv2TokenizedCardVerificationResults {
             .finish()
     }
 }
+impl v::Validate for Tmsv2TokenizedCardVerificationResults {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeProcessingInformation {
@@ -2832,6 +4039,9 @@ pub struct Tmsv2tokenizeProcessingInformation {
     /// TMS tokens types you want to perform the action on.
     #[serde(rename = "actionTokenTypes", skip_serializing_if = "Option::is_none")]
     pub action_token_types: Option<Vec<String>>,
+}
+impl v::Validate for Tmsv2tokenizeProcessingInformation {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2874,6 +4084,27 @@ impl ::std::fmt::Debug for Tmsv2tokenizeTokenInformation {
                 &self.transient_token_jwt.as_ref().map(|_| "[REDACTED]"),
             )
             .finish()
+    }
+}
+impl v::Validate for Tmsv2tokenizeTokenInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "customer", &self.customer, false);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::string(path, out, "jti", &self.jti, false, None, Some(64), None);
+        v::nested(
+            path,
+            out,
+            "paymentInstrument",
+            &self.payment_instrument,
+            false,
+        );
+        v::nested(path, out, "shippingAddress", &self.shipping_address, false);
     }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2922,6 +4153,41 @@ pub struct Tmsv2tokenizeTokenInformationCustomer {
     #[serde(rename = "objectInformation", skip_serializing_if = "Option::is_none")]
     pub object_information: Option<Tmsv2tokenizeTokenInformationCustomerObjectInformation>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomer {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "clientReferenceInformation",
+            &self.client_reference_information,
+            false,
+        );
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::list(
+            path,
+            out,
+            "merchantDefinedInformation",
+            &self.merchant_defined_information,
+            false,
+            (None, None),
+        );
+        v::nested(
+            path,
+            out,
+            "objectInformation",
+            &self.object_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerBuyerInformation {
@@ -2939,6 +4205,30 @@ pub struct Tmsv2tokenizeTokenInformationCustomerBuyerInformation {
     )]
     pub merchant_customer_id: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerBuyerInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "merchantCustomerID",
+            &self.merchant_customer_id,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerClientReferenceInformation {
@@ -2948,6 +4238,11 @@ pub struct Tmsv2tokenizeTokenInformationCustomerClientReferenceInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub code: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerClientReferenceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(path, out, "code", &self.code, false, None, Some(50), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2959,6 +4254,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerDefaultPaymentInstrument {
     )]
     pub id: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerDefaultPaymentInstrument {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerDefaultShippingAddress {
@@ -2968,6 +4266,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerDefaultShippingAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub id: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerDefaultShippingAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Additional resources for the Customer.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2984,6 +4285,24 @@ pub struct Tmsv2tokenizeTokenInformationCustomerEmbedded {
     )]
     pub default_shipping_address: Option<DefaultShippingAddress>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerEmbedded {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(
+            path,
+            out,
+            "defaultPaymentInstrument",
+            &self.default_payment_instrument,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "defaultShippingAddress",
+            &self.default_shipping_address,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerLinks {
@@ -2993,6 +4312,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerLinks {
     pub self_: Option<Tmsv2tokenizeTokenInformationCustomerLinksSelf>,
     #[serde(rename = "shippingAddress", skip_serializing_if = "Option::is_none")]
     pub shipping_address: Option<Tmsv2tokenizeTokenInformationCustomerLinksShippingAddress>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerLinks {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3004,6 +4326,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerLinksPaymentInstruments {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerLinksPaymentInstruments {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerLinksSelf {
@@ -3014,6 +4339,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerLinksSelf {
     )]
     pub href: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerLinksSelf {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerLinksShippingAddress {
@@ -3023,6 +4351,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerLinksShippingAddress {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub href: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerLinksShippingAddress {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3040,6 +4371,20 @@ pub struct Tmsv2tokenizeTokenInformationCustomerMerchantDefinedInformation {
     )]
     pub value: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerMerchantDefinedInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "value",
+            &self.value,
+            false,
+            None,
+            Some(100),
+            None,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationCustomerMetadata {
@@ -3049,6 +4394,9 @@ pub struct Tmsv2tokenizeTokenInformationCustomerMetadata {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub creator: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerMetadata {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3065,6 +4413,21 @@ pub struct Tmsv2tokenizeTokenInformationCustomerObjectInformation {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub title: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizeTokenInformationCustomerObjectInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "comment",
+            &self.comment,
+            false,
+            None,
+            Some(150),
+            None,
+        );
+        v::string(path, out, "title", &self.title, false, None, Some(60), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3134,6 +4497,30 @@ pub struct Tmsv2tokenizeTokenInformationInstrumentIdentifier {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationInstrumentIdentifier {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(path, out, "card", &self.card, false);
+        v::nested(path, out, "issuer", &self.issuer, false);
+        v::nested(
+            path,
+            out,
+            "pointOfSaleInformation",
+            &self.point_of_sale_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+        v::nested(path, out, "tokenizedCard", &self.tokenized_card, false);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizeTokenInformationPaymentInstrument {
@@ -3198,6 +4585,43 @@ pub struct Tmsv2tokenizeTokenInformationPaymentInstrument {
     )]
     pub r#type: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizeTokenInformationPaymentInstrument {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "_embedded", &self.embedded, false);
+        v::nested(path, out, "bankAccount", &self.bank_account, false);
+        v::nested(path, out, "billTo", &self.bill_to, false);
+        v::nested(
+            path,
+            out,
+            "buyerInformation",
+            &self.buyer_information,
+            false,
+        );
+        v::nested(path, out, "card", &self.card, false);
+        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::nested(
+            path,
+            out,
+            "instrumentIdentifier",
+            &self.instrument_identifier,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "merchantInformation",
+            &self.merchant_information,
+            false,
+        );
+        v::nested(
+            path,
+            out,
+            "processingInformation",
+            &self.processing_information,
+            false,
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizedcardsBillTo {
@@ -3254,6 +4678,90 @@ pub struct Tmsv2tokenizedcardsBillTo {
     )]
     pub postal_code: Option<String>,
 }
+impl v::Validate for Tmsv2tokenizedcardsBillTo {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "address1",
+            &self.address1,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "administrativeArea",
+            &self.administrative_area,
+            false,
+            None,
+            Some(20),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "country",
+            &self.country,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "email",
+            &self.email,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "firstName",
+            &self.first_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "lastName",
+            &self.last_name,
+            false,
+            None,
+            Some(60),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "locality",
+            &self.locality,
+            false,
+            None,
+            Some(50),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "postalCode",
+            &self.postal_code,
+            false,
+            None,
+            Some(10),
+            None,
+        );
+    }
+}
 #[derive(Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv2tokenizedcardsCard {
@@ -3294,6 +4802,40 @@ impl ::std::fmt::Debug for Tmsv2tokenizedcardsCard {
             .finish()
     }
 }
+impl v::Validate for Tmsv2tokenizedcardsCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "number",
+            &self.number,
+            false,
+            Some(12),
+            Some(19),
+            None,
+        );
+    }
+}
 /// Passcode by issuer for ID&V.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3304,6 +4846,9 @@ pub struct Tmsv2tokenizedcardsPasscode {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub value: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizedcardsPasscode {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }
 /// Reason for deleting the network token.
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -3321,6 +4866,20 @@ pub struct Tmsv2tokenizedcardstokenizedCardIddeleteReason {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub description: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizedcardstokenizedCardIddeleteReason {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "description",
+            &self.description,
+            false,
+            None,
+            Some(255),
+            None,
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3345,6 +4904,31 @@ pub struct Tmsv2tokenizedcardstokenizedCardIdissuerlifecycleeventsimulationsCard
         deserialize_with = "crate::types::lenient::string"
     )]
     pub last4: Option<String>,
+}
+impl v::Validate for Tmsv2tokenizedcardstokenizedCardIdissuerlifecycleeventsimulationsCard {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "expirationMonth",
+            &self.expiration_month,
+            false,
+            None,
+            Some(2),
+            None,
+        );
+        v::string(
+            path,
+            out,
+            "expirationYear",
+            &self.expiration_year,
+            false,
+            None,
+            Some(4),
+            None,
+        );
+        v::string(path, out, "last4", &self.last4, false, None, Some(4), None);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3381,6 +4965,40 @@ pub struct Tmsv3tokenstokenIdpaymentcredentialsAuthenticatedIdentities {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub user_authentication_method: Option<String>,
+}
+impl v::Validate for Tmsv3tokenstokenIdpaymentcredentialsAuthenticatedIdentities {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "data",
+            &self.data,
+            false,
+            None,
+            Some(17000),
+            Some(&crate::generated::patterns::P10),
+        );
+        v::string(
+            path,
+            out,
+            "id",
+            &self.id,
+            false,
+            None,
+            Some(50),
+            Some(&crate::generated::patterns::P10),
+        );
+        v::string(
+            path,
+            out,
+            "relyingPartyId",
+            &self.relying_party_id,
+            false,
+            None,
+            Some(2000),
+            Some(&crate::generated::patterns::P10),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3463,6 +5081,90 @@ pub struct Tmsv3tokenstokenIdpaymentcredentialsDeviceInformation {
     )]
     pub user_agent_browser_value: Option<String>,
 }
+impl v::Validate for Tmsv3tokenstokenIdpaymentcredentialsDeviceInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "httpAcceptContent",
+            &self.http_accept_content,
+            false,
+            None,
+            Some(2048),
+            Some(&crate::generated::patterns::P11),
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserColorDepth",
+            &self.http_browser_color_depth,
+            false,
+            None,
+            Some(2),
+            Some(&crate::generated::patterns::P9),
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserLanguage",
+            &self.http_browser_language,
+            false,
+            None,
+            Some(8),
+            Some(&crate::generated::patterns::P11),
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenHeight",
+            &self.http_browser_screen_height,
+            false,
+            None,
+            Some(6),
+            Some(&crate::generated::patterns::P9),
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserScreenWidth",
+            &self.http_browser_screen_width,
+            false,
+            None,
+            Some(6),
+            Some(&crate::generated::patterns::P9),
+        );
+        v::string(
+            path,
+            out,
+            "httpBrowserTimeDifference",
+            &self.http_browser_time_difference,
+            false,
+            None,
+            Some(5),
+            Some(&crate::generated::patterns::P9),
+        );
+        v::string(
+            path,
+            out,
+            "ipAddress",
+            &self.ip_address,
+            false,
+            None,
+            Some(45),
+            Some(&crate::generated::patterns::P7),
+        );
+        v::string(
+            path,
+            out,
+            "userAgentBrowserValue",
+            &self.user_agent_browser_value,
+            false,
+            None,
+            Some(2048),
+            Some(&crate::generated::patterns::P11),
+        );
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct Tmsv3tokenstokenIdpaymentcredentialsOrderInformation {
@@ -3470,6 +5172,11 @@ pub struct Tmsv3tokenstokenIdpaymentcredentialsOrderInformation {
     pub amount_details: Option<Tmsv3tokenstokenIdpaymentcredentialsOrderInformationAmountDetails>,
     #[serde(rename = "billTo", skip_serializing_if = "Option::is_none")]
     pub bill_to: Option<Tmsv2tokenizedcardsBillTo>,
+}
+impl v::Validate for Tmsv3tokenstokenIdpaymentcredentialsOrderInformation {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::nested(path, out, "billTo", &self.bill_to, false);
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -3487,4 +5194,7 @@ pub struct Tmsv3tokenstokenIdpaymentcredentialsOrderInformationAmountDetails {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub total_amount: Option<String>,
+}
+impl v::Validate for Tmsv3tokenstokenIdpaymentcredentialsOrderInformationAmountDetails {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }

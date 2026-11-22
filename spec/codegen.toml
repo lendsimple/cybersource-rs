@@ -122,3 +122,28 @@ getAllSubscriptions = { total = "totalCount", items = "subscriptions" }
 subscriptionsIdPaymentsGet = { total = "totalCount", items = "subscriptionPayment" }
 getAllInvoices = { total = "totalInvoices", items = "invoices" }
 getAllPaymentLinks = { total = "totalLinks", items = "links" }
+
+# Request-body patterns that the `regex` crate cannot use as written. Keys
+# are the spec's pattern, verbatim. An entry gives a `regex` the value must
+# match and/or a `reject` list it must match none of (what a negative
+# lookahead excluded), or `skip` alone with the reason the pattern is not
+# checked. Codegen strips JavaScript `/.../` delimiters and unescapes HTML
+# entities itself; any other pattern that does not compile is an error.
+[patterns]
+# Agentic commerce: free text that is not only punctuation and has no "./"
+# on its first line. `.` stops at a newline, as in the original.
+"(?!^[*.,'#_/-]+$)(?!.*\\./.*)^.*$" = { regex = '^.*$', reject = ["^[*.,'#_/-]+$", '^.*\./'] }
+"(?!^[*.,'#_/-]+$)(?!.*\\./.*)^.+$" = { regex = '^.+$', reject = ["^[*.,'#_/-]+$", '^.*\./'] }
+# The same with `(?s)`: any text, newlines included, so only the rejects remain.
+"(?s)(?!^[*.,'#_/-]+$)(?!.*\\./.*)^.*$" = { reject = ["^[*.,'#_/-]+$", '\./'] }
+"(?!^[*.,'#_/-]+$)^.*$" = { regex = '^.*$', reject = ["^[*.,'#_/-]+$"] }
+# Boarding passport number: 3-20 alphanumerics, not all zeros.
+"^(?!^0+$)[a-zA-Z0-9]{3,20}$" = { regex = '^[a-zA-Z0-9]{3,20}$', reject = ['^0+$'] }
+# Boarding token requestor ids: a double-escaped `\z` and a stray quote make
+# the pattern unmatchable; the description says 11 digits.
+"^[0-9]{11}\\\\z$\"" = { regex = '^[0-9]{11}$' }
+# Boarding Amex SE number: 11 digits, but maxLength is 10 and the example
+# has 10 digits.
+"^[0-9]{11}\\z$" = { skip = "contradicts the field's maxLength (10) and example" }
+# Boarding preferredAcquirer: allows exactly one character, but maxLength is 30.
+"^[a-zA-Z0-9-_]$" = { skip = "allows one character; maxLength is 30" }

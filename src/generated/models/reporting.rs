@@ -3,6 +3,8 @@
 
 #[allow(unused_imports)]
 use super::*;
+#[allow(unused_imports)]
+use crate::validate as v;
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct CreateAdhocReportRequest {
@@ -68,6 +70,50 @@ pub struct CreateAdhocReportRequest {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub timezone: Option<String>,
+}
+impl v::Validate for CreateAdhocReportRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "groupName",
+            &self.group_name,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P8),
+        );
+        v::string(
+            path,
+            out,
+            "organizationId",
+            &self.organization_id,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P14),
+        );
+        v::string(
+            path,
+            out,
+            "reportDefinitionName",
+            &self.report_definition_name,
+            false,
+            Some(1),
+            Some(80),
+            Some(&crate::generated::patterns::P12),
+        );
+        v::string(
+            path,
+            out,
+            "reportName",
+            &self.report_name,
+            false,
+            Some(1),
+            Some(128),
+            Some(&crate::generated::patterns::P13),
+        );
+    }
 }
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -148,6 +194,74 @@ pub struct CreateReportSubscriptionRequest {
     )]
     pub timezone: Option<String>,
 }
+impl v::Validate for CreateReportSubscriptionRequest {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "groupName",
+            &self.group_name,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P13),
+        );
+        v::string(
+            path,
+            out,
+            "organizationId",
+            &self.organization_id,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P14),
+        );
+        v::string(
+            path,
+            out,
+            "reportDefinitionName",
+            &self.report_definition_name,
+            true,
+            Some(1),
+            Some(80),
+            Some(&crate::generated::patterns::P12),
+        );
+        v::present(path, out, "reportFields", &self.report_fields);
+        v::present(path, out, "reportFrequency", &self.report_frequency);
+        v::string(
+            path,
+            out,
+            "reportInterval",
+            &self.report_interval,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P37),
+        );
+        v::present(path, out, "reportMimeType", &self.report_mime_type);
+        v::string(
+            path,
+            out,
+            "reportName",
+            &self.report_name,
+            true,
+            Some(1),
+            Some(128),
+            Some(&crate::generated::patterns::P13),
+        );
+        v::number(
+            path,
+            out,
+            "startDay",
+            &self.start_day,
+            false,
+            Some(1i64),
+            Some(31i64),
+        );
+        v::present(path, out, "startTime", &self.start_time);
+        v::present(path, out, "timezone", &self.timezone);
+    }
+}
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
 pub struct PredefinedSubscriptionRequestBean {
@@ -219,6 +333,50 @@ pub struct PredefinedSubscriptionRequestBean {
         deserialize_with = "crate::types::lenient::string"
     )]
     pub timezone: Option<String>,
+}
+impl v::Validate for PredefinedSubscriptionRequestBean {
+    fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
+        v::string(
+            path,
+            out,
+            "reportDefinitionName",
+            &self.report_definition_name,
+            true,
+            Some(1),
+            Some(80),
+            Some(&crate::generated::patterns::P15),
+        );
+        v::string(
+            path,
+            out,
+            "reportInterval",
+            &self.report_interval,
+            false,
+            None,
+            None,
+            Some(&crate::generated::patterns::P37),
+        );
+        v::string(
+            path,
+            out,
+            "reportName",
+            &self.report_name,
+            false,
+            Some(1),
+            Some(128),
+            Some(&crate::generated::patterns::P13),
+        );
+        v::number(
+            path,
+            out,
+            "startDay",
+            &self.start_day,
+            false,
+            Some(1i64),
+            Some(31i64),
+        );
+        v::present(path, out, "subscriptionType", &self.subscription_type);
+    }
 }
 #[doc(alias = "reportDefinitionDefaultSettings")]
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
@@ -2390,6 +2548,9 @@ pub struct Reportingv3reportsReportFilters {
     #[serde(rename = "lastName", skip_serializing_if = "Option::is_none")]
     pub last_name: Option<Vec<String>>,
 }
+impl v::Validate for Reportingv3reportsReportFilters {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
+}
 /// Report Preferences
 #[derive(Debug, Clone, Default, PartialEq, ::serde::Serialize, ::serde::Deserialize)]
 #[serde(default)]
@@ -2408,4 +2569,7 @@ pub struct Reportingv3reportsReportPreferences {
         deserialize_with = "crate::types::lenient::bool"
     )]
     pub signed_amounts: Option<bool>,
+}
+impl v::Validate for Reportingv3reportsReportPreferences {
+    fn validate_into(&self, _path: &mut v::Path, _out: &mut Vec<v::Violation>) {}
 }

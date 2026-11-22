@@ -57,6 +57,9 @@ impl Operation for AuthReversal {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -102,6 +105,9 @@ impl Operation for BillingAgreementsDeRegistration {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -149,6 +155,9 @@ impl Operation for BillingAgreementsIntimation {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -186,6 +195,9 @@ impl Operation for BillingAgreementsRegistration {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -234,6 +246,9 @@ impl Operation for CapturePayment {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -270,6 +285,9 @@ impl Operation for CreateCredit {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -303,6 +321,9 @@ impl Operation for CreateOrder {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -349,6 +370,9 @@ impl Operation for CreateOrderRequest {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -384,6 +408,9 @@ impl Operation for CreatePayment {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -421,6 +448,9 @@ impl Operation for CreateSessionRequest {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -466,6 +496,9 @@ impl Operation for IncrementAuth {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -502,6 +535,9 @@ impl Operation for MitReversal {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -535,6 +571,9 @@ impl Operation for MitVoid {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -580,6 +619,9 @@ impl Operation for RefreshPaymentStatus {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -628,6 +670,9 @@ impl Operation for RefundCapture {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -675,6 +720,9 @@ impl Operation for RefundPayment {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -711,6 +759,9 @@ impl Operation for RetrieveOrDeletePaymentToken {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -753,6 +804,9 @@ impl Operation for UpdateOrder {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -799,6 +853,9 @@ impl Operation for UpdateSessionRequest {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -841,6 +898,9 @@ impl Operation for VoidCapture {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
@@ -885,6 +945,9 @@ impl Operation for VoidCredit {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -928,6 +991,9 @@ impl Operation for VoidPayment {
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
     }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
+    }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
     }
@@ -970,6 +1036,9 @@ impl Operation for VoidRefund {
     }
     fn body(&self) -> Result<Option<Bytes>> {
         json_body(&self.body)
+    }
+    fn validate(&self) -> ::std::result::Result<(), crate::validate::ValidationError> {
+        crate::validate::Validate::validate(&self.body)
     }
     fn decode(&self, _status: StatusCode, body: &Bytes) -> Result<Self::Output> {
         json_decode(body)
