@@ -183,6 +183,7 @@ pub struct Config {
     user_agent: String,
     mle: MleConfig,
     developer_id: Option<String>,
+    validate_requests: bool,
 }
 
 /// What a certificate is used for.
@@ -251,6 +252,12 @@ impl Config {
         /// that accept it and don't already have one. Off by default.
         #[builder(into)]
         developer_id: Option<String>,
+        /// Whether request bodies are checked against the spec's
+        /// constraints before sending. On by default; an invalid body fails
+        /// with [`Error::Validation`] and is never sent. Turn it off only to
+        /// work around a constraint the spec gets wrong.
+        #[builder(default = true)]
+        validate_requests: bool,
     ) -> Result<Self> {
         let merchant_id = non_empty("merchant id", merchant_id)?;
         let portfolio_id = portfolio_id
@@ -275,6 +282,7 @@ impl Config {
             developer_id: developer_id
                 .map(|d| non_empty("developer id", d))
                 .transpose()?,
+            validate_requests,
         };
         #[cfg(feature = "tracing")]
         crate::telemetry::config_warnings(&config);
@@ -311,6 +319,11 @@ impl Config {
     /// The partner developer id added to request bodies, if configured.
     pub fn developer_id(&self) -> Option<&str> {
         self.developer_id.as_deref()
+    }
+
+    /// Whether request bodies are validated before sending.
+    pub fn validate_requests(&self) -> bool {
+        self.validate_requests
     }
 
     /// Message-level encryption settings.

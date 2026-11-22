@@ -824,6 +824,35 @@ Each stage leaves the crate compiling with green tests, and each is committed in
 - **Package:** 180 files, 5.2 MiB (692 KiB compressed), with tests included. Every test passes from the `.crate`; the live and p12 tests stay ignored.
 - **Before the first release:** do the one-time setup in `RELEASING.md` (the `crates-io` environment and `CARGO_REGISTRY_TOKEN`).
 
+### Stage 7: Request validation before sending
+**Status:** In Progress
+**Goal:** Check request bodies against the spec's constraints before sending them, as authorizenet-rs does, so a bad value is reported with its field path instead of an opaque `400 INVALID_DATA`.
+
+**Decisions**
+- On by default; `Config::builder().validate_requests(false)` turns it off, as an escape hatch for a constraint the spec gets wrong.
+- Patterns are enforced with the `regex` crate. The spec's broken patterns (lookarounds, `/.../` delimiters, HTML entities, format placeholders) are repaired or skipped through a `[patterns]` table in `spec/codegen.toml`. A pattern that still fails to compile is a codegen error.
+
+**Work**
+- **7a, runtime.**
+  - `src/validate.rs` holds the public `Validate`, `Violation` and `ValidationError`, plus the hidden `Path` and the `check_*` functions the generated code calls.
+  - `Error::Validation` and the `validate_requests` config option.
+  - `Operation::validate`, which `pipeline::prepare` calls before `body()`.
+- **7b, codegen IR.** `required`, `minLength`/`maxLength`, `pattern`, `minimum`/`maximum` and `minItems`/`maxItems` are read into `Field`.
+- **7c, emission.**
+  - `src/generated/patterns.rs` holds one lazily compiled `Regex` per pattern.
+  - `impl Validate` for every model reachable from a request body.
+  - `Operation::validate` overrides on the generated operations.
+- **7d, tests.**
+  - Every request-body spec example passes validation; the exceptions are an explicit allow-list.
+  - Client tests: invalid requests are never sent, and validation can be turned off.
+- **7e, docs.** CHANGELOG, README and this outcome.
+
+**Success criteria**
+- The pipeline tests show that an invalid body never reaches the transport, through both the async and the blocking client.
+- `cargo xtask check-codegen` is clean, and every non-skipped spec pattern compiles.
+- Every request spec example validates, apart from the listed exceptions.
+- Wasm builds still pass, and the `full` build stays within the Stage 2 budget.
+
 ---
 
 ## 4. Verification (end to end)
