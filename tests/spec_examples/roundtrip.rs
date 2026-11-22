@@ -5,6 +5,7 @@
 
 #![allow(dead_code)]
 
+use cybersource::validate::Validate;
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
@@ -12,6 +13,7 @@ use serde_json::Value;
 const DATA: &str = include_str!("examples.json");
 
 pub type Check = fn(&Value, &[String]) -> Result<(), String>;
+pub type Valid = fn(&Value) -> Result<(), String>;
 
 /// Deserializes `value` as `T`, serializes it back, and reports any field
 /// that was dropped or changed, except at `ignore` paths (where the example
@@ -32,6 +34,17 @@ pub fn check<T: DeserializeOwned + Serialize>(
     } else {
         Err(diffs.join("; "))
     }
+}
+
+/// Deserializes `value` as `T` and validates it, as the client would
+/// before sending it.
+pub fn valid<T: DeserializeOwned + Validate>(value: &Value) -> Result<(), String> {
+    let typed: T =
+        serde_json::from_value(value.clone()).map_err(|e| format!("deserialize: {e}"))?;
+    typed.validate().map_err(|e| {
+        let all: Vec<String> = e.violations().iter().map(ToString::to_string).collect();
+        format!("invalid: {}", all.join("; "))
+    })
 }
 
 fn compare(path: &str, original: &Value, back: &Value, ignore: &[String], diffs: &mut Vec<String>) {
@@ -82,11 +95,11 @@ fn scalar_eq(a: &Value, b: &Value) -> bool {
     }
 }
 
-/// Runs every case, failing with all problems not on the allowlist.
-pub fn run(cases: &[(&str, Check)]) {
+/// Runs every case, failing with all problems not on an allowlist.
+pub fn run(cases: &[(&str, Check, Option<Valid>)]) {
     let data: Value = serde_json::from_str(DATA).expect("examples.json");
     let mut failures = Vec::new();
-    for (id, check) in cases {
+    for (id, check, valid) in cases {
         let case = &data["examples"][*id];
         if case["skip"].is_string() {
             continue; // the example contradicts its own schema
@@ -101,6 +114,13 @@ pub fn run(cases: &[(&str, Check)]) {
             )),
             (Err(e), false) => failures.push(format!("{id}: {e}")),
             (Err(_), true) => {}
+        }
+        // Cybersource's own example is evidence the server accepts it: a
+        // constraint it breaks belongs under [relax] in spec/codegen.toml.
+        if let Some(valid) = valid
+            && let Err(e) = valid(&case["value"])
+        {
+            failures.push(format!("{id}: {e}"));
         }
     }
     assert!(

@@ -7046,7 +7046,7 @@ pub struct Iccv1tokensPaymentInformationCustomer {
 }
 impl v::Validate for Iccv1tokensPaymentInformationCustomer {
     fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
-        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::string(path, out, "id", &self.id, false, None, Some(32), None);
     }
 }
 /// Instrument Identifier data.
@@ -7078,7 +7078,7 @@ pub struct Iccv1tokensPaymentInformationPaymentInstrument {
 }
 impl v::Validate for Iccv1tokensPaymentInformationPaymentInstrument {
     fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
-        v::string(path, out, "id", &self.id, false, Some(1), Some(32), None);
+        v::string(path, out, "id", &self.id, false, None, Some(32), None);
     }
 }
 /// Response for GET /icc/v1/agents/{agentId}/keys - agent info at top level with keys array

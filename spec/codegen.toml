@@ -147,3 +147,38 @@ getAllPaymentLinks = { total = "totalLinks", items = "links" }
 "^[0-9]{11}\\z$" = { skip = "contradicts the field's maxLength (10) and example" }
 # Boarding preferredAcquirer: allows exactly one character, but maxLength is 30.
 "^[a-zA-Z0-9-_]$" = { skip = "allows one character; maxLength is 30" }
+
+# Request-body constraints not enforced by client-side validation, keyed by
+# "<operation id> <json.path>" (list items and map entries have no segment)
+# and listing what to drop: required, min_length, max_length, pattern,
+# minimum, maximum, min_items, max_items. Every entry here is a constraint
+# that one of Cybersource's own request examples breaks: the example is
+# evidence the server accepts the value, so the client must not reject it.
+[relax]
+# Non-US/CA regions: "NSW", "Provence-Alpes-Côte d'Azur".
+"generateUnifiedCheckoutCaptureContext data.orderInformation.shipTo.administrativeArea" = ["max_length"]
+"generateUnifiedCheckoutV1CaptureContext data.orderInformation.shipTo.administrativeArea" = ["max_length"]
+"generateUnifiedCheckoutV1CaptureContext data.orderInformation.lineItems.productDescription" = ["max_length"]
+# Example 8 validates a Unified Checkout token (tokenInformation.jti) instead.
+"bankAccountValidationRequest paymentInformation" = ["required"]
+# The example sends empty ids; the server, not the client, rejects them.
+"retrievePaymentCredentials paymentInformation.customer.id" = ["min_length"]
+"retrievePaymentCredentials paymentInformation.paymentInstrument.id" = ["min_length"]
+# Alpha-3 country codes ("USA", "GBR") in funds transfers.
+"createPushFundsTransfer recipientInformation.country" = ["pattern"]
+"createPayment recipientInformation.country" = ["max_length"]
+"createPayment senderInformation.countryCode" = ["max_length"]
+# 35-character names ("senderfirstname_senderfirstname_35C") and a
+# 22-character reference number in AFT/OCT examples.
+"createPayment recipientInformation.middleName" = ["max_length"]
+"createPayment senderInformation.firstName" = ["max_length"]
+"createPayment senderInformation.middleName" = ["max_length"]
+"createPayment senderInformation.referenceNumber" = ["max_length"]
+# The processor's merchantId depends on the processor; the amexdirect, CUP,
+# EFTPOS and fdiglobal examples omit it.
+"postRegistration productInformation.selectedProducts.payments.cardProcessing.configurationInformation.configurations.common.processors.merchantId" = ["required"]
+# Payer authentication with a network token sent without cryptogram or CVV,
+# and travel legs with 4- and 5-character destinations.
+"checkPayerAuthEnrollment paymentInformation.tokenizedCard.cryptogram" = ["required"]
+"checkPayerAuthEnrollment paymentInformation.tokenizedCard.securityCode" = ["required"]
+"checkPayerAuthEnrollment travelInformation.legs.destination" = ["max_length"]

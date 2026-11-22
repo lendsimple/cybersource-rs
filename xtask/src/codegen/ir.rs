@@ -92,6 +92,35 @@ impl Constraints {
         }
     }
 
+    /// Whether the named constraint is set; `None` for an unknown name.
+    fn has(&self, name: &str) -> Option<bool> {
+        Some(match name {
+            "required" => self.required,
+            "min_length" => self.min_length.is_some(),
+            "max_length" => self.max_length.is_some(),
+            "pattern" => self.pattern.is_some(),
+            "minimum" => self.minimum.is_some(),
+            "maximum" => self.maximum.is_some(),
+            "min_items" => self.min_items.is_some(),
+            "max_items" => self.max_items.is_some(),
+            _ => return None,
+        })
+    }
+
+    fn drop(&mut self, name: &str) {
+        match name {
+            "required" => self.required = false,
+            "min_length" => self.min_length = None,
+            "max_length" => self.max_length = None,
+            "pattern" => self.pattern = None,
+            "minimum" => self.minimum = None,
+            "maximum" => self.maximum = None,
+            "min_items" => self.min_items = None,
+            "max_items" => self.max_items = None,
+            _ => unreachable!("checked by has()"),
+        }
+    }
+
     /// The loosest constraints satisfying both: a model shared by several
     /// operations must not reject what any of them allows.
     fn loosest(&self, other: &Self) -> Self {
@@ -334,6 +363,71 @@ pub struct Ir {
 }
 
 impl Ir {
+    /// Drops constraints the spec gets wrong (`[relax]` in codegen.toml),
+    /// reporting entries that name no field or a constraint it lacks.
+    pub fn relax(&mut self, table: &BTreeMap<String, Vec<String>>) -> Result<(), Vec<String>> {
+        let mut errors = Vec::new();
+        let mut targets = Vec::new();
+        for (key, names) in table {
+            let found = key
+                .split_once(' ')
+                .ok_or_else(|| "must be \"<operation id> <json.path>\"".to_owned())
+                .and_then(|(op, path)| self.field_at(op, path));
+            match found {
+                Ok((model, index)) => {
+                    let c = &self.models[&model].fields[index].constraints;
+                    for name in names {
+                        match c.has(name) {
+                            Some(true) => targets.push((model.clone(), index, name.clone())),
+                            Some(false) => errors.push(format!(
+                                "[relax] {key:?}: the field has no `{name}` constraint; remove it"
+                            )),
+                            None => {
+                                errors.push(format!("[relax] {key:?}: unknown constraint `{name}`"))
+                            }
+                        }
+                    }
+                }
+                Err(e) => errors.push(format!("[relax] {key:?}: {e}")),
+            }
+        }
+        if !errors.is_empty() {
+            return Err(errors);
+        }
+        for (model, index, name) in targets {
+            let c = &mut self.models.get_mut(&model).unwrap().fields[index].constraints;
+            c.drop(&name);
+        }
+        Ok(())
+    }
+
+    /// The model and field index at a JSON path in an operation's body.
+    fn field_at(&self, op_id: &str, path: &str) -> Result<(String, usize), String> {
+        let op = self
+            .operations
+            .iter()
+            .find(|o| o.id == op_id)
+            .ok_or_else(|| format!("no operation `{op_id}`"))?;
+        let mut ty = op.body.as_ref().ok_or("the operation has no body")?;
+        let mut found = None;
+        for segment in path.split('.') {
+            while let Ty::Vec(t) | Ty::Map(t) = ty {
+                ty = t;
+            }
+            let Ty::Model(name) = ty else {
+                return Err(format!("`{segment}` is inside a non-object"));
+            };
+            let index = self.models[name]
+                .fields
+                .iter()
+                .position(|f| f.json_name == segment)
+                .ok_or_else(|| format!("`{name}` has no field `{segment}`"))?;
+            ty = &self.models[name].fields[index].ty;
+            found = Some((name.clone(), index));
+        }
+        found.ok_or_else(|| "empty path".to_owned())
+    }
+
     /// Models reachable from a request body: the ones that get validated.
     pub fn request_models(&self) -> BTreeSet<String> {
         fn visit(ir: &Ir, ty: &Ty, seen: &mut BTreeSet<String>) {
@@ -1393,6 +1487,72 @@ mod tests {
                 "CreatePaymentRequestPaymentInformationCard",
                 "Ptsv2paymentsClientReferenceInformation",
             ]
+        );
+    }
+
+    fn relax_ir() -> Ir {
+        let schema = json!({
+            "type": "object", "title": "Order", "required": ["code"],
+            "properties": {
+                "code": {"type": "string", "maxLength": 3},
+                "lines": {"type": "array", "items": {
+                    "type": "object", "title": "Line",
+                    "properties": {"sku": {"type": "string", "maxLength": 5}}
+                }}
+            }
+        });
+        build(
+            &spec(json!({"/o": {"post": body_op("createOrder", schema)}})),
+            &config(),
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn relax_drops_constraints_by_body_path() {
+        let mut ir = relax_ir();
+        let table = BTreeMap::from([
+            ("createOrder code".to_owned(), vec!["required".to_owned()]),
+            (
+                "createOrder lines.sku".to_owned(),
+                vec!["max_length".to_owned()],
+            ),
+        ]);
+        ir.relax(&table).unwrap();
+        let code = &ir.models["Order"].fields[0].constraints;
+        assert!(!code.required);
+        assert_eq!(code.max_length, Some(3), "other constraints stay");
+        assert_eq!(ir.models["Line"].fields[0].constraints.max_length, None);
+    }
+
+    #[test]
+    fn relax_entries_must_name_a_real_constraint() {
+        let mut ir = relax_ir();
+        let table = BTreeMap::from([
+            ("createOrder nope".to_owned(), vec!["required".to_owned()]),
+            (
+                "createOrder code".to_owned(),
+                vec!["pattern".to_owned(), "colour".to_owned()],
+            ),
+            ("missingOp code".to_owned(), vec!["required".to_owned()]),
+        ]);
+        let errors = ir.relax(&table).unwrap_err();
+        assert_eq!(errors.len(), 4, "{errors:?}");
+        assert!(errors.iter().any(|e| e.contains("has no field `nope`")));
+        assert!(errors.iter().any(|e| e.contains("no `pattern` constraint")));
+        assert!(
+            errors
+                .iter()
+                .any(|e| e.contains("unknown constraint `colour`"))
+        );
+        assert!(
+            errors
+                .iter()
+                .any(|e| e.contains("no operation `missingOp`"))
+        );
+        assert!(
+            ir.models["Order"].fields[0].constraints.required,
+            "nothing applied"
         );
     }
 }

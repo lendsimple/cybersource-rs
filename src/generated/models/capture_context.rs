@@ -3509,16 +3509,6 @@ impl v::Validate for Ucv1sessionsDataOrderInformationLineItems {
         v::string(
             path,
             out,
-            "productDescription",
-            &self.product_description,
-            false,
-            None,
-            Some(30),
-            None,
-        );
-        v::string(
-            path,
-            out,
             "productName",
             &self.product_name,
             false,
@@ -3835,16 +3825,6 @@ impl v::Validate for Ucv1sessionsDataOrderInformationShipTo {
             false,
             None,
             Some(60),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "administrativeArea",
-            &self.administrative_area,
-            false,
-            None,
-            Some(2),
             None,
         );
         v::string(
@@ -6965,16 +6945,6 @@ impl v::Validate for Upv1capturecontextsDataOrderInformationShipTo {
             false,
             None,
             Some(60),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "administrativeArea",
-            &self.administrative_area,
-            false,
-            None,
-            Some(2),
             None,
         );
         v::string(

@@ -23,7 +23,8 @@ pub fn load() -> Result<(ir::Ir, config::Config, patterns::Patterns)> {
     let config_text = fs::read_to_string(workspace_root().join("spec/codegen.toml"))
         .map_err(|e| format!("reading spec/codegen.toml: {e}"))?;
     let config = config::Config::parse(&config_text)?;
-    let ir = ir::build(&spec, &config).map_err(problems)?;
+    let mut ir = ir::build(&spec, &config).map_err(problems)?;
+    ir.relax(&config.relax).map_err(problems)?;
     let errors = emit::validate(&ir);
     if !errors.is_empty() {
         return Err(problems(errors));

@@ -32,7 +32,7 @@ impl v::Validate for AccountValidationsRequest {
             out,
             "paymentInformation",
             &self.payment_information,
-            true,
+            false,
         );
         v::nested(
             path,

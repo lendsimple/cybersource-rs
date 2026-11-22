@@ -3933,7 +3933,7 @@ impl v::Validate for Riskv1authenticationsPaymentInformationTokenizedCard {
             out,
             "cryptogram",
             &self.cryptogram,
-            true,
+            false,
             None,
             Some(255),
             None,
@@ -3973,7 +3973,7 @@ impl v::Validate for Riskv1authenticationsPaymentInformationTokenizedCard {
             out,
             "securityCode",
             &self.security_code,
-            true,
+            false,
             None,
             Some(4),
             None,
@@ -9182,16 +9182,6 @@ impl v::Validate for Riskv1decisionsTravelInformationLegs {
             false,
             None,
             Some(2),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "destination",
-            &self.destination,
-            false,
-            None,
-            Some(3),
             None,
         );
         v::string(
