@@ -6,6 +6,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-22
+
 ### Added
 
 - Request validation. Request bodies are checked against the spec before
@@ -19,16 +21,27 @@ uses [Semantic Versioning](https://semver.org/).
 - `Operation::validate`, which the pipeline runs before serializing the
   body. Hand-written operations inherit a default that accepts anything.
 
-### Notes
+### Changed
 
-- Patterns are compiled with the `regex` crate, now a dependency of the
-  `server` feature. The spec's patterns are written for Java and
-  JavaScript; those Rust cannot compile as written are repaired or skipped
-  in `spec/codegen.toml`.
+- Requests are validated by default, so a body that 0.1 sent to
+  Cybersource (and that Cybersource would reject) now fails locally with
+  `Error::Validation` instead of `Error::Api`. Code that matches on
+  `Error::Api` to report bad input should also handle `Error::Validation`.
 - Constraints that Cybersource's own request examples break (for example
   2-character `administrativeArea` against "NSW", or 30-character sender
   names against 35-character ones) are not enforced, so validation does not
   reject requests Cybersource documents as valid.
+- Patterns are compiled with the `regex` crate, now a dependency of the
+  `server` feature. The spec's patterns are written for Java and
+  JavaScript; those Rust cannot compile as written are repaired or skipped
+  in `spec/codegen.toml`.
+
+### Security
+
+- `url` is updated to 2.5.9 in `Cargo.lock` for RUSTSEC-2026-0592 (a stack
+  overflow in `Url::origin()` on nested `blob:` URLs), which reached the
+  crate through `reqwest`. Lock files are not published, so update `url` in
+  your own project as well.
 
 ## [0.1.0] - 2026-11-21
 
@@ -70,5 +83,6 @@ First release.
 - Transports: `reqwest` (async; native and wasm), `ureq` (blocking),
   `fetch` (Cloudflare Workers, Deno and Node) and `wasi` (WASI 0.2).
 
-[Unreleased]: https://github.com/lendsimple/cybersource-rs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/lendsimple/cybersource-rs/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/lendsimple/cybersource-rs/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/lendsimple/cybersource-rs/releases/tag/v0.1.0
