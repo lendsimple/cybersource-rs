@@ -3207,7 +3207,6 @@ pub struct CardProcessingConfigCommonProcessors {
 }
 impl v::Validate for CardProcessingConfigCommonProcessors {
     fn validate_into(&self, path: &mut v::Path, out: &mut Vec<v::Violation>) {
-        v::present(path, out, "merchantId", &self.merchant_id);
         v::string(
             path,
             out,

@@ -22554,16 +22554,6 @@ impl v::Validate for Ptsv2paymentsRecipientInformation {
         v::string(
             path,
             out,
-            "country",
-            &self.country,
-            false,
-            None,
-            Some(2),
-            None,
-        );
-        v::string(
-            path,
-            out,
             "countryOfBirth",
             &self.country_of_birth,
             false,
@@ -22619,16 +22609,6 @@ impl v::Validate for Ptsv2paymentsRecipientInformation {
             false,
             None,
             Some(25),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "middleName",
-            &self.middle_name,
-            false,
-            None,
-            Some(30),
             None,
         );
         v::string(
@@ -23295,31 +23275,11 @@ impl v::Validate for Ptsv2paymentsSenderInformation {
         v::string(
             path,
             out,
-            "countryCode",
-            &self.country_code,
-            false,
-            None,
-            Some(2),
-            None,
-        );
-        v::string(
-            path,
-            out,
             "email",
             &self.email,
             false,
             None,
             Some(255),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "firstName",
-            &self.first_name,
-            false,
-            None,
-            Some(30),
             None,
         );
         v::string(
@@ -23345,31 +23305,11 @@ impl v::Validate for Ptsv2paymentsSenderInformation {
         v::string(
             path,
             out,
-            "middleName",
-            &self.middle_name,
-            false,
-            None,
-            Some(30),
-            None,
-        );
-        v::string(
-            path,
-            out,
             "postalCode",
             &self.postal_code,
             false,
             None,
             Some(10),
-            None,
-        );
-        v::string(
-            path,
-            out,
-            "referenceNumber",
-            &self.reference_number,
-            false,
-            None,
-            Some(19),
             None,
         );
     }

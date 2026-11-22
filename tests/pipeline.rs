@@ -302,6 +302,34 @@ async fn validation_can_be_turned_off() {
 }
 
 #[tokio::test]
+async fn generated_operations_validate_their_body() {
+    let mock = MockTransport::new();
+    let mut body = payment();
+    let order = body.order_information.as_mut().unwrap();
+    order.amount_details.as_mut().unwrap().currency = Some("US dollars".into());
+    order.bill_to.as_mut().unwrap().country = Some("United States".into());
+
+    let err = jwt_client(&mock)
+        .payments()
+        .create_payment(body)
+        .await
+        .unwrap_err();
+
+    let Error::Validation(err) = err else {
+        panic!("expected Validation, got {err:?}");
+    };
+    let paths: Vec<&str> = err.violations().iter().map(|v| v.path.as_str()).collect();
+    assert_eq!(
+        paths,
+        [
+            "orderInformation.amountDetails.currency",
+            "orderInformation.billTo.country",
+        ]
+    );
+    assert!(mock.requests().is_empty());
+}
+
+#[tokio::test]
 async fn operation_headers_cannot_override_authentication() {
     let mock = MockTransport::new();
     mock.push_json(200, "{}");

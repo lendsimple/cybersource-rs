@@ -29,6 +29,10 @@ pub struct Config {
     /// Example ids allowed to fail the round-trip test -> reason.
     #[serde(default)]
     pub example_allowlist: BTreeMap<String, String>,
+    /// "<operation id> <json.path>" in a request body -> the constraints
+    /// (`required`, `max_length`, ...) not to enforce on that field.
+    #[serde(default)]
+    pub relax: BTreeMap<String, Vec<String>>,
     /// Operation id -> how to read a page of its response.
     #[serde(default)]
     pub pagination: BTreeMap<String, PageSpec>,

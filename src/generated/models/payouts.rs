@@ -4267,16 +4267,6 @@ impl v::Validate for Ptsv1pushfundstransferRecipientInformation {
         v::string(
             path,
             out,
-            "country",
-            &self.country,
-            false,
-            None,
-            None,
-            Some(&crate::generated::patterns::P30),
-        );
-        v::string(
-            path,
-            out,
             "email",
             &self.email,
             false,
